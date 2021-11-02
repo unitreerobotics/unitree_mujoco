@@ -65,5 +65,3 @@ to
 ```
 
 For now, all the preparation is done and we can simulate our robot in MuJoCo.
-
-# Simulation
