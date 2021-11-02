@@ -33,7 +33,7 @@
 
         <body name="trunk" pos="0 0 0.55">
             <inertial pos="0.002284 -4.1e-05 0.025165" quat="-0.00605949 0.710803 -0.00734309 0.703327" mass="13.733" diaginertia="0.254491 0.250684 0.0733281" />
-            <joint name="floating_base" type="free" />
+            <joint type="free" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.2 0.2 0.2 1" mesh="trunk" />
             <geom size="0.2808 0.086 0.09375" pos="0 0 0.01675" type="box" rgba="0.2 0.2 0.2 0" />
             <body name="FR_hip" pos="0.21935 -0.0875 0">

@@ -34,7 +34,7 @@
 
         <body name="trunk" pos="0 0 0.5">
             <inertial pos="0.00846406 0.00404455 -0.000762916" quat="-3.12625e-05 0.708321 0.00247254 0.705886" mass="9.042" diaginertia="0.174706 0.161175 0.033357" />
-            <joint name="floating_base" type="free" />
+            <joint type="free" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.2 0.2 0.2 1" mesh="trunk" />
             <geom size="0.3235 0.075 0.056" type="box" rgba="0.2 0.2 0.2 0" />
             <geom size="0.0005 0.0005 0.0005" type="box" contype="0" conaffinity="0" group="1" rgba="0.8 0 0 0" />
