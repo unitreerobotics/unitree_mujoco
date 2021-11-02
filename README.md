@@ -18,7 +18,6 @@ Before converting urdf to xml, some parts of urdf file need to be edited. Take "
             meshdir="../meshes/" 
             balanceinertia="true" 
             discardvisual="false" />
-            <option gravity='0 0 -9.8'/>
     </mujoco>
    ```
 
@@ -43,16 +42,49 @@ MuJoCo provides an executable file for converting urdf to XML. This file is unde
 ## Edit xml file
 After converting the urdf to xml, some parts of xml file need to be edited.
 
-1. Add ground and light source:
+1. Set environment
+
+Add the following line after " size njmax="500" nconmax="100" "
+
+```
+<option gravity='0 0 -9.806' iterations='50' solver='Newton' timestep='0.002'/>
+
+<default>
+    <geom contype="1" conaffinity="1" friction="0.6 0.3 0.3" rgba="0.5 0.6 0.7 1" margin="0.001" group="0"/>
+
+    <light castshadow="false" diffuse="1 1 1"/>
+    <motor ctrlrange="-33.5 33.5" ctrllimited="true"/>
+    <camera fovy="60"/>
+    <joint damping="0.01" armature="0.01"/>
+
+</default>
+
+<asset>
+    <mesh name="trunk" file="trunk.stl" />
+    <mesh name="hip" file="hip.stl" />
+    <mesh name="thigh_mirror" file="thigh_mirror.stl" />
+    <mesh name="calf" file="calf.stl" />
+    <mesh name="thigh" file="thigh.stl" />
+</asset>
+
+<asset>
+    <texture type="skybox" builtin="gradient" rgb1="1.0 1.0 1.0" rgb2="1.0 1.0 1.0" width="512" height="512"/>
+    <texture name="plane" type="2d" builtin="flat" rgb1="1 1 1" rgb2="1 1 1" width="512" height="512" mark="cross" markrgb="0 0 0"/>
+    <material name="plane" reflectance="0.0" texture="plane" texrepeat="3 3" texuniform="true"/>
+</asset>
+```
+
+2. Add ground and light source:
 
 Add these line after "worldbody" tag:
 ```
-<light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1"/>    
-<geom type="plane" pos="0 0 -0.45" size="10 10 0.1" rgba=".9 0 0 1"/>
+<light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+<camera name="track" mode="trackcom" pos="0 -1.3 1.6" xyaxes="1 0 0 0 0.707 0.707"/>
+<geom name='floor' type='plane' conaffinity='1' condim='3' contype='1' rgba="0.5 0.9 0.9 0.1" material='plane' pos='0 0 0' size='0 0 1'/>
     
 ```
 
-2. Remove the visibility of the collision parts:
+3. Remove the visibility of the collision parts:
 
 In the model, some parts are used as collision detection. For these parts we do not want them to show in the simulation. To make them invisible, we need to edit the rgba value.
 
