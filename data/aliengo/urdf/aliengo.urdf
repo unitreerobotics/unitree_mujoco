@@ -4,6 +4,13 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="aliengo_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <mujoco>
+        <compiler 
+        meshdir="../meshes/" 
+        balanceinertia="true" 
+        discardvisual="false" />
+  </mujoco>
+
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
   </material>
@@ -41,17 +48,10 @@
             <child link="base"/>
         </joint>
     </xacro:if>  -->
-  <link name="base">
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-  </link>
-  <joint name="floating_base" type="fixed">
+<link name="world"/>
+  <joint name="floating_base" type="floating">
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="base"/>
+    <parent link="world"/>
     <child link="trunk"/>
   </joint>
   <link name="trunk">
@@ -60,7 +60,7 @@
       <geometry>
         <mesh filename="../meshes/trunk.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -119,7 +119,7 @@
       <geometry>
         <mesh filename="../meshes/hip.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 -0.083 0"/>
@@ -161,7 +161,7 @@
       <geometry>
         <mesh filename="../meshes/thigh_mirror.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -189,7 +189,7 @@
       <geometry>
         <mesh filename="../meshes/calf.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -214,7 +214,7 @@
       <geometry>
         <sphere radius="0.0165"/>
       </geometry>
-      <material name="green"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -271,7 +271,7 @@
       <geometry>
         <mesh filename="../meshes/hip.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0.083 0"/>
@@ -313,7 +313,7 @@
       <geometry>
         <mesh filename="../meshes/thigh.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -341,7 +341,7 @@
       <geometry>
         <mesh filename="../meshes/calf.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -366,7 +366,7 @@
       <geometry>
         <sphere radius="0.0165"/>
       </geometry>
-      <material name="green"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -423,7 +423,7 @@
       <geometry>
         <mesh filename="../meshes/hip.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 -0.083 0"/>
@@ -465,7 +465,7 @@
       <geometry>
         <mesh filename="../meshes/thigh_mirror.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -493,7 +493,7 @@
       <geometry>
         <mesh filename="../meshes/calf.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -518,7 +518,7 @@
       <geometry>
         <sphere radius="0.0165"/>
       </geometry>
-      <material name="green"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -575,7 +575,7 @@
       <geometry>
         <mesh filename="../meshes/hip.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0.083 0"/>
@@ -617,7 +617,7 @@
       <geometry>
         <mesh filename="../meshes/thigh.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -645,7 +645,7 @@
       <geometry>
         <mesh filename="../meshes/calf.stl" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.125"/>
@@ -670,7 +670,7 @@
       <geometry>
         <sphere radius="0.0165"/>
       </geometry>
-      <material name="green"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>

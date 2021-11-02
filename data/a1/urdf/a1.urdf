@@ -10,7 +10,6 @@
         meshdir="../meshes/" 
         balanceinertia="true" 
         discardvisual="false" />
-        <option gravity='0 0 -9.8'/>
   </mujoco>
 
   <material name="black">

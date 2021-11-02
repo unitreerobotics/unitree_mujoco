@@ -1,0 +1,122 @@
+<mujoco model="Robot_arm">
+    <compiler angle="radian" meshdir='arm_meshes' balanceinertia='false'/>
+    <size njmax="500" nconmax="100" />
+    <option gravity='0 0 -9.806' iterations='50' solver='Newton' timestep='0.002'/>
+
+    <default>
+        <geom contype="1" conaffinity="1" friction="0.6 0.3 0.3" rgba="0.5 0.6 0.7 1" margin="0.001" group="0"/>
+
+        <default class="visual">
+            <geom contype="0" conaffinity="0" group="1" type="mesh" rgba="0.9 0.9 0.9 1.0"/>
+        </default>
+
+        <light castshadow="false" diffuse="1 1 1"/>
+        <motor ctrllimited='true'/>
+        <camera fovy="60"/>
+        <joint damping="0.01" armature="0.01"/>
+    </default>
+
+    <asset>
+        <mesh name="base_link" file="base_link.STL" />
+        <mesh name="link_1" file="link_1.STL" />
+        <mesh name="link_2" file="link_2.STL" />
+        <mesh name="link_3" file="link_3.STL" />
+        <mesh name="link_4" file="link_4.STL" />
+    </asset>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="1.0 1.0 1.0" rgb2="1.0 1.0 1.0" width="512" height="512"/>
+        <texture name="plane" type="2d" builtin="flat" rgb1="1 1 1" rgb2="1 1 1" width="512" height="512" mark="cross" markrgb="0 0 0"/>
+        <material name="plane" reflectance="0.0" texture="plane" texrepeat="3 3" texuniform="true"/>
+    </asset>
+
+    <visual>
+        <rgba com="0.502 1.0 0 0.5" contactforce="0.2 0.98 0.2 0.8" contactpoint="1.0 1.0 0.6 0.4"/>
+        <scale com="0.2" forcewidth="0.05" contactwidth="0.10" contactheight="0.04"/>
+    </visual>
+
+    <worldbody>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+        <camera name="track" mode="trackcom" pos="0 -1.3 1.6" xyaxes="1 0 0 0 0.707 0.707"/>
+        <geom name='floor' type='plane' conaffinity='1' condim='3' contype='1' rgba='1 1 1 1' material='plane' pos='0 0 0' size='0 0 1'/>
+
+        <body name='base_link' pos='0 0 1' euler='0 0 0'>
+
+            <!-- <joint type='free' limited='false' frictionloss='disable' damping='0' stiffness='0' armature='0' /> -->
+            <geom type='mesh' mesh='base_link' class='visual'/>
+            <geom name='base_link_collision' type='box' size='0.035 0.035 0.01' pos='0 0 0' euler='0 0 0' />
+            <inertial pos='1.688E-07 -8.3907E-05 0.011068' mass='0.10458' fullinertia='7.0188E-05 4.9884E-05 7.6398E-05 1.1028E-09 2.5713E-11 3.4141E-07'/>
+            <site name="imu" pos="0 0 0"/>
+
+            <!-- link1-->
+            <body name="link_1" pos="0 -0.0001 0.049" quat="0.696006 0.696009 0.124794 -0.124794">
+                <inertial pos="0.023572 0.014375 -0.00025895" quat="-0.0544401 0.710149 0.0551732 0.699771" mass="0.32357" diaginertia="0.00030638 0.000232161 0.000180019" />
+                <joint name="joint_1" type='hinge' pos="0 0 0" axis="0 0 1" limited="true" range="-0.5 2" frictionloss='0.0'/>
+                <geom type='mesh' rgba="1 1 1 1" mesh='link_1' class='visual'/>
+                <geom name='link1_collision' type='box' size='0.04 0.032 0.02' pos='0.02 0.02 0' euler='0 0 0' />
+
+                <body name="link_2" pos="0.06855 0 0" quat="0.499998 -0.5 0.500002 -0.5">
+                    <inertial pos="-1.2238e-07 0.00020627 0.067735" quat="0.999997 0.0011959 -4.45307e-06 0.001984" mass="0.1626" diaginertia="0.000412886 0.000392583 7.94664e-05" />
+                    <joint name="joint_2" type='hinge' pos="0 0 0" axis="0 0 -1" limited="true" range="-3.14 3.14" frictionloss='0.0' />
+                    <geom type='mesh' mesh='link_2' class='visual'/>
+                    <geom name='link2_collision' type='cylinder' size='0.02 0.055' pos='0 0 0.06' euler='0 0 0' />
+
+                    <body name="link_3" pos="0 0.00025 0.1414" quat="0.691267 0.69127 0.148821 -0.148821">
+                        <inertial pos="0.023572 0.014377 -0.00025896" quat="-0.0544841 0.710145 0.0552199 0.699769" mass="0.32357" diaginertia="0.000306351 0.000232164 0.000179987" />
+                        <joint name="joint_3" type='hinge' pos="0 0 0" axis="0 0 1" limited="true" range="-2 2" frictionloss='0.0' />
+                        <geom type='mesh' mesh='link_3' class='visual'/>
+                        <geom name='link3_collision' type='box' size='0.04 0.032 0.02' pos='0.02 0.02 0' euler='0 0 0'/>
+
+                        <body name="link_4" pos="0.06855 0 0" quat="0.707105 0 0.707108 0">
+                            <inertial pos="-1.5087e-07 -1.6077e-07 0.067748" quat="0.923879 -9.48044e-07 -2.06085e-06 0.382685" mass="0.11973" diaginertia="0.000523594 0.000522057 4.41449e-05" />
+                            <joint name="joint_4" type='hinge' pos="0 0 0" axis="0 0 -1" limited="true" range="-3.14 3.14" frictionloss='0.0' />
+                            <geom type='mesh' mesh='link_4' class='visual'/>
+                            <geom name='link4_collision' type='cylinder' size='0.02 0.08' pos='0 0 0.08' euler='0 0 0'/>
+                        </body>
+                    </body>
+                </body>
+            </body> 
+        </body>
+
+        <!-- estiamted position -->
+        <body name='estiamted_base_p' pos='0 0 0' mocap='true'>
+            <geom name='base_position' conaffinity='0' contype='0' size='0.015' type='sphere' rgba='0 1 0 0.7' />
+        </body>
+
+    </worldbody>
+
+    <actuator>
+
+        <!-- <motor name='joint1_motor' joint='joint_1' gear='1' ctrllimited='true' ctrlrange='-60 60'/>
+        <motor name='joint2_motor' joint='joint_2' gear='1' ctrllimited='true' ctrlrange='-60 60'/>
+        <motor name='joint3_motor' joint='joint_3' gear='1' ctrllimited='true' ctrlrange='-60 60'/>
+        <motor name='joint4_motor' joint='joint_4' gear='1' ctrllimited='true' ctrlrange='-60 60'/> -->
+
+        <position name='joint1_pos' joint='joint_1' gear='1' kp='150' ctrllimited='false' /> 
+        <position name='joint2_pos' joint='joint_2' gear='1' kp='10' ctrllimited='false' />
+        <position name='joint3_pos' joint='joint_3' gear='1' kp='10' ctrllimited='false' />
+        <position name='joint4_pos' joint='joint_4' gear='1' kp='10' ctrllimited='false' />
+
+        <velocity name='joint1_vel' joint='joint_1' gear='1' kv='1' ctrllimited='false' />
+        <velocity name='joint2_vel' joint='joint_2' gear='1' kv='1' ctrllimited='false' />
+        <velocity name='joint3_vel' joint='joint_3' gear='1' kv='1' ctrllimited='false' />
+        <velocity name='joint4_vel' joint='joint_4' gear='1' kv='1' ctrllimited='false' />
+    </actuator>
+
+    <sensor>
+
+        <!-- sensordata index from 0-3 -->
+        <jointpos name='Link1' joint='joint_1'/>
+        <jointpos name='Link2' joint='joint_2'/>
+        <jointpos name='Link3' joint='joint_3'/>
+        <jointpos name='Link4' joint='joint_4'/>
+
+        <!-- sensordata index from 12-17 -->
+        <jointvel name='Link1_vel' joint='joint_1'/>
+        <jointvel name='Link2_vel' joint='joint_2'/>
+        <jointvel name='Link3_vel' joint='joint_3'/>
+        <jointvel name='Link4_vel' joint='joint_4'/>
+
+    </sensor>
+
+</mujoco>
