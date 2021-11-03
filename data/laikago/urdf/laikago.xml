@@ -7,7 +7,7 @@
         <geom contype="1" conaffinity="1" friction="0.6 0.3 0.3" rgba="0.5 0.6 0.7 1" margin="0.001" group="0"/>
 
         <light castshadow="false" diffuse="1 1 1"/>
-        <motor ctrlrange="-33.5 33.5" ctrllimited="true"/>
+        <motor ctrlrange="-40.0 40.0" ctrllimited="true"/>
         <camera fovy="60"/>
         <joint damping="0.01" armature="0.01"/>
     
