@@ -49,7 +49,7 @@
         </joint>
     </xacro:if>  -->
 <link name="world"/>
-  <joint name="" type="floating">
+  <joint name="floating_base" type="floating">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
     <child link="trunk"/>
