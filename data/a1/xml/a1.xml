@@ -176,9 +176,9 @@
 
         <gyro name="Body_Gyro" site="imu"/>
 
-        <framepos name="Body_Pos" objtype=site objname="imu"/>
+        <framepos name="Body_Pos" objtype="site" objname="imu"/>
 
-        <framequat name="Body_Quat" objtype=site objname="imu"/>
+        <framequat name="Body_Quat" objtype="site" objname="imu"/>
         
     
     </sensor>
