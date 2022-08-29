@@ -4,25 +4,25 @@
 In this repo, some mujoco example scripts and the xml files of different Unitree robots are provided, including A1, Aliengo, Laikago and Go1. To simulate different robots, the corresponding xml files are needed. Here we introduce how to generate xml files from urdf and how to use them.
 
 # Generate XML
-In MuJoCo, robots are described by xml files. Before we generate the xml file, we need the urdf file of the robot. There are many ways to obtain urdf, and these methods are not discussed here. After generating the urdf, you must ensure that all meshes are stl files. If you are using meshes in obj or other formats, convert them to stl. 
+In MuJoCo, robots are described by xml files. Before we generate the xml file, we need the urdf file of the robot. There are many ways to obtain urdf, and these methods are not discussed here. After generating the urdf, you must ensure that all meshes are stl files. If you are using meshes in obj or other formats, convert them to stl.
 
 ## Edit URDF
 Before converting urdf to xml, some parts of urdf file need to be edited. Take "/data/urdf/a1.urdf" as an example.
 
 1. Add MuJoCo tag
-   
+
    Add the following line after the robot description line:
    ```
     <mujoco>
-            <compiler 
-            meshdir="../meshes/" 
-            balanceinertia="true" 
+            <compiler
+            meshdir="../meshes/"
+            balanceinertia="true"
             discardvisual="false" />
     </mujoco>
    ```
 
 2. Add a floating joint between robot body and world frame
-   
+
    Since MuJoCo set the base link as fixed by default, a free joint has to be manually added between robot body and world frame:
    ```
     <link name="world"/>
@@ -81,7 +81,7 @@ Add these line after "worldbody" tag:
 <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
 <camera name="track" mode="trackcom" pos="0 -1.3 1.6" xyaxes="1 0 0 0 0.707 0.707"/>
 <geom name='floor' type='plane' conaffinity='1' condim='3' contype='1' rgba="0.5 0.9 0.9 0.1" material='plane' pos='0 0 0' size='0 0 1'/>
-    
+
 ```
 
 3. Remove the visibility of the collision parts:
@@ -97,3 +97,7 @@ to
 ```
 
 For now, all the preparation is done and we can simulate our robot in MuJoCo.
+
+## License
+
+XML and 3D assets in this repository are licensed under the [MIT License](LICENSE).
