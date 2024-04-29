@@ -1,0 +1,9 @@
+robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1"
+robot_scene: "scene.xml" # Robot scene 
+
+domain_id: 1  # Domain id
+interface: "lo" # Interface 
+
+print_scene_information: 1 # Print link, joint and sensors information of robot
+
+enable_elastic_band: 0 # Virtual spring band, used for lifting h1
