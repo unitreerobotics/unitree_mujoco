@@ -2,8 +2,8 @@ import time
 import sys
 import numpy as np
 
-from unitree_sdk2py.core.channel import ChannelPublisher, ChannelFactortyInitialize
-from unitree_sdk2py.core.channel import ChannelSubscriber, ChannelFactortyInitialize
+from unitree_sdk2py.core.channel import ChannelPublisher, ChannelSubscriber
+from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
 from unitree_sdk2py.utils.crc import CRC

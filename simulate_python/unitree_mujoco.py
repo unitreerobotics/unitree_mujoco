@@ -4,7 +4,7 @@ import mujoco.viewer
 from threading import Thread
 import threading
 
-from unitree_sdk2py.core.channel import ChannelFactortyInitialize
+from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from unitree_sdk2py_bridge import UnitreeSdk2Bridge, ElasticBand
 
 import config
@@ -37,8 +37,14 @@ time.sleep(0.2)
 def SimulationThread():
     global mj_data, mj_model
     
-    ChannelFactortyInitialize(config.DOMAIN_ID, config.INTERFACE)
-    unitree = UnitreeSdk2Bridge(mj_model, mj_data, config.PRINT_SCENE_INFORMATION)
+    ChannelFactoryInitialize(config.DOMAIN_ID, config.INTERFACE)
+    unitree = UnitreeSdk2Bridge(mj_model, mj_data)
+
+    if config.USE_JOYSTICK:
+        unitree.SetupJoystick()
+    if config.PRINT_SCENE_INFORMATION:
+        unitree.PrintSceneInformation()
+        
     while viewer.is_running():
         step_start = time.perf_counter()
 
