@@ -10,6 +10,7 @@ include_directories(/usr/local/include/ddscxx /usr/local/include/iceoryx/v2.0.2)
 link_libraries(unitree_sdk2 ddsc ddscxx rt pthread)
 
 FILE (GLOB SIM_SRC
+        src/joystick/joystick.cc
         src/mujoco/*.cc
         src/unitree_sdk2_bridge/*.cc)
 
@@ -24,5 +25,6 @@ add_executable(unitree_mujoco ${SIM_SRC} src/main.cc)
 target_link_libraries(unitree_mujoco  ${SIM_DEPENDENCIES})
 
 add_executable(test test/test_unitree_sdk2.cpp)
+add_executable(jstest src/joystick/jstest.cc src/joystick/joystick.cc)
 
 SET(CMAKE_BUILD_TYPE Release)

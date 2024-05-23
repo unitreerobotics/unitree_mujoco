@@ -103,6 +103,10 @@ Could not locate cyclonedds. Try to set CYCLONEDDS_HOME or CMAKE_PREFIX_PATH
 ```bash
 pip3 install mujoco
 ```
+#### joystick
+```bash
+pip3 install pygame
+```
 ### 2. 测试
 ```bash
 cd ./simulate_python

@@ -8,16 +8,23 @@ UnitreeSdk2Bridge::UnitreeSdk2Bridge(mjModel *model, mjData *data) : mj_model_(m
     high_state_puber_.reset(new ChannelPublisher<unitree_go::msg::dds_::SportModeState_>(TOPIC_HIGHSTATE));
     high_state_puber_->InitChannel();
 
+    wireless_controller_puber_.reset(new ChannelPublisher<unitree_go::msg::dds_::WirelessController_>(TOPIC_WIRELESS_CONTROLLER));
+    wireless_controller_puber_->InitChannel();
+
     low_cmd_suber_.reset(new ChannelSubscriber<unitree_go::msg::dds_::LowCmd_>(TOPIC_LOWCMD));
     low_cmd_suber_->InitChannel(bind(&UnitreeSdk2Bridge::LowCmdHandler, this, placeholders::_1), 1);
 
     lowStatePuberThreadPtr = CreateRecurrentThreadEx("lowstate", UT_CPU_ID_NONE, 2000, &UnitreeSdk2Bridge::PublishLowState, this);
     HighStatePuberThreadPtr = CreateRecurrentThreadEx("highstate", UT_CPU_ID_NONE, 2000, &UnitreeSdk2Bridge::PublishHighState, this);
+    WirelessControllerPuberThreadPtr = CreateRecurrentThreadEx("wirelesscontroller", UT_CPU_ID_NONE, 2000, &UnitreeSdk2Bridge::PublishWirelessController, this);
 
     CheckSensor();
 }
 
-UnitreeSdk2Bridge::~UnitreeSdk2Bridge(){};
+UnitreeSdk2Bridge::~UnitreeSdk2Bridge()
+{
+    delete js_;
+}
 
 void UnitreeSdk2Bridge::LowCmdHandler(const void *msg)
 {
@@ -79,7 +86,39 @@ void UnitreeSdk2Bridge::PublishHighState()
 
         high_state_puber_->Write(high_state);
     }
-};
+}
+
+void UnitreeSdk2Bridge::PublishWirelessController()
+{
+    if (js_)
+    {
+        js_->getState();
+        dds_keys_.components.R1 = js_->button_[js_id_.button["RB"]];
+        dds_keys_.components.L1 = js_->button_[js_id_.button["LB"]];
+        dds_keys_.components.start = js_->button_[js_id_.button["START"]];
+        dds_keys_.components.select = js_->button_[js_id_.button["SELECT"]];
+        dds_keys_.components.R2 = (js_->axis_[js_id_.axis["RT"]] > 0);
+        dds_keys_.components.L2 = (js_->axis_[js_id_.axis["LT"]] > 0);
+        dds_keys_.components.F1 = 0;
+        dds_keys_.components.F2 = 0;
+        dds_keys_.components.A = js_->button_[js_id_.button["A"]];
+        dds_keys_.components.B = js_->button_[js_id_.button["B"]];
+        dds_keys_.components.X = js_->button_[js_id_.button["X"]];
+        dds_keys_.components.Y = js_->button_[js_id_.button["Y"]];
+        dds_keys_.components.up = (js_->axis_[js_id_.axis["DY"]] < 0);
+        dds_keys_.components.right = (js_->axis_[js_id_.axis["DX"]] > 0);
+        dds_keys_.components.down = (js_->axis_[js_id_.axis["DY"]] > 0);
+        dds_keys_.components.left = (js_->axis_[js_id_.axis["DX"]] < 0);
+
+        wireless_controller.lx() = double(js_->axis_[js_id_.axis["LX"]]) / max_value_;
+        wireless_controller.ly() = -double(js_->axis_[js_id_.axis["LY"]]) / max_value_;
+        wireless_controller.rx() = double(js_->axis_[js_id_.axis["RX"]]) / max_value_;
+        wireless_controller.ry() = -double(js_->axis_[js_id_.axis["RY"]]) / max_value_;
+        wireless_controller.keys() = dds_keys_.value;
+
+        wireless_controller_puber_->Write(wireless_controller);
+    }
+}
 
 void UnitreeSdk2Bridge::Run()
 {
@@ -87,7 +126,64 @@ void UnitreeSdk2Bridge::Run()
     {
         sleep(2);
     }
-};
+}
+
+void UnitreeSdk2Bridge::SetupJoystick(string device, string js_type, int bits)
+{
+    js_ = new Joystick(device);
+    if (!js_->isFound())
+    {
+        cout << "Error: Joystick open failed." << endl;
+        exit(1);
+    }
+
+    max_value_ = (1 << (bits - 1));
+
+    if (js_type == "xbox")
+    {
+        js_id_.axis["LX"] = 0; // Left stick axis x
+        js_id_.axis["LY"] = 1; // Left stick axis y
+        js_id_.axis["RX"] = 3; // Right stick axis x
+        js_id_.axis["RY"] = 4; // Right stick axis y
+        js_id_.axis["LT"] = 2; // Left trigger
+        js_id_.axis["RT"] = 5; // Right trigger
+        js_id_.axis["DX"] = 6; // Directional pad x
+        js_id_.axis["DY"] = 7; // Directional pad y
+
+        js_id_.button["X"] = 2;
+        js_id_.button["Y"] = 3;
+        js_id_.button["B"] = 1;
+        js_id_.button["A"] = 0;
+        js_id_.button["LB"] = 4;
+        js_id_.button["RB"] = 5;
+        js_id_.button["SELECT"] = 6;
+        js_id_.button["START"] = 7;
+    }
+    else if (js_type == "switch")
+    {
+        js_id_.axis["LX"] = 0; // Left stick axis x
+        js_id_.axis["LY"] = 1; // Left stick axis y
+        js_id_.axis["RX"] = 2; // Right stick axis x
+        js_id_.axis["RY"] = 3; // Right stick axis y
+        js_id_.axis["LT"] = 5; // Left trigger
+        js_id_.axis["RT"] = 4; // Right trigger
+        js_id_.axis["DX"] = 6; // Directional pad x
+        js_id_.axis["DY"] = 7; // Directional pad y
+
+        js_id_.button["X"] = 3;
+        js_id_.button["Y"] = 4;
+        js_id_.button["B"] = 1;
+        js_id_.button["A"] = 0;
+        js_id_.button["LB"] = 6;
+        js_id_.button["RB"] = 7;
+        js_id_.button["SELECT"] = 10;
+        js_id_.button["START"] = 11;
+    }
+    else
+    {
+        cout << "Unsupported gamepad." << endl;
+    }
+}
 
 void UnitreeSdk2Bridge::PrintSceneInformation()
 {
@@ -148,7 +244,7 @@ void UnitreeSdk2Bridge::PrintSceneInformation()
         index = index + mj_model_->sensor_dim[i];
     }
     cout << endl;
-};
+}
 
 void UnitreeSdk2Bridge::CheckSensor()
 {

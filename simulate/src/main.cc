@@ -72,6 +72,11 @@ namespace
     int domain_id = 1;
     std::string interface = "lo";
 
+    int use_joystick = 0;
+    std::string joystick_type = "xbox";
+    std::string joystick_device = "/dev/input/js0";
+    int joystick_bits = 16;
+
     int print_scene_information = 1;
 
     int enable_elastic_band = 0;
@@ -559,7 +564,8 @@ void *UnitreeSdk2BridgeThread(void *arg)
     }
     usleep(500000);
   }
-  if (config.robot=="h1")
+
+  if (config.robot == "h1")
   {
     config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "torso_link");
   }
@@ -567,8 +573,14 @@ void *UnitreeSdk2BridgeThread(void *arg)
   {
     config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "base_link");
   }
+
   ChannelFactory::Instance()->Init(config.domain_id, config.interface);
   UnitreeSdk2Bridge unitree_interface(m, d);
+
+  if (config.use_joystick == 1)
+  {
+    unitree_interface.SetupJoystick(config.joystick_device, config.joystick_type, config.joystick_bits);
+  }
 
   if (config.print_scene_information == 1)
   {
@@ -636,6 +648,11 @@ int main(int argc, char **argv)
   config.interface = yaml_node["interface"].as<std::string>();
   config.print_scene_information = yaml_node["print_scene_information"].as<int>();
   config.enable_elastic_band = yaml_node["enable_elastic_band"].as<int>();
+  config.use_joystick = yaml_node["use_joystick"].as<int>();
+  config.joystick_type = yaml_node["joystick_type"].as<std::string>();
+  config.joystick_device = yaml_node["joystick_device"].as<std::string>();
+  config.joystick_bits = yaml_node["joystick_bits"].as<int>();
+
   sim->use_elastic_band_ = config.enable_elastic_band;
   yaml_node.~Node();
 

@@ -4,6 +4,11 @@ robot_scene: "scene.xml" # Robot scene
 domain_id: 1  # Domain id
 interface: "lo" # Interface 
 
+use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
+joystick_type: "xbox" # support "xbox" and "switch" gamepad layout
+joystick_device: "/dev/input/js0" # Device path
+joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
+
 print_scene_information: 1 # Print link, joint and sensors information of robot
 
 enable_elastic_band: 0 # Virtual spring band, used for lifting h1

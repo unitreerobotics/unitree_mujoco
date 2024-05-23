@@ -97,6 +97,12 @@ Refer to: https://github.com/unitreerobotics/unitree_sdk2_python
 ```bash
 pip3 install mujoco
 ```
+
+#### joystick
+```bash
+pip3 install pygame
+```
+
 ### 2. Test
 ```bash
 cd ./simulate_python
@@ -123,6 +129,12 @@ robot: "go2"
 robot_scene: "scene.xml"
 # DDS domain id, it is recommended to distinguish from the real robot (default is 0 on the real robot)
 domain_id: 1
+
+use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
+joystick_type: "xbox" # support "xbox" and "switch" gamepad layout
+joystick_device: "/dev/input/js0" # Device path
+joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
+
 # Network interface name, for simulation, it is recommended to use the local loopback "lo"
 interface: "lo"
 # Whether to output robot link, joint, sensor information, 1 for output
