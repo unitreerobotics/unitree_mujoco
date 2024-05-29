@@ -1,5 +1,5 @@
 import time
-from unitree_sdk2py.core.channel import ChannelFactortyInitialize
+from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from unitree_sdk2py.core.channel import ChannelPublisher, ChannelSubscriber
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__SportModeState_
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_
