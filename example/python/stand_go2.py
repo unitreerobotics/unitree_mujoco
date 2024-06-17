@@ -29,9 +29,9 @@ input("Press enter to start")
 if __name__ == '__main__':
 
     if len(sys.argv) <2:
-        ChannelFactortyInitialize(1, "lo")
+        ChannelFactoryInitialize(1, "lo")
     else:
-        ChannelFactortyInitialize(0, sys.argv[1])
+        ChannelFactoryInitialize(0, sys.argv[1])
 
     # Create a publisher to publish the data defined in UserData class
     pub = ChannelPublisher("rt/lowcmd", LowCmd_)

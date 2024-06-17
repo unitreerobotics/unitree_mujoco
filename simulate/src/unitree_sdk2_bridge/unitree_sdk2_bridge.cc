@@ -66,6 +66,34 @@ void UnitreeSdk2Bridge::PublishLowState()
             low_state.imu_state().accelerometer()[1] = mj_data_->sensordata[dim_motor_sensor_ + 8];
             low_state.imu_state().accelerometer()[2] = mj_data_->sensordata[dim_motor_sensor_ + 9];
         }
+        
+        if (js_)
+        {
+            js_->getState();
+            wireless_remote_.btn.components.R1 = js_->button_[js_id_.button["RB"]];
+            wireless_remote_.btn.components.L1 = js_->button_[js_id_.button["LB"]];
+            wireless_remote_.btn.components.start = js_->button_[js_id_.button["START"]];
+            wireless_remote_.btn.components.select = js_->button_[js_id_.button["SELECT"]];
+            wireless_remote_.btn.components.R2 = (js_->axis_[js_id_.axis["RT"]] > 0);
+            wireless_remote_.btn.components.L2 = (js_->axis_[js_id_.axis["LT"]] > 0);
+            wireless_remote_.btn.components.F1 = 0;
+            wireless_remote_.btn.components.F2 = 0;
+            wireless_remote_.btn.components.A = js_->button_[js_id_.button["A"]];
+            wireless_remote_.btn.components.B = js_->button_[js_id_.button["B"]];
+            wireless_remote_.btn.components.X = js_->button_[js_id_.button["X"]];
+            wireless_remote_.btn.components.Y = js_->button_[js_id_.button["Y"]];
+            wireless_remote_.btn.components.up = (js_->axis_[js_id_.axis["DY"]] < 0);
+            wireless_remote_.btn.components.right = (js_->axis_[js_id_.axis["DX"]] > 0);
+            wireless_remote_.btn.components.down = (js_->axis_[js_id_.axis["DY"]] > 0);
+            wireless_remote_.btn.components.left = (js_->axis_[js_id_.axis["DX"]] < 0);
+
+            wireless_remote_.lx = double(js_->axis_[js_id_.axis["LX"]]) / max_value_;
+            wireless_remote_.ly = -double(js_->axis_[js_id_.axis["LY"]]) / max_value_;
+            wireless_remote_.rx = double(js_->axis_[js_id_.axis["RX"]]) / max_value_;
+            wireless_remote_.ry = -double(js_->axis_[js_id_.axis["RY"]]) / max_value_;
+
+            memcpy(&low_state.wireless_remote()[0], &wireless_remote_, 40);
+        }
 
         low_state_puber_->Write(low_state);
     }

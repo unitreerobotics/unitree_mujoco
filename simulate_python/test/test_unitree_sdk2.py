@@ -21,7 +21,7 @@ def LowStateHandler(msg: LowState_):
 
 
 if __name__ == "__main__":
-    ChannelFactortyInitialize(1, "lo")
+    ChannelFactoryInitialize(1, "lo")
     hight_state_suber = ChannelSubscriber("rt/sportmodestate", SportModeState_)
     low_state_suber = ChannelSubscriber("rt/lowstate", LowState_)
 

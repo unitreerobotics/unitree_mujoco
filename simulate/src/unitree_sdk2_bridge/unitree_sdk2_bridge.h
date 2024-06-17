@@ -48,6 +48,19 @@ typedef union
     uint16_t value;
 } xKeySwitchUnion;
 
+typedef struct
+{
+    uint8_t head[2];
+    xKeySwitchUnion btn;
+    float lx;
+    float rx;
+    float ry;
+    float L2;
+    float ly;
+
+    uint8_t idle[16];
+} xRockerBtnDataStruct;
+
 // Defaults to xbox gamepad
 struct JoystickId
 {
@@ -106,7 +119,9 @@ public:
     ThreadPtr HighStatePuberThreadPtr;
     ThreadPtr WirelessControllerPuberThreadPtr;
 
-    xKeySwitchUnion dds_keys_;
+    xKeySwitchUnion dds_keys_ = {};
+    xRockerBtnDataStruct wireless_remote_ = {};
+
     JoystickId js_id_;
     Joystick *js_;
     int max_value_ = (1 << 15); // 16 bits joystick

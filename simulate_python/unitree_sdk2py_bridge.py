@@ -2,6 +2,7 @@ import mujoco
 import numpy as np
 import pygame
 import sys
+import struct
 
 from unitree_sdk2py.core.channel import ChannelSubscriber, ChannelPublisher
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
@@ -34,6 +35,8 @@ class UnitreeSdk2Bridge:
         self.have_frame_sensor = False
         self.dt = self.mj_model.opt.timestep
 
+        self.joystick = None
+
         # Check sensor
         for i in range(self.dim_motor_sensor, self.mj_model.nsensor):
             name = mujoco.mj_id2name(
@@ -43,7 +46,6 @@ class UnitreeSdk2Bridge:
                 self.have_imu_ = True
             if name == "frame_pos":
                 self.have_frame_sensor_ = True
-        
 
         # Unitree sdk2 message
         self.low_state = unitree_go_msg_dds__LowState_()
@@ -96,9 +98,6 @@ class UnitreeSdk2Bridge:
             "down": 14,
             "left": 15,
         }
-
-        self.joystick = None
-        
 
     def LowCmdHandler(self, msg: LowCmd_):
         if self.mj_data != None:
@@ -160,6 +159,58 @@ class UnitreeSdk2Bridge:
                     self.dim_motor_sensor + 9
                 ]
 
+            if self.joystick != None:
+                pygame.event.get()
+                # Buttons
+                self.low_state.wireless_remote[2] = int(
+                    "".join(
+                        [
+                            f"{key}"
+                            for key in [
+                                0,
+                                0,
+                                int(self.joystick.get_axis(self.axis_id["LT"]) > 0),
+                                int(self.joystick.get_axis(self.axis_id["RT"]) > 0),
+                                int(self.joystick.get_button(self.button_id["SELECT"])),
+                                int(self.joystick.get_button(self.button_id["START"])),
+                                int(self.joystick.get_button(self.button_id["LB"])),
+                                int(self.joystick.get_button(self.button_id["RB"])),
+                            ]
+                        ]
+                    ),
+                    2,
+                )
+                self.low_state.wireless_remote[3] = int(
+                    "".join(
+                        [
+                            f"{key}"
+                            for key in [
+                                int(self.joystick.get_hat(0)[0] < 0),  # left
+                                int(self.joystick.get_hat(0)[1] < 0),  # down
+                                int(self.joystick.get_hat(0)[0] > 0), # right
+                                int(self.joystick.get_hat(0)[1] > 0),    # up
+                                int(self.joystick.get_button(self.button_id["Y"])),     # Y
+                                int(self.joystick.get_button(self.button_id["X"])),     # X
+                                int(self.joystick.get_button(self.button_id["B"])),     # B
+                                int(self.joystick.get_button(self.button_id["A"])),     # A
+                            ]
+                        ]
+                    ),
+                    2,
+                )
+                # Axes
+                sticks = [
+                    self.joystick.get_axis(self.axis_id["LX"]),
+                    self.joystick.get_axis(self.axis_id["RX"]),
+                    -self.joystick.get_axis(self.axis_id["RY"]),
+                    -self.joystick.get_axis(self.axis_id["LY"]),
+                ]
+                packs = list(map(lambda x: struct.pack("f", x), sticks))
+                self.low_state.wireless_remote[4:8] = packs[0]
+                self.low_state.wireless_remote[8:12] = packs[1]
+                self.low_state.wireless_remote[12:16] = packs[2]
+                self.low_state.wireless_remote[20:24] = packs[3]
+
             self.low_state_puber.Write(self.low_state)
 
     def PublishHighState(self):
@@ -190,23 +241,35 @@ class UnitreeSdk2Bridge:
     def PublishWirelessController(self):
         if self.joystick != None:
             pygame.event.get()
-            key_state = [0]*16
-            key_state[self.key_map["R1"]] = self.joystick.get_button(self.button_id["RB"])
-            key_state[self.key_map["L1"]] = self.joystick.get_button(self.button_id["LB"])
-            key_state[self.key_map["start"]] = self.joystick.get_button(self.button_id["START"])
-            key_state[self.key_map["select"]] = self.joystick.get_button(self.button_id["SELECT"])
-            key_state[self.key_map["R2"]] = (self.joystick.get_axis(self.axis_id["RT"])>0)
-            key_state[self.key_map["L2"]] = (self.joystick.get_axis(self.axis_id["LT"])>0)
+            key_state = [0] * 16
+            key_state[self.key_map["R1"]] = self.joystick.get_button(
+                self.button_id["RB"]
+            )
+            key_state[self.key_map["L1"]] = self.joystick.get_button(
+                self.button_id["LB"]
+            )
+            key_state[self.key_map["start"]] = self.joystick.get_button(
+                self.button_id["START"]
+            )
+            key_state[self.key_map["select"]] = self.joystick.get_button(
+                self.button_id["SELECT"]
+            )
+            key_state[self.key_map["R2"]] = (
+                self.joystick.get_axis(self.axis_id["RT"]) > 0
+            )
+            key_state[self.key_map["L2"]] = (
+                self.joystick.get_axis(self.axis_id["LT"]) > 0
+            )
             key_state[self.key_map["F1"]] = 0
             key_state[self.key_map["F2"]] = 0
             key_state[self.key_map["A"]] = self.joystick.get_button(self.button_id["A"])
             key_state[self.key_map["B"]] = self.joystick.get_button(self.button_id["B"])
             key_state[self.key_map["X"]] = self.joystick.get_button(self.button_id["X"])
             key_state[self.key_map["Y"]] = self.joystick.get_button(self.button_id["Y"])
-            key_state[self.key_map["up"]] = (self.joystick.get_hat(0)[1]>0)
-            key_state[self.key_map["right"]] = (self.joystick.get_hat(0)[0]>0)
-            key_state[self.key_map["down"]] = (self.joystick.get_hat(0)[1]<0)
-            key_state[self.key_map["left"]] = (self.joystick.get_hat(0)[0]<0)
+            key_state[self.key_map["up"]] = self.joystick.get_hat(0)[1] > 0
+            key_state[self.key_map["right"]] = self.joystick.get_hat(0)[0] > 0
+            key_state[self.key_map["down"]] = self.joystick.get_hat(0)[1] < 0
+            key_state[self.key_map["left"]] = self.joystick.get_hat(0)[0] < 0
 
             key_value = 0
             for i in range(16):
@@ -230,7 +293,7 @@ class UnitreeSdk2Bridge:
         else:
             print("No gamepad detected.")
             sys.exit()
-        
+
         if js_type == "xbox":
             self.axis_id = {
                 "LX": 0,  # Left stick axis x
