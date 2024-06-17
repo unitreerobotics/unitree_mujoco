@@ -279,15 +279,15 @@ if __name__ == "__main__":
     tg.AddSuspendStairs(init_pos=[1.0, 6.0, 0.0], yaw=0.0)
 
     # Rough ground
-    tg.AddRoughGround(init_pos=[-1.5, 5.0, 0.0],
+    tg.AddRoughGround(init_pos=[-2.5, 5.0, 0.0],
                       euler=[0, 0, 0.0],
                       nums=[10, 8])
 
     # Perlin heigh field
-    tg.AddPerlinHeighField(position=[-0.5, 4.0, 0.0], size=[2.0, 1.5])
+    tg.AddPerlinHeighField(position=[-1.5, 4.0, 0.0], size=[2.0, 1.5])
 
     # Heigh field from image
-    tg.AddHeighFieldFromImage(position=[-0.5, 2.0, 0.0],
+    tg.AddHeighFieldFromImage(position=[-1.5, 2.0, 0.0],
                               euler=[0, 0, -1.57],
                               size=[2.0,2.0],
                               input_img="./unitree_robot.jpeg",
