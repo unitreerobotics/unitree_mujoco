@@ -1,4 +1,4 @@
-robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1"
+robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1", "go2w"
 robot_scene: "scene_terrain.xml" # Robot scene 
 
 domain_id: 1  # Domain id
