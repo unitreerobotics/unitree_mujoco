@@ -317,7 +317,7 @@ class UnitreeSdk2Bridge:
                 "START": 7,
             }
 
-        elif js_type == "stitch":
+        elif js_type == "switch":
             self.axis_id = {
                 "LX": 0,  # Left stick axis x
                 "LY": 1,  # Left stick axis y

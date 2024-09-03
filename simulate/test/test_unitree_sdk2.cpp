@@ -35,7 +35,7 @@ void HighStateHandler(const void *msg)
 
 int main()
 {
-    ChannelFactory::Instance()->Init(27, "lo");
+    ChannelFactory::Instance()->Init(1, "lo");
 
     ChannelSubscriber<unitree_go::msg::dds_::LowState_> lowstate_suber(TOPIC_LOWSTATE);
     lowstate_suber.InitChannel(LowStateHandler);

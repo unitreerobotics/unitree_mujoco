@@ -35,8 +35,10 @@
 ```bash
 git clone https://github.com/unitreerobotics/unitree_sdk2.git
 cd unitree_sdk2/
-chmod +x ./install.sh
-sudo ./install.sh
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/opt/unitree_robotics
+sudo make install
 ```
 详细见：https://github.com/unitreerobotics/unitree_sdk2
 #### mujoco >= 3.0.0
@@ -164,6 +166,10 @@ INTERFACE = "lo" # Interface
 # 是否输出机器人连杆、关节、传感器等信息，True 为输出
 PRINT_SCENE_INFORMATION = True 
 
+USE_JOYSTICK = 1 # Simulate Unitree WirelessController using a gamepad
+JOYSTICK_TYPE = "xbox" # support "xbox" and "switch" gamepad layout
+JOYSTICK_DEVICE = 0 # Joystick number
+
 # 是否使用虚拟挂带, 1 为启用
 # 主要用于模拟 H1 机器人初始化挂起的过程 
 ENABLE_ELASTIC_BAND = False 
@@ -175,6 +181,62 @@ SIMULATE_DT = 0.003
 # 可视化界面的运行步长，0.02 对应 50fps/s
 VIEWER_DT = 0.02 
 ```
+
+### 游戏手柄
+仿真器会使用 Xbox 或者 Switch 游戏来模拟机器人的无线控制器，并将手柄按键和摇杆信息发布在"rt/wireless_controller" topic。如果手上没有可以使用的游戏手柄，需要将 `config.yaml/config.py` 中的 `use_joystick/USE_JOYSTICK` 设置为 0。如果使用的手柄不属于 Xbox 和 Switch 映射，可以在源码中自行修改或添加(可以使用 `jstest` 工具查看按键和摇杆 id)：
+
+In `simulate/src/unitree_sdk2_bridge/unitree_sdk2_bridge.cc`: 
+```C++
+ if (js_type == "xbox")
+{
+    js_id_.axis["LX"] = 0; // Left stick axis x
+    js_id_.axis["LY"] = 1; // Left stick axis y
+    js_id_.axis["RX"] = 3; // Right stick axis x
+    js_id_.axis["RY"] = 4; // Right stick axis y
+    js_id_.axis["LT"] = 2; // Left trigger
+    js_id_.axis["RT"] = 5; // Right trigger
+    js_id_.axis["DX"] = 6; // Directional pad x
+    js_id_.axis["DY"] = 7; // Directional pad y
+    
+    js_id_.button["X"] = 2;
+    js_id_.button["Y"] = 3;
+    js_id_.button["B"] = 1;
+    js_id_.button["A"] = 0;
+    js_id_.button["LB"] = 4;
+    js_id_.button["RB"] = 5;
+    js_id_.button["SELECT"] = 6;
+    js_id_.button["START"] = 7;
+}
+```
+
+In `simulate_python/unitree_sdk2_bridge.py`: 
+```python
+if js_type == "xbox":
+    self.axis_id = {
+        "LX": 0,  # Left stick axis x
+        "LY": 1,  # Left stick axis y
+        "RX": 3,  # Right stick axis x
+        "RY": 4,  # Right stick axis y
+        "LT": 2,  # Left trigger
+        "RT": 5,  # Right trigger
+        "DX": 6,  # Directional pad x
+        "DY": 7,  # Directional pad y
+    }
+
+    self.button_id = {
+        "X": 2,
+        "Y": 3,
+        "B": 1,
+        "A": 0,
+        "LB": 4,
+        "RB": 5,
+        "SELECT": 6,
+        "START": 7,
+    }
+```
+### 人形机器人虚拟挂带
+考虑到人形机器人不便于从平地上启动并进行调试，在仿真中设计了一个虚拟挂带，用于模拟人形机器人的吊起和放下。设置 `enable_elastic_band/ENABLE_ELASTIC_BAND = 1` 可以启用虚拟挂带。加载机器人后，按 `9` 启用或松开挂带，按 `7` 放下机器人，按 `8` 吊起机器人。
+
 ## 2. 地形生成工具
 我们提供了一个在 mujcoc 仿真器中参数化创建简单地形的工具，支持添加楼梯、杂乱地面、高程图等地形。程序位于 `terrain_tool` 文件夹中。具体的使用方法见 `terrain_tool` 文件夹下的 readme 文件。
 ![](./doc/terrain.png)

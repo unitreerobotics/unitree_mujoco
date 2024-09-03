@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="5" border="0">
     <diagram id="VpdAtZ29HSXdMf1KcTSp" name="第 1 页">
-        <mxGraphModel dx="465" dy="353" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+        <mxGraphModel dx="882" dy="593" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -22,7 +22,7 @@
                 <mxCell id="5" value="unitree_ros2" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="115" y="430" width="125" height="35" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="mujcoc cpp &lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="6" value="mujcoco cpp &lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="446.26" y="372.5" width="110" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="7" value="mujcoco python&lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">

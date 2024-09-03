@@ -33,8 +33,10 @@ Note:
 ```bash
 git clone https://github.com/unitreerobotics/unitree_sdk2.git
 cd unitree_sdk2/
-chmod +x ./install.sh
-sudo ./install.sh
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/opt/unitree_robotics
+sudo make install
 ```
 For more details, see: https://github.com/unitreerobotics/unitree_sdk2
 #### mujoco >= 3.0.0
@@ -157,6 +159,11 @@ DOMAIN_ID = 1  # Domain id
 INTERFACE = "lo"  # Interface
 # Whether to output robot link, joint, sensor information, True for output
 PRINT_SCENE_INFORMATION = True
+
+USE_JOYSTICK = 1 # Simulate Unitree WirelessController using a gamepad
+JOYSTICK_TYPE = "xbox" # support "xbox" and "switch" gamepad layout
+JOYSTICK_DEVICE = 0 # Joystick number
+
 # Whether to use virtual tape, 1 to enable
 # Mainly used to simulate the hanging process of H1 robot initialization
 ENABLE_ELASTIC_BAND = False
@@ -166,6 +173,62 @@ SIMULATE_DT = 0.003
 # Visualization interface runtime step, 0.02 corresponds to 50fps/s
 VIEWER_DT = 0.02
 ```
+### Joystick
+The simulator will use an Xbox or Switch gamepad  to simulate the wireless controller of the robot. The button and joystick information of the wireless controller will be published through "rt/wireless_controller" topic. `use_joystick/USE_JOYSTICK` in `config.yaml/config.py` needs to be set to 0, when there is no gamepad. If your gamepad is not in Xbox or Switch layout, you can modify it in the source code (The button and joystick IDs can be  determined  using `jstest`):
+
+In `simulate/src/unitree_sdk2_bridge/unitree_sdk2_bridge.cc`: 
+```C++
+ if (js_type == "xbox")
+{
+    js_id_.axis["LX"] = 0; // Left stick axis x
+    js_id_.axis["LY"] = 1; // Left stick axis y
+    js_id_.axis["RX"] = 3; // Right stick axis x
+    js_id_.axis["RY"] = 4; // Right stick axis y
+    js_id_.axis["LT"] = 2; // Left trigger
+    js_id_.axis["RT"] = 5; // Right trigger
+    js_id_.axis["DX"] = 6; // Directional pad x
+    js_id_.axis["DY"] = 7; // Directional pad y
+
+    js_id_.button["X"] = 2;
+    js_id_.button["Y"] = 3;
+    js_id_.button["B"] = 1;
+    js_id_.button["A"] = 0;
+    js_id_.button["LB"] = 4;
+    js_id_.button["RB"] = 5;
+    js_id_.button["SELECT"] = 6;
+    js_id_.button["START"] = 7;
+}
+```
+
+In `simulate_python/unitree_sdk2_bridge.py`: 
+```python
+if js_type == "xbox":
+    self.axis_id = {
+        "LX": 0,  # Left stick axis x
+        "LY": 1,  # Left stick axis y
+        "RX": 3,  # Right stick axis x
+        "RY": 4,  # Right stick axis y
+        "LT": 2,  # Left trigger
+        "RT": 5,  # Right trigger
+        "DX": 6,  # Directional pad x
+        "DY": 7,  # Directional pad y
+    }
+
+    self.button_id = {
+        "X": 2,
+        "Y": 3,
+        "B": 1,
+        "A": 0,
+        "LB": 4,
+        "RB": 5,
+        "SELECT": 6,
+        "START": 7,
+    }
+```
+
+### Elastic band for humanoid 
+Consider humanoid robots are not suitable for starting in ground, a virtual elastic band was designed to simulate the lifting and lowering of humanoid robots. Setting ` enable_elastic_mand/ENABLE_ELSTIC_BAND=1 ` can enable the virtual elastic band. After loading the robot, press' 9 'to activate or release the strap, press' 7' to lower the robot, and press' 8 'to lift the robot.
+
 ## 2. Terrain Generation Tool
 We provide a tool to parametrically create simple terrains in the mujoco simulator, including stairs, rough ground, and height maps. The program is located in the `terrain_tool` folder. For specific usage instructions, refer to the README file in the `terrain_tool` folder.
 ![Terrain Generation Example](./doc/terrain.png)
