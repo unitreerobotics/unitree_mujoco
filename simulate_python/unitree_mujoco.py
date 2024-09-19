@@ -18,7 +18,7 @@ mj_data = mujoco.MjData(mj_model)
 
 if config.ENABLE_ELASTIC_BAND:
     elastic_band = ElasticBand()
-    if config.ROBOT == "h1":
+    if config.ROBOT == "h1" or config.ROBOT == "g1":
         band_attached_link = mj_model.body("torso_link").id
     else:
         band_attached_link = mj_model.body("base_link").id

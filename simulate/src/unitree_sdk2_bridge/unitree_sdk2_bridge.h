@@ -8,9 +8,11 @@
 #include <unitree/robot/channel/channel_publisher.hpp>
 #include <unitree/robot/channel/channel_subscriber.hpp>
 #include <unitree/idl/go2/SportModeState_.hpp>
+#include <unitree/idl/go2/WirelessController_.hpp>
 #include <unitree/idl/go2/LowState_.hpp>
 #include <unitree/idl/go2/LowCmd_.hpp>
-#include <unitree/idl/go2/WirelessController_.hpp>
+#include <unitree/idl/hg/LowCmd_.hpp>
+#include <unitree/idl/hg/LowState_.hpp>
 #include <mujoco/mujoco.h>
 #include "../joystick/joystick.h"
 
@@ -23,6 +25,8 @@ using namespace std;
 #define TOPIC_LOWCMD "rt/lowcmd"
 #define TOPIC_WIRELESS_CONTROLLER "rt/wirelesscontroller"
 #define MOTOR_SENSOR_NUM 3
+#define NUM_MOTOR_IDL_GO 20
+#define NUM_MOTOR_IDL_HG 35
 
 typedef union
 {
@@ -96,8 +100,11 @@ public:
     UnitreeSdk2Bridge(mjModel *model, mjData *data);
     ~UnitreeSdk2Bridge();
 
-    void LowCmdHandler(const void *msg);
-    void PublishLowState();
+    void LowCmdGoHandler(const void *msg);
+    void LowCmdHgHandler(const void *msg);
+
+    void PublishLowStateGo();
+    void PublishLowStateHg();
     void PublishHighState();
     void PublishWirelessController();
     void Run();
@@ -105,15 +112,18 @@ public:
     void CheckSensor();
     void SetupJoystick(string device, string js_type, int bits);
 
-    unitree_go::msg::dds_::LowState_ low_state{};
-    unitree_go::msg::dds_::SportModeState_ high_state{};
-    unitree_go::msg::dds_::WirelessController_ wireless_controller{};
+    ChannelSubscriberPtr<unitree_go::msg::dds_::LowCmd_> low_cmd_go_suber_;
+    ChannelSubscriberPtr<unitree_hg::msg::dds_::LowCmd_> low_cmd_hg_suber_;
 
-    ChannelPublisherPtr<unitree_go::msg::dds_::LowState_> low_state_puber_;
+    unitree_go::msg::dds_::LowState_ low_state_go_{};
+    unitree_hg::msg::dds_::LowState_ low_state_hg_{};
+    unitree_go::msg::dds_::SportModeState_ high_state_{};
+    unitree_go::msg::dds_::WirelessController_ wireless_controller_{};
+
+    ChannelPublisherPtr<unitree_go::msg::dds_::LowState_> low_state_go_puber_;
+    ChannelPublisherPtr<unitree_hg::msg::dds_::LowState_> low_state_hg_puber_;
     ChannelPublisherPtr<unitree_go::msg::dds_::SportModeState_> high_state_puber_;
     ChannelPublisherPtr<unitree_go::msg::dds_::WirelessController_> wireless_controller_puber_;
-
-    ChannelSubscriberPtr<unitree_go::msg::dds_::LowCmd_> low_cmd_suber_;
 
     ThreadPtr lowStatePuberThreadPtr;
     ThreadPtr HighStatePuberThreadPtr;
@@ -134,6 +144,10 @@ public:
 
     int have_imu_ = false;
     int have_frame_sensor_ = false;
+    int idl_type_ = 0; // 0: unitree_go, 1: unitree_hg
+
+private:
+    void GetWirelessRemote();
 };
 
 #endif

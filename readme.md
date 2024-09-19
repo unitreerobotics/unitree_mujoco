@@ -26,6 +26,11 @@ Note:
 - [Unitree Doc](https://support.unitree.com/home/zh/developer)
 - [Mujoco Doc](https://mujoco.readthedocs.io/en/stable/overview.html)
 
+## Message (DDS idl) type description
+- Unitree Go2, B2, H1, B2w, Go2w robots use unitree_go idl for low-level communication.
+- Unitree G1 robot uses unitree_hg idl for low-level communication.
+
+
 # Installation
 ## C++ Simulator (simulate)
 ### 1. Dependencies
@@ -79,6 +84,7 @@ In a new terminal, run:
 ```
 The program will output the robot's pose and position information in the simulator, and each motor of the robot will continuously output 1Nm of torque.
 
+**Note:** The testing program sends the unitree_go message. If you want to test G1 robot, you need to modify the program to use the unitree_hg message.
 
 ## Python Simulator (simulate_python)
 ### 1. Dependencies
@@ -116,6 +122,8 @@ In a new terminal, run:
 python3 ./test/test_unitree_sdk2.py
 ```
 The program will output the robot's pose and position information in the simulator, and each motor of the robot will continuously output 1Nm of torque.
+
+**Note:** The testing program sends the unitree_go message. If you want to test G1 robot, you need to modify the program to use the unitree_hg message.
 
 
 # Usage

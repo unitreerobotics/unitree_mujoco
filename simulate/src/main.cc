@@ -565,7 +565,7 @@ void *UnitreeSdk2BridgeThread(void *arg)
     usleep(500000);
   }
 
-  if (config.robot == "h1")
+  if (config.robot == "h1" || config.robot == "g1")
   {
     config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "torso_link");
   }

@@ -17,6 +17,10 @@
 - `LowState`：电机状态
 - `SportModeState`：机器人位置和速度
 
+## 消息(DDS idl)类型说明
+- Unitree Go2, B2, H1, B2w, Go2w 型号的机器人使用 unitree_go idl 实现底层通信
+- Unitree G1 型号的机器人使用 unitree_hg 实现底层通信
+
 注：
  1. 电机的编号与机器人实物一致，具体可参考 [Unitree 文档](https://support.unitree.com/home/zh/developer)
  2. 在机器人实物上关闭自带的运控服务后， `SportModeState` 消息是无法读取的。仿真中保留了这一消息，便于用户利用位置和速度信息分析所开发的控制程序。
@@ -85,6 +89,8 @@ make -j4
 ```
 程序会输出机器人在仿真器中的姿态和位置信息，同时机器人的每个电机都会持续输出 1Nm 的转矩。
 
+**注：** 测试程序发送的是 unitree_go 消息，如果需要测试 G1 机器人，需要修改程序使用 unitree_hg 消息。
+
 ## Python 仿真器 (simulate_python)
 ### 1. 依赖
 #### unitree_sdk2_python
@@ -119,6 +125,8 @@ python3 ./unitree_mujoco.py
 python3 ./test/test_unitree_sdk2.py
 ```
 程序会输出机器人在仿真器中的姿态和位置信息，同时机器人的每个电机都会持续输出 1Nm 的转矩。
+
+**注：** 测试程序发送的是 unitree_go 消息，如果需要测试 G1 机器人，需要修改程序使用 unitree_hg 消息。
 
 
  
@@ -238,7 +246,7 @@ if js_type == "xbox":
 考虑到人形机器人不便于从平地上启动并进行调试，在仿真中设计了一个虚拟挂带，用于模拟人形机器人的吊起和放下。设置 `enable_elastic_band/ENABLE_ELASTIC_BAND = 1` 可以启用虚拟挂带。加载机器人后，按 `9` 启用或松开挂带，按 `7` 放下机器人，按 `8` 吊起机器人。
 
 ## 2. 地形生成工具
-我们提供了一个在 mujcoc 仿真器中参数化创建简单地形的工具，支持添加楼梯、杂乱地面、高程图等地形。程序位于 `terrain_tool` 文件夹中。具体的使用方法见 `terrain_tool` 文件夹下的 readme 文件。
+我们提供了一个在 mujoco 仿真器中参数化创建简单地形的工具，支持添加楼梯、杂乱地面、高程图等地形。程序位于 `terrain_tool` 文件夹中。具体的使用方法见 `terrain_tool` 文件夹下的 readme 文件。
 ![](./doc/terrain.png)
 
 ## 3. sim to real

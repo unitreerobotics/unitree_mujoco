@@ -5,15 +5,22 @@ import sys
 import struct
 
 from unitree_sdk2py.core.channel import ChannelSubscriber, ChannelPublisher
-from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
-from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
+
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import SportModeState_
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import WirelessController_
-from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_
-from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__SportModeState_
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__WirelessController_
 from unitree_sdk2py.utils.thread import RecurrentThread
+
+import config
+if config.ROBOT=="g1":
+    from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_
+    from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
+    from unitree_sdk2py.idl.default import unitree_hg_msg_dds__LowState_ as LowState_default
+else:
+    from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
+    from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
+    from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_ as LowState_default
 
 TOPIC_LOWCMD = "rt/lowcmd"
 TOPIC_LOWSTATE = "rt/lowstate"
@@ -21,7 +28,8 @@ TOPIC_HIGHSTATE = "rt/sportmodestate"
 TOPIC_WIRELESS_CONTROLLER = "rt/wirelesscontroller"
 
 MOTOR_SENSOR_NUM = 3
-
+NUM_MOTOR_IDL_GO = 20
+NUM_MOTOR_IDL_HG = 35
 
 class UnitreeSdk2Bridge:
 
@@ -34,6 +42,7 @@ class UnitreeSdk2Bridge:
         self.have_imu = False
         self.have_frame_sensor = False
         self.dt = self.mj_model.opt.timestep
+        self.idl_type = (self.num_motor > NUM_MOTOR_IDL_GO) # 0: unitree_go, 1: unitree_hg
 
         self.joystick = None
 
@@ -48,7 +57,7 @@ class UnitreeSdk2Bridge:
                 self.have_frame_sensor_ = True
 
         # Unitree sdk2 message
-        self.low_state = unitree_go_msg_dds__LowState_()
+        self.low_state = LowState_default()
         self.low_state_puber = ChannelPublisher(TOPIC_LOWSTATE, LowState_)
         self.low_state_puber.Init()
         self.lowStateThread = RecurrentThread(
