@@ -22,56 +22,58 @@
 #include <GLFW/glfw3native.h>
 #endif
 
-namespace mujoco {
-// Dynamic dispatch table for GLFW functions required by Simulate.
-// This allows us to use GLFW without introducing a link-time dependency on the
-// library, which is useful e.g. when using GLFW via Python.
-struct Glfw {
+namespace mujoco
+{
+  // Dynamic dispatch table for GLFW functions required by Simulate.
+  // This allows us to use GLFW without introducing a link-time dependency on the
+  // library, which is useful e.g. when using GLFW via Python.
+  struct Glfw
+  {
 #define mjGLFW_DECLARE_SYMBOL(func) decltype(&::func) func
-  // go/keep-sorted start
-  mjGLFW_DECLARE_SYMBOL(glfwCreateWindow);
-  mjGLFW_DECLARE_SYMBOL(glfwDestroyWindow);
-  mjGLFW_DECLARE_SYMBOL(glfwGetCursorPos);
-  mjGLFW_DECLARE_SYMBOL(glfwGetFramebufferSize);
-  mjGLFW_DECLARE_SYMBOL(glfwGetKey);
-  mjGLFW_DECLARE_SYMBOL(glfwGetMonitorPhysicalSize);
-  mjGLFW_DECLARE_SYMBOL(glfwGetMouseButton);
-  mjGLFW_DECLARE_SYMBOL(glfwGetPrimaryMonitor);
-  mjGLFW_DECLARE_SYMBOL(glfwGetTime);
-  mjGLFW_DECLARE_SYMBOL(glfwGetVideoMode);
-  mjGLFW_DECLARE_SYMBOL(glfwGetWindowMonitor);
-  mjGLFW_DECLARE_SYMBOL(glfwGetWindowPos);
-  mjGLFW_DECLARE_SYMBOL(glfwGetWindowSize);
-  mjGLFW_DECLARE_SYMBOL(glfwGetWindowUserPointer);
-  mjGLFW_DECLARE_SYMBOL(glfwInit);
-  mjGLFW_DECLARE_SYMBOL(glfwMakeContextCurrent);
-  mjGLFW_DECLARE_SYMBOL(glfwPollEvents);
-  mjGLFW_DECLARE_SYMBOL(glfwSetClipboardString);
-  mjGLFW_DECLARE_SYMBOL(glfwSetCursorPosCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetDropCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetKeyCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetMouseButtonCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetScrollCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetWindowMonitor);
-  mjGLFW_DECLARE_SYMBOL(glfwSetWindowRefreshCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetWindowSizeCallback);
-  mjGLFW_DECLARE_SYMBOL(glfwSetWindowTitle);
-  mjGLFW_DECLARE_SYMBOL(glfwSetWindowUserPointer);
-  mjGLFW_DECLARE_SYMBOL(glfwSwapBuffers);
-  mjGLFW_DECLARE_SYMBOL(glfwSwapInterval);
-  mjGLFW_DECLARE_SYMBOL(glfwTerminate);
-  mjGLFW_DECLARE_SYMBOL(glfwWindowHint);
-  mjGLFW_DECLARE_SYMBOL(glfwWindowShouldClose);
-  // go/keep-sorted end
+    // go/keep-sorted start
+    mjGLFW_DECLARE_SYMBOL(glfwCreateWindow);
+    mjGLFW_DECLARE_SYMBOL(glfwDestroyWindow);
+    mjGLFW_DECLARE_SYMBOL(glfwGetCursorPos);
+    mjGLFW_DECLARE_SYMBOL(glfwGetFramebufferSize);
+    mjGLFW_DECLARE_SYMBOL(glfwGetKey);
+    mjGLFW_DECLARE_SYMBOL(glfwGetMonitorPhysicalSize);
+    mjGLFW_DECLARE_SYMBOL(glfwGetMouseButton);
+    mjGLFW_DECLARE_SYMBOL(glfwGetPrimaryMonitor);
+    mjGLFW_DECLARE_SYMBOL(glfwGetTime);
+    mjGLFW_DECLARE_SYMBOL(glfwGetVideoMode);
+    mjGLFW_DECLARE_SYMBOL(glfwGetWindowMonitor);
+    mjGLFW_DECLARE_SYMBOL(glfwGetWindowPos);
+    mjGLFW_DECLARE_SYMBOL(glfwGetWindowSize);
+    mjGLFW_DECLARE_SYMBOL(glfwGetWindowUserPointer);
+    mjGLFW_DECLARE_SYMBOL(glfwInit);
+    mjGLFW_DECLARE_SYMBOL(glfwMakeContextCurrent);
+    mjGLFW_DECLARE_SYMBOL(glfwPollEvents);
+    mjGLFW_DECLARE_SYMBOL(glfwSetClipboardString);
+    mjGLFW_DECLARE_SYMBOL(glfwSetCursorPosCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetDropCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetKeyCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetMouseButtonCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetScrollCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetWindowMonitor);
+    mjGLFW_DECLARE_SYMBOL(glfwSetWindowRefreshCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetWindowSizeCallback);
+    mjGLFW_DECLARE_SYMBOL(glfwSetWindowTitle);
+    mjGLFW_DECLARE_SYMBOL(glfwSetWindowUserPointer);
+    mjGLFW_DECLARE_SYMBOL(glfwSwapBuffers);
+    mjGLFW_DECLARE_SYMBOL(glfwSwapInterval);
+    mjGLFW_DECLARE_SYMBOL(glfwTerminate);
+    mjGLFW_DECLARE_SYMBOL(glfwWindowHint);
+    mjGLFW_DECLARE_SYMBOL(glfwWindowShouldClose);
+    // go/keep-sorted end
 
 #ifdef __APPLE__
-  mjGLFW_DECLARE_SYMBOL(glfwGetNSGLContext);
+    mjGLFW_DECLARE_SYMBOL(glfwGetNSGLContext);
 #endif
 
 #undef mjGLFW_DECLARE_SYMBOL
-};
+  };
 
-const struct Glfw& Glfw(void* dlhandle = nullptr);
-}  // namespace mujoco
+  const struct Glfw &Glfw(void *dlhandle = nullptr);
+} // namespace mujoco
 
-#endif  // MUJOCO_SIMULATE_GLFW_DISPATCH_H_
+#endif // MUJOCO_SIMULATE_GLFW_DISPATCH_H_

@@ -18,7 +18,6 @@
 #include <utility>
 #include <iostream>
 #include <GLFW/glfw3.h>
-
 #include <mujoco/mujoco.h>
 
 namespace mujoco
@@ -70,8 +69,6 @@ namespace mujoco
     virtual bool IsAltKeyPressed() const = 0;
     virtual bool IsCtrlKeyPressed() const = 0;
     virtual bool IsShiftKeyPressed() const = 0;
-
-    virtual bool IsKeyPressed(int key) const = 0;
 
     virtual bool IsMouseButtonDownEvent(int act) const = 0;
     virtual bool IsKeyDownEvent(int act) const = 0;

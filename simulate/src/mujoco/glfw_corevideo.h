@@ -28,30 +28,31 @@
 #ifdef __OBJC__
 #import <CoreVideo/CoreVideo.h>
 #else
-typedef void* CVDisplayLinkRef;
+typedef void *CVDisplayLinkRef;
 #endif
 
 // Workaround for perpertually broken OpenGL VSync on macOS,
 // most recently https://github.com/glfw/glfw/issues/2249.
-namespace mujoco {
-class GlfwCoreVideo {
- public:
-  GlfwCoreVideo(GLFWwindow* window);
-  ~GlfwCoreVideo();
+namespace mujoco
+{
+  class GlfwCoreVideo
+  {
+  public:
+    GlfwCoreVideo(GLFWwindow *window);
+    ~GlfwCoreVideo();
 
-  void WaitForDisplayRefresh();
-  int DisplayLinkCallback();
-  void UpdateDisplayLink();
+    void WaitForDisplayRefresh();
+    int DisplayLinkCallback();
+    void UpdateDisplayLink();
 
- private:
-  GLFWwindow* window_;
-  CVDisplayLinkRef display_link_;
+  private:
+    GLFWwindow *window_;
+    CVDisplayLinkRef display_link_;
 
-  std::atomic_bool waiting_;
-  std::mutex mu_;
-  std::condition_variable cond_;
-};
-}  // namespace mujoco
+    std::atomic_bool waiting_;
+    std::mutex mu_;
+    std::condition_variable cond_;
+  };
+} // namespace mujoco
 
-
-#endif  // MUJOCO_SIMULATE_GLFW_COREVIDEO_H_
+#endif // MUJOCO_SIMULATE_GLFW_COREVIDEO_H_

@@ -26,55 +26,55 @@
 #include "glfw_corevideo.h"
 #endif
 
-namespace mujoco {
-class GlfwAdapter : public PlatformUIAdapter {
- public:
-  GlfwAdapter();
-  ~GlfwAdapter() override;
+namespace mujoco
+{
+  class GlfwAdapter : public PlatformUIAdapter
+  {
+  public:
+    GlfwAdapter();
+    ~GlfwAdapter() override;
 
-  std::pair<double, double> GetCursorPosition() const override;
-  double GetDisplayPixelsPerInch() const override;
-  std::pair<int, int> GetFramebufferSize() const override;
-  std::pair<int, int> GetWindowSize() const override;
-  bool IsGPUAccelerated() const override;
-  void PollEvents() override;
-  void SetClipboardString(const char* text) override;
-  void SetVSync(bool enabled) override;
-  void SetWindowTitle(const char* title) override;
-  bool ShouldCloseWindow() const override;
-  void SwapBuffers() override;
-  void ToggleFullscreen() override;
+    std::pair<double, double> GetCursorPosition() const override;
+    double GetDisplayPixelsPerInch() const override;
+    std::pair<int, int> GetFramebufferSize() const override;
+    std::pair<int, int> GetWindowSize() const override;
+    bool IsGPUAccelerated() const override;
+    void PollEvents() override;
+    void SetClipboardString(const char *text) override;
+    void SetVSync(bool enabled) override;
+    void SetWindowTitle(const char *title) override;
+    bool ShouldCloseWindow() const override;
+    void SwapBuffers() override;
+    void ToggleFullscreen() override;
 
-  bool IsLeftMouseButtonPressed() const override;
-  bool IsMiddleMouseButtonPressed() const override;
-  bool IsRightMouseButtonPressed() const override;
+    bool IsLeftMouseButtonPressed() const override;
+    bool IsMiddleMouseButtonPressed() const override;
+    bool IsRightMouseButtonPressed() const override;
 
-  bool IsAltKeyPressed() const override;
-  bool IsCtrlKeyPressed() const override;
-  bool IsShiftKeyPressed() const override;
+    bool IsAltKeyPressed() const override;
+    bool IsCtrlKeyPressed() const override;
+    bool IsShiftKeyPressed() const override;
 
-  bool IsKeyPressed(int key) const override;
+    bool IsMouseButtonDownEvent(int act) const override;
+    bool IsKeyDownEvent(int act) const override;
 
-  bool IsMouseButtonDownEvent(int act) const override;
-  bool IsKeyDownEvent(int act) const override;
+    int TranslateKeyCode(int key) const override;
+    mjtButton TranslateMouseButton(int button) const override;
 
-  int TranslateKeyCode(int key) const override;
-  mjtButton TranslateMouseButton(int button) const override;
+  private:
+    GLFWvidmode vidmode_;
+    GLFWwindow *window_;
 
- private:
-  GLFWvidmode vidmode_;
-  GLFWwindow* window_;
-
-  // store last window information when going to full screen
-  std::pair<int, int> window_pos_;
-  std::pair<int, int> window_size_;
+    // store last window information when going to full screen
+    std::pair<int, int> window_pos_;
+    std::pair<int, int> window_size_;
 
 #ifdef __APPLE__
-  // Workaround for perpertually broken OpenGL VSync on macOS,
-  // most recently https://github.com/glfw/glfw/issues/2249.
-  std::optional<GlfwCoreVideo> core_video_;
+    // Workaround for perpertually broken OpenGL VSync on macOS,
+    // most recently https://github.com/glfw/glfw/issues/2249.
+    std::optional<GlfwCoreVideo> core_video_;
 #endif
-};
-}  // namespace mujoco
+  };
+} // namespace mujoco
 
-#endif  // MUJOCO_SIMULATE_GLFW_ADAPTER_H_
+#endif // MUJOCO_SIMULATE_GLFW_ADAPTER_H_

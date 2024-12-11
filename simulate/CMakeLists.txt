@@ -11,12 +11,12 @@ find_package(mujoco REQUIRED)
 find_package(unitree_sdk2 REQUIRED)
 
 
-FILE (GLOB SIM_SRC
-        src/joystick/joystick.cc
-        src/mujoco/*.cc
-        src/unitree_sdk2_bridge/*.cc)
+file(GLOB SIM_SRC
+    src/joystick/joystick.cc
+    src/mujoco/*.cc
+    src/unitree_sdk2_bridge/*.cc)
 
-set(SIM_DEPENDENCIES 
+set(SIM_DEPENDENCIES
     pthread
     mujoco::mujoco
     glfw
@@ -25,11 +25,11 @@ set(SIM_DEPENDENCIES
 
 
 add_executable(unitree_mujoco ${SIM_SRC} src/main.cc)
-target_link_libraries(unitree_mujoco  ${SIM_DEPENDENCIES})
+target_link_libraries(unitree_mujoco ${SIM_DEPENDENCIES})
 
 add_executable(test test/test_unitree_sdk2.cpp)
 target_link_libraries(test unitree_sdk2)
 
 add_executable(jstest src/joystick/jstest.cc src/joystick/joystick.cc)
 
-SET(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)

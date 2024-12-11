@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="5" border="0">
     <diagram id="VpdAtZ29HSXdMf1KcTSp" name="第 1 页">
-        <mxGraphModel dx="882" dy="593" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+        <mxGraphModel dx="836" dy="447" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -22,10 +22,10 @@
                 <mxCell id="5" value="unitree_ros2" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="115" y="430" width="125" height="35" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="mujcoco cpp &lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="6" value="mujoco cpp &lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="446.26" y="372.5" width="110" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="mujcoco python&lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="7" value="mujoco python&lt;br&gt;simulate" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="445.63" y="325" width="110" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" value="Unitree Robots" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
@@ -53,7 +53,7 @@
                 <mxCell id="11" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Unitree API&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="111.25" y="290" width="132.5" height="35" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Unitree mujcoco&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="13" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Unitree mujoco&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="435" y="290" width="132.5" height="35" as="geometry"/>
                 </mxCell>
             </root>

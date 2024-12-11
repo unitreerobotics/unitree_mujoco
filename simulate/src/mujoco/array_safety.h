@@ -30,76 +30,89 @@
 //
 // They do not perform runtime bound checks.
 
-namespace mujoco {
-namespace sample_util {
-
-// returns sizeof(arr)
-// use instead of sizeof() to avoid unintended array-to-pointer decay
-template <typename T, int N>
-static constexpr std::size_t sizeof_arr(const T(&arr)[N]) {
-  return sizeof(arr);
-}
-
-// like std::strcmp but it will not read beyond the bound of either lhs or rhs
-template <std::size_t N1, std::size_t N2>
-static inline int strcmp_arr(const char (&lhs)[N1], const char (&rhs)[N2]) {
-  return std::strncmp(lhs, rhs, std::min(N1, N2));
-}
-
-// like std::strlen but it will not read beyond the bound of str
-// if str is not null-terminated, returns sizeof(str)
-template <std::size_t N>
-static inline std::size_t strlen_arr(const char (&str)[N]) {
-  for (std::size_t i = 0; i < N; ++i) {
-    if (str[i] == '\0') {
-      return i;
-    }
-  }
-  return N;
-}
-
-// like std::sprintf but will not write beyond the bound of dest
-// dest is guaranteed to be null-terminated
-template <std::size_t N>
-static inline int sprintf_arr(char (&dest)[N], const char* format, ...) {
-  std::va_list vargs;
-  va_start(vargs, format);
-  int retval = std::vsnprintf(dest, N, format, vargs);
-  va_end(vargs);
-  return retval;
-}
-
-// like std::strcat but will not write beyond the bound of dest
-// dest is guaranteed to be null-terminated
-template <std::size_t N>
-static inline char* strcat_arr(char (&dest)[N], const char* src) {
-  const std::size_t dest_len = strlen_arr(dest);
-  const std::size_t dest_size = sizeof_arr(dest);
-  for (std::size_t i = dest_len; i < dest_size; ++i) {
-    dest[i] = src[i - dest_len];
-    if (!dest[i]) {
-      break;
-    }
-  }
-  dest[dest_size - 1] = '\0';
-  return dest;
-}
-
-// like std::strcpy but won't write beyond the bound of dest
-// dest is guaranteed to be null-terminated
-template <std::size_t N>
-static inline char* strcpy_arr(char (&dest)[N], const char* src) {
+namespace mujoco
+{
+  namespace sample_util
   {
-    std::size_t i = 0;
-    for (; src[i] && i < N - 1; ++i) {
-      dest[i] = src[i];
+
+    // returns sizeof(arr)
+    // use instead of sizeof() to avoid unintended array-to-pointer decay
+    template <typename T, int N>
+    static constexpr std::size_t sizeof_arr(const T (&arr)[N])
+    {
+      return sizeof(arr);
     }
-    dest[i] = '\0';
-  }
-  return &dest[0];
-}
 
-}  // namespace sample_util
-}  // namespace mujoco
+    // like std::strcmp but it will not read beyond the bound of either lhs or rhs
+    template <std::size_t N1, std::size_t N2>
+    static inline int strcmp_arr(const char (&lhs)[N1], const char (&rhs)[N2])
+    {
+      return std::strncmp(lhs, rhs, std::min(N1, N2));
+    }
 
-#endif  // MUJOCO_SAMPLE_ARRAY_SAFETY_H_
+    // like std::strlen but it will not read beyond the bound of str
+    // if str is not null-terminated, returns sizeof(str)
+    template <std::size_t N>
+    static inline std::size_t strlen_arr(const char (&str)[N])
+    {
+      for (std::size_t i = 0; i < N; ++i)
+      {
+        if (str[i] == '\0')
+        {
+          return i;
+        }
+      }
+      return N;
+    }
+
+    // like std::sprintf but will not write beyond the bound of dest
+    // dest is guaranteed to be null-terminated
+    template <std::size_t N>
+    static inline int sprintf_arr(char (&dest)[N], const char *format, ...)
+    {
+      std::va_list vargs;
+      va_start(vargs, format);
+      int retval = std::vsnprintf(dest, N, format, vargs);
+      va_end(vargs);
+      return retval;
+    }
+
+    // like std::strcat but will not write beyond the bound of dest
+    // dest is guaranteed to be null-terminated
+    template <std::size_t N>
+    static inline char *strcat_arr(char (&dest)[N], const char *src)
+    {
+      const std::size_t dest_len = strlen_arr(dest);
+      const std::size_t dest_size = sizeof_arr(dest);
+      for (std::size_t i = dest_len; i < dest_size; ++i)
+      {
+        dest[i] = src[i - dest_len];
+        if (!dest[i])
+        {
+          break;
+        }
+      }
+      dest[dest_size - 1] = '\0';
+      return dest;
+    }
+
+    // like std::strcpy but won't write beyond the bound of dest
+    // dest is guaranteed to be null-terminated
+    template <std::size_t N>
+    static inline char *strcpy_arr(char (&dest)[N], const char *src)
+    {
+      {
+        std::size_t i = 0;
+        for (; src[i] && i < N - 1; ++i)
+        {
+          dest[i] = src[i];
+        }
+        dest[i] = '\0';
+      }
+      return &dest[0];
+    }
+
+  } // namespace sample_util
+} // namespace mujoco
+
+#endif // MUJOCO_SAMPLE_ARRAY_SAFETY_H_

@@ -13,6 +13,7 @@
 - `example`: 例程
 
 ## 支持的 Unitree sdk2 消息：
+**当前版本仅支持底层开发，主要用于控制器的 sim to real 验证**
 - `LowCmd`: 电机控制指令
 - `LowState`：电机状态
 - `SportModeState`：机器人位置和速度
@@ -36,6 +37,7 @@
 ## c++ 仿真器 (simulate)
 ### 1. 依赖
 #### unitree_sdk2
+推荐将 `unitree_sdk2` 安装在 `/opt/unitree_robotics` 路径下。
 ```bash
 git clone https://github.com/unitreerobotics/unitree_sdk2.git
 cd unitree_sdk2/
@@ -45,7 +47,8 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/opt/unitree_robotics
 sudo make install
 ```
 详细见：https://github.com/unitreerobotics/unitree_sdk2
-#### mujoco >= 3.0.0
+#### mujoco
+当前版本基于 mujoco-3.2.7 测试
 ```bash
 sudo apt install libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev
 ```

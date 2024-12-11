@@ -25,8 +25,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <GLFW/glfw3.h>
-#include <iostream>
 
 #include <mujoco/mjui.h>
 #include <mujoco/mujoco.h>
@@ -48,7 +46,6 @@ namespace mujoco
     bool enable_ = true;
     std::vector<double> f_ = {0, 0, 0};
   };
-
   // The viewer itself doesn't require a reentrant mutex, however we use it in
   // order to provide a Python sync API that doesn't require separate locking
   // (since sync is by far the most common operation), but that also won't
@@ -106,6 +103,9 @@ namespace mujoco
     // add state to history buffer
     void AddToHistory();
 
+    // inject control noise
+    void InjectNoise();
+
     // constants
     static constexpr int kMaxFilenameLength = 1000;
 
@@ -150,6 +150,7 @@ namespace mujoco
     mjOption mjopt_prev_;
     mjvOption opt_prev_;
     mjvCamera cam_prev_;
+
     int warn_vgeomfull_prev_;
 
     // pending GUI-driven actions, to be applied at the next call to Sync
@@ -267,6 +268,7 @@ namespace mujoco
 
     // additional user-defined visualization geoms (used in passive mode)
     mjvScene *user_scn = nullptr;
+    mjtByte user_scn_flags_prev_[mjNRNDFLAG];
 
     // OpenGL rendering and UI
     int refresh_rate = 60;
@@ -280,7 +282,7 @@ namespace mujoco
     // Constant arrays needed for the option section of UI and the UI interface
     // TODO setting the size here is not ideal
     const mjuiDef def_option[13] = {
-        {mjITEM_SECTION, "Option", 1, nullptr, "AO"},
+        {mjITEM_SECTION, "Option", mjPRESERVE, nullptr, "AO"},
         {mjITEM_CHECKINT, "Help", 2, &this->help, " #290"},
         {mjITEM_CHECKINT, "Info", 2, &this->info, " #291"},
         {mjITEM_CHECKINT, "Profiler", 2, &this->profiler, " #292"},
@@ -300,7 +302,7 @@ namespace mujoco
 
     // simulation section of UI
     const mjuiDef def_simulation[14] = {
-        {mjITEM_SECTION, "Simulation", 1, nullptr, "AS"},
+        {mjITEM_SECTION, "Simulation", mjPRESERVE, nullptr, "AS"},
         {mjITEM_RADIO, "", 5, &this->run, "Pause\nRun"},
         {mjITEM_BUTTON, "Reset", 2, nullptr, " #259"},
         {mjITEM_BUTTON, "Reload", 5, nullptr, "CL"},
@@ -309,15 +311,15 @@ namespace mujoco
         {mjITEM_SLIDERINT, "Key", 3, &this->key, "0 0"},
         {mjITEM_BUTTON, "Load key", 3},
         {mjITEM_BUTTON, "Save key", 3},
-        {mjITEM_SLIDERNUM, "Noise scale", 5, &this->ctrl_noise_std, "0 2"},
-        {mjITEM_SLIDERNUM, "Noise rate", 5, &this->ctrl_noise_rate, "0 2"},
+        {mjITEM_SLIDERNUM, "Noise scale", 5, &this->ctrl_noise_std, "0 1"},
+        {mjITEM_SLIDERNUM, "Noise rate", 5, &this->ctrl_noise_rate, "0 4"},
         {mjITEM_SEPARATOR, "History", 1},
         {mjITEM_SLIDERINT, "", 5, &this->scrub_index, "0 0"},
         {mjITEM_END}};
 
     // watch section of UI
     const mjuiDef def_watch[5] = {
-        {mjITEM_SECTION, "Watch", 0, nullptr, "AW"},
+        {mjITEM_SECTION, "Watch", mjPRESERVE, nullptr, "AW"},
         {mjITEM_EDITTXT, "Field", 2, this->field, "qpos"},
         {mjITEM_EDITINT, "Index", 2, &this->index, "1"},
         {mjITEM_STATIC, "Value", 2, nullptr, " "},
@@ -336,7 +338,6 @@ namespace mujoco
     ElasticBand elastic_band_;
     int use_elastic_band_ = 0;
   };
-
 } // namespace mujoco
 
 #endif
