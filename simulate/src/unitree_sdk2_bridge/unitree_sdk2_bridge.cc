@@ -1,3 +1,5 @@
+#include <eigen3/Eigen/Eigen>
+
 #include "unitree_sdk2_bridge.h"
 
 UnitreeSdk2Bridge::UnitreeSdk2Bridge(mjModel *model, mjData *data) : mj_model_(model), mj_data_(data)
@@ -86,6 +88,18 @@ void UnitreeSdk2Bridge::PublishLowStateGo()
             low_state_go_.imu_state().quaternion()[2] = mj_data_->sensordata[dim_motor_sensor_ + 2];
             low_state_go_.imu_state().quaternion()[3] = mj_data_->sensordata[dim_motor_sensor_ + 3];
 
+	    Eigen::Quaternionf quat;
+	    quat.w() = low_state_go_.imu_state().quaternion()[0];
+	    quat.x() = low_state_go_.imu_state().quaternion()[1];
+	    quat.y() = low_state_go_.imu_state().quaternion()[2];
+	    quat.z() = low_state_go_.imu_state().quaternion()[3];
+
+	    Eigen::Vector3f ypr = quat.toRotationMatrix().canonicalEulerAngles(2, 1, 0);
+
+	    low_state_go_.imu_state().rpy()[0] = ypr[2];
+	    low_state_go_.imu_state().rpy()[1] = ypr[1];
+	    low_state_go_.imu_state().rpy()[2] = ypr[0];
+
             low_state_go_.imu_state().gyroscope()[0] = mj_data_->sensordata[dim_motor_sensor_ + 4];
             low_state_go_.imu_state().gyroscope()[1] = mj_data_->sensordata[dim_motor_sensor_ + 5];
             low_state_go_.imu_state().gyroscope()[2] = mj_data_->sensordata[dim_motor_sensor_ + 6];
@@ -122,6 +136,18 @@ void UnitreeSdk2Bridge::PublishLowStateHg()
             low_state_hg_.imu_state().quaternion()[1] = mj_data_->sensordata[dim_motor_sensor_ + 1];
             low_state_hg_.imu_state().quaternion()[2] = mj_data_->sensordata[dim_motor_sensor_ + 2];
             low_state_hg_.imu_state().quaternion()[3] = mj_data_->sensordata[dim_motor_sensor_ + 3];
+
+	    Eigen::Quaternionf quat;
+	    quat.w() = low_state_hg_.imu_state().quaternion()[0];
+	    quat.x() = low_state_hg_.imu_state().quaternion()[1];
+	    quat.y() = low_state_hg_.imu_state().quaternion()[2];
+	    quat.z() = low_state_hg_.imu_state().quaternion()[3];
+
+	    Eigen::Vector3f ypr = quat.toRotationMatrix().canonicalEulerAngles(2, 1, 0);
+
+	    low_state_hg_.imu_state().rpy()[0] = ypr[2];
+	    low_state_hg_.imu_state().rpy()[1] = ypr[1];
+	    low_state_hg_.imu_state().rpy()[2] = ypr[0];
 
             low_state_hg_.imu_state().gyroscope()[0] = mj_data_->sensordata[dim_motor_sensor_ + 4];
             low_state_hg_.imu_state().gyroscope()[1] = mj_data_->sensordata[dim_motor_sensor_ + 5];
