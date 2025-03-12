@@ -211,7 +211,10 @@ void UnitreeSdk2Bridge::PublishWirelessController()
 
 void UnitreeSdk2Bridge::Run()
 {
-	pause();
+    while (1)
+    {
+        sleep(2);
+    }
 }
 
 void UnitreeSdk2Bridge::SetupJoystick(string device, string js_type, int bits)
