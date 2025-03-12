@@ -3,7 +3,6 @@
 UnitreeSdk2Bridge::UnitreeSdk2Bridge(mjModel *model, mjData *data) : mj_model_(model), mj_data_(data)
 {
     CheckSensor();
-    SetupJoystick();
 
     if (idl_type_ == 0)
     {

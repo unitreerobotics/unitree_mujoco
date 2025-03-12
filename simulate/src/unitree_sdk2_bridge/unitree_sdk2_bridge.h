@@ -110,7 +110,7 @@ public:
     void Run();
     void PrintSceneInformation();
     void CheckSensor();
-    void SetupJoystick(string device = "/dev/input/js0", string js_type = "xbox", int bits = 16);
+    void SetupJoystick(string device, string js_type, int bits);
 
     ChannelSubscriberPtr<unitree_go::msg::dds_::LowCmd_> low_cmd_go_suber_;
     ChannelSubscriberPtr<unitree_hg::msg::dds_::LowCmd_> low_cmd_hg_suber_;
