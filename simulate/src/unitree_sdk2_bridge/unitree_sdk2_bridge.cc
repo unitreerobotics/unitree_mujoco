@@ -334,6 +334,27 @@ void UnitreeSdk2Bridge::PrintSceneInformation()
     cout << endl;
 }
 
+void UnitreeSdk2Bridge::identify_robot_model() {
+    // Erstelle eine Kopie des Namens und wandle sie in Kleinbuchstaben um.
+    std::string lower_model_name = mj_model_->names;
+    std::transform(lower_model_name.begin(), lower_model_name.end(), lower_model_name.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+
+    const std::map<std::string, RobotModel> robot_signatures = {
+        {"h1", RobotModel::H1},
+        {"g1", RobotModel::G1},
+        {"go2", RobotModel::GO2},
+        {"b1", RobotModel::B1}
+    };
+
+    for (const auto& pair : robot_signatures) {
+        if (lower_model_name.find(pair.first) != std::string::npos) {
+            robot_model_ = pair.second;
+            return;
+        }
+    }
+}
+
 void UnitreeSdk2Bridge::CheckSensor()
 {
     num_motor_ = mj_model_->nu;
@@ -352,12 +373,20 @@ void UnitreeSdk2Bridge::CheckSensor()
         }
     }
 
-    if (num_motor_ > NUM_MOTOR_IDL_GO)
+    identify_robot_model();
+    if (robot_model_ == RobotModel::H1 || robot_model_ == RobotModel::G1)
     {
+        std::cout << "Using messages of HG for " << mj_model_->names << std::endl;
         idl_type_ = 1; // unitree_hg
+    }
+    else if (robot_model_ == RobotModel::GO2 || robot_model_ == RobotModel::B1)
+    {
+        std::cout << "Using messages of GO for " << mj_model_->names << std::endl;
+        idl_type_ = 0; // unitree_go
     }
     else
     {
+        std::cerr << "Not Implemented name " << mj_model_->names << ". Fallback to messages of GO" << std::endl;
         idl_type_ = 0; // unitree_go
     }
 }

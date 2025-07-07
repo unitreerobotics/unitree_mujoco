@@ -4,6 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <cstring>
+#include <algorithm>
 
 #include <unitree/robot/channel/channel_publisher.hpp>
 #include <unitree/robot/channel/channel_subscriber.hpp>
@@ -25,8 +26,6 @@ using namespace std;
 #define TOPIC_LOWCMD "rt/lowcmd"
 #define TOPIC_WIRELESS_CONTROLLER "rt/wirelesscontroller"
 #define MOTOR_SENSOR_NUM 3
-#define NUM_MOTOR_IDL_GO 20
-#define NUM_MOTOR_IDL_HG 35
 
 typedef union
 {
@@ -94,6 +93,14 @@ struct JoystickId
     };
 };
 
+enum class RobotModel {
+    UNKNOWN,
+    H1,
+    G1,
+    GO2,
+    B1
+};
+
 class UnitreeSdk2Bridge
 {
 public:
@@ -109,6 +116,7 @@ public:
     void PublishWirelessController();
     void Run();
     void PrintSceneInformation();
+    void identify_robot_model();
     void CheckSensor();
     void SetupJoystick(string device, string js_type, int bits);
 
@@ -144,6 +152,7 @@ public:
 
     int have_imu_ = false;
     int have_frame_sensor_ = false;
+    RobotModel robot_model_ = RobotModel::UNKNOWN;
     int idl_type_ = 0; // 0: unitree_go, 1: unitree_hg
 
 private:
