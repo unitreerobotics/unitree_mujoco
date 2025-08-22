@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <unitree/dds_wrapper/common/unitree_joystick.hpp>
-#include "../joystick/joystick.h"
+#include "joystick/joystick.h"
 #include <memory>
 
 

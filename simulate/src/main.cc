@@ -28,8 +28,7 @@
 #include "mujoco/glfw_adapter.h"
 #include "mujoco/simulate.h"
 #include "mujoco/array_safety.h"
-#include "unitree_sdk2_bridge/go2_bridge.h"
-#include "unitree_sdk2_bridge/g1_bridge.h"
+#include "unitree_sdk2_bridge.h"
 #include "param.h"
 
 #define MUJOCO_PLUGIN_DIR "mujoco_plugin"

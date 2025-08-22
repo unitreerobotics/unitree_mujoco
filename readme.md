@@ -78,7 +78,7 @@ make -j4
 ### 3. Test:
 Run:
 ```bash
-./unitree_mujoco
+./unitree_mujoco -r go2
 ```
 You should see the mujoco simulator with the Go2 robot loaded.
 In a new terminal, run:
