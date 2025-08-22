@@ -29,7 +29,7 @@ Note:
 
 ## Message (DDS idl) type description
 - Unitree Go2, B2, H1, B2w, Go2w robots use unitree_go idl for low-level communication.
-- Unitree G1 robot uses unitree_hg idl for low-level communication.
+- Unitree G1, H1-2 robot uses unitree_hg idl for low-level communication.
 
 
 # Installation
@@ -78,7 +78,7 @@ make -j4
 ### 3. Test:
 Run:
 ```bash
-./unitree_mujoco
+./unitree_mujoco -r go2
 ```
 You should see the mujoco simulator with the Go2 robot loaded.
 In a new terminal, run:

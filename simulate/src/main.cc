@@ -28,11 +28,11 @@
 #include "mujoco/glfw_adapter.h"
 #include "mujoco/simulate.h"
 #include "mujoco/array_safety.h"
-#include "unitree_sdk2_bridge/unitree_sdk2_bridge.h"
-#include <pthread.h>
-#include "yaml-cpp/yaml.h"
+#include "unitree_sdk2_bridge.h"
+#include "param.h"
 
 #define MUJOCO_PLUGIN_DIR "mujoco_plugin"
+#define NUM_MOTOR_IDL_GO 20
 
 extern "C"
 {
@@ -63,26 +63,6 @@ namespace
 
   // control noise variables
   mjtNum *ctrlnoise = nullptr;
-
-  struct SimulationConfig
-  {
-    std::string robot = "go2";
-    std::string robot_scene = "scene.xml";
-
-    int domain_id = 1;
-    std::string interface = "lo";
-
-    int use_joystick = 0;
-    std::string joystick_type = "xbox";
-    std::string joystick_device = "/dev/input/js0";
-    int joystick_bits = 16;
-
-    int print_scene_information = 1;
-
-    int enable_elastic_band = 0;
-    int band_attached_link = 0;
-
-  } config;
 
   using Seconds = std::chrono::duration<double>;
 
@@ -472,14 +452,14 @@ namespace
                 {
                   if (sim.elastic_band_.enable_)
                   {
-                    vector<double> x = {d->qpos[0], d->qpos[1], d->qpos[2]};
-                    vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
+                    std::vector<double> x = {d->qpos[0], d->qpos[1], d->qpos[2]};
+                    std::vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
 
                     sim.elastic_band_.Advance(x, dx);
 
-                    d->xfrc_applied[config.band_attached_link] = sim.elastic_band_.f_[0];
-                    d->xfrc_applied[config.band_attached_link + 1] = sim.elastic_band_.f_[1];
-                    d->xfrc_applied[config.band_attached_link + 2] = sim.elastic_band_.f_[2];
+                    d->xfrc_applied[param::config.band_attached_link] = sim.elastic_band_.f_[0];
+                    d->xfrc_applied[param::config.band_attached_link + 1] = sim.elastic_band_.f_[1];
+                    d->xfrc_applied[param::config.band_attached_link + 2] = sim.elastic_band_.f_[2];
                   }
                 }
 
@@ -555,7 +535,7 @@ void PhysicsThread(mj::Simulate *sim, const char *filename)
 void *UnitreeSdk2BridgeThread(void *arg)
 {
   // Wait for mujoco data
-  while (1)
+  while (true)
   {
     if (d)
     {
@@ -565,31 +545,26 @@ void *UnitreeSdk2BridgeThread(void *arg)
     usleep(500000);
   }
 
-  if (config.robot == "h1" || config.robot == "g1")
-  {
-    config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "torso_link");
+  unitree::robot::ChannelFactory::Instance()->Init(param::config.domain_id, param::config.interface);
+
+
+  int body_id = mj_name2id(m, mjOBJ_BODY, "torso_link");
+  if (body_id < 0) {
+    body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
   }
-  else
-  {
-    config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "base_link");
+  param::config.band_attached_link = 6 * body_id;
+  
+  std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
+  if (m->nu > NUM_MOTOR_IDL_GO) {
+    interface = std::make_unique<G1Bridge>(m, d);
+  } else {
+    interface = std::make_unique<Go2Bridge>(m, d);
   }
-
-  ChannelFactory::Instance()->Init(config.domain_id, config.interface);
-  UnitreeSdk2Bridge unitree_interface(m, d);
-
-  if (config.use_joystick == 1)
+  
+  while (true)
   {
-    unitree_interface.SetupJoystick(config.joystick_device, config.joystick_type, config.joystick_bits);
+    sleep(1);
   }
-
-  if (config.print_scene_information == 1)
-  {
-    unitree_interface.PrintSceneInformation();
-  }
-
-  unitree_interface.Run();
-
-  pthread_exit(NULL);
 }
 //------------------------------------------ main --------------------------------------------------
 
@@ -635,48 +610,25 @@ int main(int argc, char **argv)
   mjvPerturb pert;
   mjv_defaultPerturb(&pert);
 
+  // Load simulation configuration
+  std::filesystem::path proj_dir = std::filesystem::path(getExecutableDir()).parent_path();
+  param::config.load_from_yaml(proj_dir / "config.yaml");
+  param::helper(argc, argv);
+  if(param::config.robot_scene.is_relative()) {
+    param::config.robot_scene = proj_dir.parent_path() / "unitree_robots" / param::config.robot / param::config.robot_scene;
+  }
+
   // simulate object encapsulates the UI
   auto sim = std::make_unique<mj::Simulate>(
-      std::make_unique<mj::GlfwAdapter>(),
-      &cam, &opt, &pert, /* is_passive = */ false);
+    std::make_unique<mj::GlfwAdapter>(),
+    &cam, &opt, &pert, /* is_passive = */ false);
 
-  // Load simulation configuration
-  YAML::Node yaml_node = YAML::LoadFile("../config.yaml");
-  config.robot = yaml_node["robot"].as<std::string>();
-  config.robot_scene = yaml_node["robot_scene"].as<std::string>();
-  config.domain_id = yaml_node["domain_id"].as<int>();
-  config.interface = yaml_node["interface"].as<std::string>();
-  config.print_scene_information = yaml_node["print_scene_information"].as<int>();
-  config.enable_elastic_band = yaml_node["enable_elastic_band"].as<int>();
-  config.use_joystick = yaml_node["use_joystick"].as<int>();
-  config.joystick_type = yaml_node["joystick_type"].as<std::string>();
-  config.joystick_device = yaml_node["joystick_device"].as<std::string>();
-  config.joystick_bits = yaml_node["joystick_bits"].as<int>();
+  sim->use_elastic_band_ = param::config.enable_elastic_band;
 
-  sim->use_elastic_band_ = config.enable_elastic_band;
-  yaml_node.~Node();
-
-  string scene_path = "../../unitree_robots/" + config.robot + "/" + config.robot_scene;
-  const char *filename = nullptr;
-  if (argc > 1)
-  {
-    filename = argv[1];
-  }
-  else
-  {
-    filename = scene_path.c_str();
-  }
-
-  pthread_t unitree_thread;
-  int rc = pthread_create(&unitree_thread, NULL, UnitreeSdk2BridgeThread, NULL);
-  if (rc != 0)
-  {
-    std::cout << "Error:unable to create thread," << rc << std::endl;
-    exit(-1);
-  }
+  std::thread unitree_thread(UnitreeSdk2BridgeThread, nullptr);
 
   // start physics thread
-  std::thread physicsthreadhandle(&PhysicsThread, sim.get(), filename);
+  std::thread physicsthreadhandle(&PhysicsThread, sim.get(), param::config.robot_scene.c_str());
   // start simulation UI loop (blocking call)
   sim->RenderLoop();
   physicsthreadhandle.join();
