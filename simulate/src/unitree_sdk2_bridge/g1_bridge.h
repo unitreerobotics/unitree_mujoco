@@ -5,32 +5,32 @@
 
 class G1Bridge : public UnitreeSDK2BridgeBase
 {
-using LowCmd_t = unitree::robot::g1::subscription::LowCmd;
+using LowCmd_t = unitree::robot::SubscriptionBase<unitree_hg::msg::dds_::LowCmd_>;
 using LowState_t = unitree::robot::g1::publisher::LowState;
 
 public:
     G1Bridge(mjModel *model, mjData *data) : UnitreeSDK2BridgeBase(model, data)
     {
-        lowcmd = std::make_shared<LowCmd_t>();
+        lowcmd = std::make_shared<LowCmd_t>("rt/lowcmd", [this](const void *msg){
+            LowCmd_t::MsgType msg_ = *(const LowCmd_t::MsgType*)msg;
+            for(int i(0); i<num_motor_; i++) {
+                auto & m = msg_.motor_cmd()[i];
+                mj_data_->ctrl[i] = m.tau() +
+                                    m.kp() * (m.q() - mj_data_->sensordata[i]) +
+                                    m.kd() * (m.dq() - mj_data_->sensordata[i + num_motor_]);
+            }
+        });
         lowstate = std::make_unique<LowState_t>();
         lowstate->joystick = joystick;
         wireless_controller->joystick = joystick;
         thread_ = std::make_shared<unitree::common::RecurrentThread>(
-            "unitree_bridge", UT_CPU_ID_NONE, 2000, std::bind(&G1Bridge::run, this));
+            "unitree_bridge", UT_CPU_ID_NONE, 1000, std::bind(&G1Bridge::run, this));
     }
     
     void run()
     {
         if(!mj_data_) return;
         if(lowstate->joystick) { lowstate->joystick->update(); }
-
-        // lowcmd
-        for(int i(0); i<num_motor_; i++) {
-            auto & m = lowcmd->msg_.motor_cmd()[i];
-            mj_data_->ctrl[i] = m.tau() +
-                                m.kp() * (m.q() - mj_data_->sensordata[i]) +
-                                m.kd() * (m.dq() - mj_data_->sensordata[i + num_motor_]);
-        }
 
         // lowstate
         if(lowstate->trylock()) {

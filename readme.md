@@ -29,7 +29,7 @@ Note:
 
 ## Message (DDS idl) type description
 - Unitree Go2, B2, H1, B2w, Go2w robots use unitree_go idl for low-level communication.
-- Unitree G1 robot uses unitree_hg idl for low-level communication.
+- Unitree G1, H1-2 robot uses unitree_hg idl for low-level communication.
 
 
 # Installation

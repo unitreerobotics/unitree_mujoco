@@ -548,17 +548,18 @@ void *UnitreeSdk2BridgeThread(void *arg)
 
   unitree::robot::ChannelFactory::Instance()->Init(param::config.domain_id, param::config.interface);
 
-  if(std::set<std::string>({"h1", "g1"}).count(param::config.robot)) {
-    param::config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "torso_link");
-  } else {
-    param::config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "base_link");
-  }
 
+  int body_id = mj_name2id(m, mjOBJ_BODY, "torso_link");
+  if (body_id < 0) {
+    body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
+  }
+  param::config.band_attached_link = 6 * body_id;
+  
   std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
   if (m->nu > NUM_MOTOR_IDL_GO) {
-    interface = std::make_unique<Go2Bridge>(m, d);
-  } else {
     interface = std::make_unique<G1Bridge>(m, d);
+  } else {
+    interface = std::make_unique<Go2Bridge>(m, d);
   }
   
   while (true)

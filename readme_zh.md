@@ -20,7 +20,7 @@
 
 ## 消息(DDS idl)类型说明
 - Unitree Go2, B2, H1, B2w, Go2w 型号的机器人使用 unitree_go idl 实现底层通信
-- Unitree G1 型号的机器人使用 unitree_hg 实现底层通信
+- Unitree G1, H1-2 型号的机器人使用 unitree_hg 实现底层通信
 
 注：
  1. 电机的编号与机器人实物一致，具体可参考 [Unitree 文档](https://support.unitree.com/home/zh/developer)
