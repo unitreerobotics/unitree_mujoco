@@ -103,16 +103,7 @@ using WirelessController_t = unitree::robot::go2::publisher::WirelessController;
 public:
     RobotBridge(mjModel *model, mjData *data) : UnitreeSDK2BridgeBase(model, data)
     {
-        lowcmd = std::make_shared<LowCmd_t>("rt/lowcmd", [this](const void *msg){
-            if(!mj_data_) return;
-            const typename LowCmd_t::MsgType msg_ = *(const typename LowCmd_t::MsgType*)msg;
-            for(int i(0); i<num_motor_; i++) {
-                auto & m = msg_.motor_cmd()[i];
-                mj_data_->ctrl[i] = m.tau() +
-                                    m.kp() * (m.q() - mj_data_->sensordata[i]) +
-                                    m.kd() * (m.dq() - mj_data_->sensordata[i + num_motor_]);
-            }
-        });
+        lowcmd = std::make_shared<LowCmd_t>("rt/lowcmd");
         lowstate = std::make_unique<LowState_t>();
         lowstate->joystick = joystick;
         highstate = std::make_unique<HighState_t>();
@@ -126,6 +117,16 @@ public:
     {
         if(!mj_data_) return;
         if(lowstate->joystick) { lowstate->joystick->update(); }
+        // lowcmd
+        {
+            std::lock_guard<std::mutex> lock(lowcmd->mutex_);
+            for(int i(0); i<num_motor_; i++) {
+                auto & m = lowcmd->msg_.motor_cmd()[i];
+                mj_data_->ctrl[i] = m.tau() +
+                                    m.kp() * (m.q() - mj_data_->sensordata[i]) +
+                                    m.kd() * (m.dq() - mj_data_->sensordata[i + num_motor_]);
+            }
+        }
 
         // lowstate
         if(lowstate->trylock()) {
@@ -184,11 +185,5 @@ private:
     unitree::common::RecurrentThreadPtr thread_;
 };
 
-
-using Go2Bridge = RobotBridge<
-    unitree::robot::SubscriptionBase<unitree_go::msg::dds_::LowCmd_>,
-    unitree::robot::go2::publisher::LowState>;
-
-using G1Bridge = RobotBridge<
-    unitree::robot::SubscriptionBase<unitree_hg::msg::dds_::LowCmd_>,
-    unitree::robot::g1::publisher::LowState>;
+using Go2Bridge = RobotBridge<unitree::robot::go2::subscription::LowCmd, unitree::robot::go2::publisher::LowState>;
+using G1Bridge = RobotBridge<unitree::robot::g1::subscription::LowCmd, unitree::robot::g1::publisher::LowState>;

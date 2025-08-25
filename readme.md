@@ -4,7 +4,7 @@
 ![](./doc/func.png)
 
 ## Directory Structure
-- `simulate`: Simulator implemented based on unitree_sdk2 and mujoco (C++)
+- `simulate`: Simulator implemented based on unitree_sdk2 and mujoco (C++, recommended)
 - `simulate_python`: Simulator implemented based on unitree_sdk2_python and mujoco (Python)
 - `unitree_robots`: MJCF description files for robots supported by unitree_sdk2
 - `terrain_tool`: Tool for generating terrain in simulation scenarios

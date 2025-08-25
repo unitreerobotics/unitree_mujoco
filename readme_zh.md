@@ -6,7 +6,7 @@
 ![](./doc/func.png)
 
 ## 目录结构
-- `simulate`: 基于 unitree_sdk2 和 mujoco (c++) 实现的仿真器
+- `simulate`: 基于 unitree_sdk2 和 mujoco (c++) 实现的仿真器（推荐）
 - `simulate_python`: 基于 unitree_sdk2py 和 mujoco (python) 实现的仿真器
 - `unitree_robots`: unitree_sdk2 支持的机器人 mjcf 描述文件
 - `terrain_tool`: 仿真场景地形生成工具
