@@ -82,7 +82,7 @@ make -j4
 ### 3. 测试:
 运行：
 ```bash
-./unitree_mujoco -r go2
+./unitree_mujoco -r go2 -s scene_terrain.xml
 ```
 可以看到加载了 Go2 机器人的 mujoco 仿真器。
 

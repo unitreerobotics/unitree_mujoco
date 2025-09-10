@@ -78,7 +78,7 @@ make -j4
 ### 3. Test:
 Run:
 ```bash
-./unitree_mujoco -r go2
+./unitree_mujoco -r go2 -s scene_terrain.xml
 ```
 You should see the mujoco simulator with the Go2 robot loaded.
 In a new terminal, run:
