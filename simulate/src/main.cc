@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// !!! hack code: make glfw_adapter.window_ public
+#define private public
+#include "glfw_adapter.h"
+#undef private
+
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
@@ -25,9 +30,8 @@
 #include <thread>
 
 #include <mujoco/mujoco.h>
-#include "mujoco/glfw_adapter.h"
-#include "mujoco/simulate.h"
-#include "mujoco/array_safety.h"
+#include "simulate.h"
+#include "array_safety.h"
 #include "unitree_sdk2_bridge.h"
 #include "param.h"
 
@@ -46,6 +50,41 @@ extern "C"
 #include <unistd.h>
 #endif
 }
+
+class ElasticBand
+{
+public:
+  ElasticBand(){};
+  void Advance(std::vector<double> x, std::vector<double> dx)
+  {
+    std::vector<double> delta_x = {0.0, 0.0, 0.0};
+    delta_x[0] = point_[0] - x[0];
+    delta_x[1] = point_[1] - x[1];
+    delta_x[2] = point_[2] - x[2];
+    double distance = sqrt(delta_x[0] * delta_x[0] + delta_x[1] * delta_x[1] + delta_x[2] * delta_x[2]);
+
+    std::vector<double> direction = {0.0, 0.0, 0.0};
+    direction[0] = delta_x[0] / distance;
+    direction[1] = delta_x[1] / distance;
+    direction[2] = delta_x[2] / distance;
+
+    double v = dx[0] * direction[0] + dx[1] * direction[1] + dx[2] * direction[2];
+
+    f_[0] = (stiffness_ * (distance - length_) - damping_ * v) * direction[0];
+    f_[1] = (stiffness_ * (distance - length_) - damping_ * v) * direction[1];
+    f_[2] = (stiffness_ * (distance - length_) - damping_ * v) * direction[2];
+  }
+
+
+  double stiffness_ = 200;
+  double damping_ = 100;
+  std::vector<double> point_ = {0, 0, 3};
+  double length_ = 0.0;
+  bool enable_ = true;
+  std::vector<double> f_ = {0, 0, 0};
+};
+inline ElasticBand elastic_band;
+
 
 namespace
 {
@@ -448,18 +487,18 @@ namespace
                 }
 
                 // elastic band on base link
-                if (sim.use_elastic_band_ == 1)
+                if (param::config.enable_elastic_band == 1)
                 {
-                  if (sim.elastic_band_.enable_)
+                  if (elastic_band.enable_)
                   {
                     std::vector<double> x = {d->qpos[0], d->qpos[1], d->qpos[2]};
                     std::vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
 
-                    sim.elastic_band_.Advance(x, dx);
+                    elastic_band.Advance(x, dx);
 
-                    d->xfrc_applied[param::config.band_attached_link] = sim.elastic_band_.f_[0];
-                    d->xfrc_applied[param::config.band_attached_link + 1] = sim.elastic_band_.f_[1];
-                    d->xfrc_applied[param::config.band_attached_link + 2] = sim.elastic_band_.f_[2];
+                    d->xfrc_applied[param::config.band_attached_link] = elastic_band.f_[0];
+                    d->xfrc_applied[param::config.band_attached_link + 1] = elastic_band.f_[1];
+                    d->xfrc_applied[param::config.band_attached_link + 2] = elastic_band.f_[2];
                   }
                 }
 
@@ -578,6 +617,22 @@ __attribute__((used, visibility("default"))) extern "C" void _mj_rosettaError(co
 }
 #endif
 
+// user keyboard callback
+void user_key_cb(GLFWwindow* window, int key, int scancode, int act, int mods) {
+  if (act==GLFW_PRESS)
+  {
+    if(param::config.enable_elastic_band == 1) {
+      if (key==GLFW_KEY_9) {
+        elastic_band.enable_ = !elastic_band.enable_;
+      } else if (key==GLFW_KEY_7 || key==GLFW_KEY_UP) {
+        elastic_band.length_ -= 0.1;
+      } else if (key==GLFW_KEY_8 || key==GLFW_KEY_DOWN) {
+        elastic_band.length_ += 0.1;
+      }
+    }
+  }
+}
+
 // run event loop
 int main(int argc, char **argv)
 {
@@ -623,13 +678,12 @@ int main(int argc, char **argv)
     std::make_unique<mj::GlfwAdapter>(),
     &cam, &opt, &pert, /* is_passive = */ false);
 
-  sim->use_elastic_band_ = param::config.enable_elastic_band;
-
   std::thread unitree_thread(UnitreeSdk2BridgeThread, nullptr);
 
   // start physics thread
   std::thread physicsthreadhandle(&PhysicsThread, sim.get(), param::config.robot_scene.c_str());
   // start simulation UI loop (blocking call)
+  glfwSetKeyCallback(static_cast<mj::GlfwAdapter*>(sim->platform_ui.get())->window_,user_key_cb);
   sim->RenderLoop();
   physicsthreadhandle.join();
 

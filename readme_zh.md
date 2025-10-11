@@ -36,6 +36,11 @@
 # 安装
 ## c++ 仿真器 (simulate)
 ### 1. 依赖
+
+```bash
+sudo apt install libyaml-cpp-dev libspdlog-dev libboost-all-dev
+```
+
 #### unitree_sdk2
 推荐将 `unitree_sdk2` 安装在 `/opt/unitree_robotics` 路径下。
 ```bash
@@ -48,32 +53,17 @@ sudo make install
 ```
 详细见：https://github.com/unitreerobotics/unitree_sdk2
 #### mujoco
-当前版本基于 mujoco-3.2.7 测试
-```bash
-sudo apt install libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev
-```
-```bash
-git clone https://github.com/google-deepmind/mujoco.git
-mkdir build && cd build
-cmake ..
-make -j4
-sudo make install
-```
-测试:
-```bash
-simulate
-```
-弹出 mujoco 仿真器表示安装成功。
 
-#### yaml-cpp
-yaml-cpp主要用于配置文件的读取：
+下载mujoco[安装包](https://github.com/google-deepmind/mujoco/releases), 解压到 `~/.mujoco` 目录下;
+
 ```
-sudo apt install libyaml-cpp-dev
+cd unitree_mujoco/simulate/
+ln -s ~/.mujoco/mujoco-3.3.6 mujoco
 ```
 
 ### 2. 编译 unitree_mujoco
 ```
-cd simulate/
+cd unitree_mujoco/simulate/
 mkdir build && cd build
 cmake ..
 make -j4
