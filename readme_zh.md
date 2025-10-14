@@ -38,7 +38,7 @@
 ### 1. 依赖
 
 ```bash
-sudo apt install libyaml-cpp-dev libspdlog-dev libboost-all-dev
+sudo apt install libyaml-cpp-dev libspdlog-dev libboost-all-dev libglfw3-dev
 ```
 
 #### unitree_sdk2

@@ -37,7 +37,7 @@ Note:
 ### 1. Dependencies
 
 ```bash
-sudo apt install libyaml-cpp-dev libspdlog-dev libboost-all-dev
+sudo apt install libyaml-cpp-dev libspdlog-dev libboost-all-dev libglfw3-dev
 ```
 
 #### unitree_sdk2
@@ -60,11 +60,6 @@ cd unitree_mujoco/simulate/
 ln -s ~/.mujoco/mujoco-3.3.6 mujoco
 ```
 
-#### yaml-cpp
-yaml-cpp is mainly used for reading configuration files:
-```bash
-sudo apt install libyaml-cpp-dev
-```
 ### 2. Compile unitree_mujoco
 ```bash
 cd unitree_mujoco/simulate

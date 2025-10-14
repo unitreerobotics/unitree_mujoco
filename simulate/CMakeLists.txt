@@ -17,6 +17,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 include_directories(
   mujoco/include
   mujoco/simulate
+  src/lodepng
 )
 link_directories(mujoco/lib)
 
@@ -27,6 +28,7 @@ file(GLOB SIM_SRC
   mujoco/simulate/glfw_*.cc
   mujoco/simulate/platform_*.cc
   mujoco/simulate/simulate.cc
+  src/lodepng/lodepng.cpp
 )
 
 link_libraries(
