@@ -287,10 +287,10 @@ python3 ./stand_go2.py enp3s0 # 控制机器人实物，其中 enp3s0 为机器�
 ```python
 if len(sys.argv) <2:
     // 如果没有输入网卡，使用仿真的 domian id 和 网卡(本地)
-    ChannelFactortyInitialize(1, "lo")
+    ChannelFactoryInitialize(1, "lo")
 else:
     // 否则使用指定的网卡
-    ChannelFactortyInitialize(0, sys.argv[1])
+    ChannelFactoryInitialize(0, sys.argv[1])
 ```
 ### unitree_ros2
 
