@@ -630,6 +630,10 @@ void user_key_cb(GLFWwindow* window, int key, int scancode, int act, int mods) {
         elastic_band.length_ += 0.1;
       }
     }
+    if(key==GLFW_KEY_BACKSPACE) {
+      mj_resetData(m, d);
+      mj_forward(m, d);
+    }
   }
 }
 
