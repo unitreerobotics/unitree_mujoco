@@ -6,6 +6,7 @@
 #include <unitree/robot/channel/channel_subscriber.hpp>
 #include <unitree/dds_wrapper/robots/go2/go2.h>
 #include <unitree/dds_wrapper/robots/g1/g1.h>
+#include <unitree/idl/hg/BmsState_.hpp>
 
 #include "param.h"
 #include "physics_joystick.h"
@@ -34,6 +35,8 @@ public:
         }
 
     }
+
+    virtual void start() {}
 
     void printSceneInformation()
     {
@@ -109,11 +112,15 @@ public:
         highstate = std::make_unique<HighState_t>();
         wireless_controller = std::make_unique<WirelessController_t>();
         wireless_controller->joystick = joystick;
-        thread_ = std::make_shared<unitree::common::RecurrentThread>(
-            "unitree_bridge", UT_CPU_ID_NONE, 1000, std::bind(&RobotBridge::run, this));
     }
 
-    void run()
+    void start()
+    {
+        thread_ = std::make_shared<unitree::common::RecurrentThread>(
+            "unitree_bridge", UT_CPU_ID_NONE, 1000, [this]() { this->run(); });
+    }
+
+    virtual void run()
     {
         if(!mj_data_) return;
         if(lowstate->joystick) { lowstate->joystick->update(); }
@@ -187,4 +194,32 @@ private:
 };
 
 using Go2Bridge = RobotBridge<unitree::robot::go2::subscription::LowCmd, unitree::robot::go2::publisher::LowState>;
-using G1Bridge = RobotBridge<unitree::robot::g1::subscription::LowCmd, unitree::robot::g1::publisher::LowState>;
+
+class G1Bridge : public RobotBridge<unitree::robot::g1::subscription::LowCmd, unitree::robot::g1::publisher::LowState>
+{
+public:
+    G1Bridge(mjModel *model, mjData *data) : RobotBridge(model, data)
+    {
+        if (param::config.robot.find("g1") != std::string::npos) {
+            auto* g1_lowstate = dynamic_cast<unitree::robot::g1::publisher::LowState*>(lowstate.get());
+            if (g1_lowstate) {
+                auto scene = param::config.robot_scene.filename().string();
+                g1_lowstate->msg_.mode_machine() = scene.find("23") != std::string::npos ? 4 : 5;
+            }
+        }
+
+        bmsstate = std::make_unique<BmsState_t>("rt/lf/bmsstate");
+        bmsstate->msg_.soc() = 100;
+    }
+
+    void run() override
+    {
+        RobotBridge::run();
+
+        // In practice, bmsstate is sent at a low frequency; here it is sent with the main loop
+        bmsstate->unlockAndPublish();
+    }
+
+    using BmsState_t = unitree::robot::RealTimePublisher<unitree_hg::msg::dds_::BmsState_>;
+    std::unique_ptr<BmsState_t> bmsstate;
+};

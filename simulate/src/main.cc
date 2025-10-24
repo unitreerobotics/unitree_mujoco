@@ -599,6 +599,7 @@ void *UnitreeSdk2BridgeThread(void *arg)
   } else {
     interface = std::make_unique<Go2Bridge>(m, d);
   }
+  interface->start();
   
   while (true)
   {
