@@ -1,11 +1,25 @@
-Open the mujoco and run ros2_policy_runner_fixed.py
+### Summary
+Implemented the motor command interface in MuJoCo to enable Go2 to walk correctly using the rsl_rl policy within the Unitree Mujoco environment.
+
+### Key Difference
+The core change is the `compute_torque()` method, which converts the policy output into valid motor commands for the MuJoCo simulation.
+
+### How to Run
+1. Launch the MuJoCo simulator
 ```
-cd unitree_mujoco/simulate_python
-python3 unitree_mujoco.py
-cd ../example/python
-python3 ros2_policy_runner_fixed.py
+   cd unitree_mujoco/simulate_python
+   python3 unitree_mujoco.py
+```
+2. Run the policy control script
+```
+   cd ../example/python
+   python3 ros2_policy_runner_fixed.py
 ```
 
+### Expected Behavior
+Go2 will walk properly using the trained rsl_rl policy.
+Demo video:
+https://youtu.be/uk0By2kI83g?si=a1glc6pgzfZDA3AB
 
 
 
