@@ -2,7 +2,11 @@
 Implemented the motor command interface in MuJoCo to enable Go2 to walk correctly using the rsl_rl policy within the Unitree Mujoco environment.
 
 ### Key Difference
-The core change is the `compute_torque()` method, which converts the policy output into valid motor commands for the MuJoCo simulation.
+- `compute_torque()` method converts the rsl_rl policy output into valid motor commands for MuJoCo.
+- Added ROS2 PlotJuggler support to visualize joint states and command signals in real-time.
+- Included helper scripts:
+  - `reordering_example.py` for clarifying joint index mapping
+  - `sportmode_full_bridge.py` for inspecting Sport Mode motor commands through PlotJuggler
 
 ### How to Run
 1. Launch the MuJoCo simulator
