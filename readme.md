@@ -1,3 +1,16 @@
+Open the mujoco and run ros2_policy_runner_fixed.py
+```
+cd unitree_mujoco/simulate_python
+python3 unitree_mujoco.py
+cd ../example/python
+python3 ros2_policy_runner_fixed.py
+```
+
+
+
+
+---
+
 # Introduction
 ## Unitree mujoco
 `unitree_mujoco` is a simulator developed based on `Unitree sdk2` and `mujoco`. Users can easily integrate the control programs developed with `Unitree_sdk2`, `unitree_ros2`, and `unitree_sdk2_python` into this simulator, enabling a seamless transition from simulation to physical development. The repository includes two versions of the simulator implemented in C++ and Python, with a structure as follows:
