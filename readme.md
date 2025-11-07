@@ -15,6 +15,7 @@
 - `LowCmd`: Motor control commands
 - `LowState`: Motor state information
 - `SportModeState`: Robot position and velocity data
+- `IMUState`: Torso IMU state at `rt/secondary_imu` topic (G1 only)
 
 Note:
 1. The numbering of the motors corresponds to the actual robot hardware. Specific details can be found in the [Unitree documentation](https://support.unitree.com/home/zh/developer).

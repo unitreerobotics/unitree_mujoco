@@ -17,6 +17,7 @@
 - `LowCmd`: 电机控制指令
 - `LowState`：电机状态
 - `SportModeState`：机器人位置和速度
+- `IMUState`: 胸部IMU数据，话题为 `rt/secondary` (仅 G1)
 
 ## 消息(DDS idl)类型说明
 - Unitree Go2, B2, H1, B2w, Go2w 型号的机器人使用 unitree_go idl 实现底层通信
