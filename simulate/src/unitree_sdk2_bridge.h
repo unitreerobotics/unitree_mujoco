@@ -7,6 +7,9 @@
 #include <unitree/dds_wrapper/robots/go2/go2.h>
 #include <unitree/dds_wrapper/robots/g1/g1.h>
 #include <unitree/idl/hg/BmsState_.hpp>
+#include <unitree/idl/hg/IMUState_.hpp>
+
+#include <iostream>
 
 #include "param.h"
 #include "physics_joystick.h"
@@ -74,8 +77,16 @@ protected:
     mjData *mj_data_;
     mjModel *mj_model_;
 
-    int have_imu_ = false;
-    int have_frame_sensor_ = false;
+    // Sensor data indices
+    int imu_quat_adr_ = -1;
+    int imu_gyro_adr_ = -1;
+    int imu_acc_adr_ = -1;
+    int frame_pos_adr_ = -1;
+    int frame_vel_adr_ = -1;
+
+    int secondary_imu_quat_adr_ = -1;
+    int secondary_imu_gyro_adr_ = -1;
+    int secondary_imu_acc_adr_ = -1;
 
     std::shared_ptr<unitree::common::UnitreeJoystick> joystick = nullptr;
 
@@ -84,15 +95,55 @@ protected:
         num_motor_ = mj_model_->nu;
         dim_motor_sensor_ = MOTOR_SENSOR_NUM * num_motor_;
     
-        for (int i = dim_motor_sensor_; i < mj_model_->nsensor; i++)
-        {
-            const char *name = mj_id2name(mj_model_, mjOBJ_SENSOR, i);
-            if (strcmp(name, "imu_quat") == 0) {
-                have_imu_ = true;
-            }
-            if (strcmp(name, "frame_pos") == 0) {
-                have_frame_sensor_ = true;
-            }
+        // Find sensor addresses by name
+        int sensor_id = -1;
+        
+        // IMU quaternion
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "imu_quat");
+        if (sensor_id >= 0) {
+            imu_quat_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+        
+        // IMU gyroscope
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "imu_gyro");
+        if (sensor_id >= 0) {
+            imu_gyro_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+        
+        // IMU accelerometer
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "imu_acc");
+        if (sensor_id >= 0) {
+            imu_acc_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+        
+        // Frame position
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "frame_pos");
+        if (sensor_id >= 0) {
+            frame_pos_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+        
+        // Frame velocity
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "frame_vel");
+        if (sensor_id >= 0) {
+            frame_vel_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+
+        // Secondary IMU quaternion
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "secondary_imu_quat");
+        if (sensor_id >= 0) {
+            secondary_imu_quat_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+
+        // Secondary IMU gyroscope
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "secondary_imu_gyro");
+        if (sensor_id >= 0) {
+            secondary_imu_gyro_adr_ = mj_model_->sensor_adr[sensor_id];
+        }
+
+        // Secondary IMU accelerometer
+        sensor_id = mj_name2id(mj_model_, mjOBJ_SENSOR, "secondary_imu_acc");
+        if (sensor_id >= 0) {
+            secondary_imu_acc_adr_ = mj_model_->sensor_adr[sensor_id];
         }
     }
 };
@@ -142,11 +193,12 @@ public:
                 lowstate->msg_.motor_state()[i].dq() = mj_data_->sensordata[i + num_motor_];
                 lowstate->msg_.motor_state()[i].tau_est() = mj_data_->sensordata[i + 2 * num_motor_];
             }
-            if(have_frame_sensor_) {
-                lowstate->msg_.imu_state().quaternion()[0] = mj_data_->sensordata[dim_motor_sensor_ + 0];
-                lowstate->msg_.imu_state().quaternion()[1] = mj_data_->sensordata[dim_motor_sensor_ + 1];
-                lowstate->msg_.imu_state().quaternion()[2] = mj_data_->sensordata[dim_motor_sensor_ + 2];
-                lowstate->msg_.imu_state().quaternion()[3] = mj_data_->sensordata[dim_motor_sensor_ + 3];
+            
+            if(imu_quat_adr_ >= 0) {
+                lowstate->msg_.imu_state().quaternion()[0] = mj_data_->sensordata[imu_quat_adr_ + 0];
+                lowstate->msg_.imu_state().quaternion()[1] = mj_data_->sensordata[imu_quat_adr_ + 1];
+                lowstate->msg_.imu_state().quaternion()[2] = mj_data_->sensordata[imu_quat_adr_ + 2];
+                lowstate->msg_.imu_state().quaternion()[3] = mj_data_->sensordata[imu_quat_adr_ + 3];
 
                 double w = lowstate->msg_.imu_state().quaternion()[0];
                 double x = lowstate->msg_.imu_state().quaternion()[1];
@@ -156,26 +208,35 @@ public:
                 lowstate->msg_.imu_state().rpy()[0] = atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y));
                 lowstate->msg_.imu_state().rpy()[1] = asin(2 * (w * y - z * x));
                 lowstate->msg_.imu_state().rpy()[2] = atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
-
-                lowstate->msg_.imu_state().gyroscope()[0] = mj_data_->sensordata[dim_motor_sensor_ + 4];
-                lowstate->msg_.imu_state().gyroscope()[1] = mj_data_->sensordata[dim_motor_sensor_ + 5];
-                lowstate->msg_.imu_state().gyroscope()[2] = mj_data_->sensordata[dim_motor_sensor_ + 6];
-
-                lowstate->msg_.imu_state().accelerometer()[0] = mj_data_->sensordata[dim_motor_sensor_ + 7];
-                lowstate->msg_.imu_state().accelerometer()[1] = mj_data_->sensordata[dim_motor_sensor_ + 8];
-                lowstate->msg_.imu_state().accelerometer()[2] = mj_data_->sensordata[dim_motor_sensor_ + 9];
             }
+            
+            if(imu_gyro_adr_ >= 0) {
+                lowstate->msg_.imu_state().gyroscope()[0] = mj_data_->sensordata[imu_gyro_adr_ + 0];
+                lowstate->msg_.imu_state().gyroscope()[1] = mj_data_->sensordata[imu_gyro_adr_ + 1];
+                lowstate->msg_.imu_state().gyroscope()[2] = mj_data_->sensordata[imu_gyro_adr_ + 2];
+            }
+
+            if(imu_acc_adr_ >= 0) {
+                lowstate->msg_.imu_state().accelerometer()[0] = mj_data_->sensordata[imu_acc_adr_ + 0];
+                lowstate->msg_.imu_state().accelerometer()[1] = mj_data_->sensordata[imu_acc_adr_ + 1];
+                lowstate->msg_.imu_state().accelerometer()[2] = mj_data_->sensordata[imu_acc_adr_ + 2];
+            }
+            
             lowstate->msg_.tick() = std::round(mj_data_->time / 1e-3);
             lowstate->unlockAndPublish();
         }
         // highstate
-        if(have_frame_sensor_ && highstate->trylock()) {
-            highstate->msg_.position()[0] = mj_data_->sensordata[dim_motor_sensor_ + 10];
-            highstate->msg_.position()[1] = mj_data_->sensordata[dim_motor_sensor_ + 11];
-            highstate->msg_.position()[2] = mj_data_->sensordata[dim_motor_sensor_ + 12];
-            highstate->msg_.velocity()[0] = mj_data_->sensordata[dim_motor_sensor_ + 13];
-            highstate->msg_.velocity()[1] = mj_data_->sensordata[dim_motor_sensor_ + 14];
-            highstate->msg_.velocity()[2] = mj_data_->sensordata[dim_motor_sensor_ + 15];
+        if(highstate->trylock()) {
+            if(frame_pos_adr_ >= 0) {
+                highstate->msg_.position()[0] = mj_data_->sensordata[frame_pos_adr_ + 0];
+                highstate->msg_.position()[1] = mj_data_->sensordata[frame_pos_adr_ + 1];
+                highstate->msg_.position()[2] = mj_data_->sensordata[frame_pos_adr_ + 2];
+            }
+            if(frame_vel_adr_ >= 0) {
+                highstate->msg_.velocity()[0] = mj_data_->sensordata[frame_vel_adr_ + 0];
+                highstate->msg_.velocity()[1] = mj_data_->sensordata[frame_vel_adr_ + 1];
+                highstate->msg_.velocity()[2] = mj_data_->sensordata[frame_vel_adr_ + 2];
+            }
             highstate->unlockAndPublish();
         }
         // wireless_controller
@@ -210,16 +271,53 @@ public:
 
         bmsstate = std::make_unique<BmsState_t>("rt/lf/bmsstate");
         bmsstate->msg_.soc() = 100;
+
+        secondary_imustate = std::make_unique<IMUState_t>("rt/secondary_imu");
     }
 
     void run() override
     {
         RobotBridge::run();
 
+        // secondary IMU state
+        if (secondary_imustate->trylock()) {
+            if(secondary_imu_quat_adr_ >= 0) {
+                secondary_imustate->msg_.quaternion()[0] = mj_data_->sensordata[secondary_imu_quat_adr_ + 0];
+                secondary_imustate->msg_.quaternion()[1] = mj_data_->sensordata[secondary_imu_quat_adr_ + 1];
+                secondary_imustate->msg_.quaternion()[2] = mj_data_->sensordata[secondary_imu_quat_adr_ + 2];
+                secondary_imustate->msg_.quaternion()[3] = mj_data_->sensordata[secondary_imu_quat_adr_ + 3];
+
+                double w = secondary_imustate->msg_.quaternion()[0];
+                double x = secondary_imustate->msg_.quaternion()[1];
+                double y = secondary_imustate->msg_.quaternion()[2];
+                double z = secondary_imustate->msg_.quaternion()[3];
+
+                secondary_imustate->msg_.rpy()[0] = atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y));
+                secondary_imustate->msg_.rpy()[1] = asin(2 * (w * y - z * x));
+                secondary_imustate->msg_.rpy()[2] = atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
+            }
+
+            if(secondary_imu_gyro_adr_ >= 0) {
+                secondary_imustate->msg_.gyroscope()[0] = mj_data_->sensordata[secondary_imu_gyro_adr_ + 0];
+                secondary_imustate->msg_.gyroscope()[1] = mj_data_->sensordata[secondary_imu_gyro_adr_ + 1];
+                secondary_imustate->msg_.gyroscope()[2] = mj_data_->sensordata[secondary_imu_gyro_adr_ + 2];
+            }
+
+            if(secondary_imu_acc_adr_ >= 0) {
+                secondary_imustate->msg_.accelerometer()[0] = mj_data_->sensordata[secondary_imu_acc_adr_ + 0];
+                secondary_imustate->msg_.accelerometer()[1] = mj_data_->sensordata[secondary_imu_acc_adr_ + 1];
+                secondary_imustate->msg_.accelerometer()[2] = mj_data_->sensordata[secondary_imu_acc_adr_ + 2];
+            }
+
+            secondary_imustate->unlockAndPublish();
+        }
+
         // In practice, bmsstate is sent at a low frequency; here it is sent with the main loop
         bmsstate->unlockAndPublish();
     }
 
     using BmsState_t = unitree::robot::RealTimePublisher<unitree_hg::msg::dds_::BmsState_>;
+    using IMUState_t = unitree::robot::RealTimePublisher<unitree_hg::msg::dds_::IMUState_>;
     std::unique_ptr<BmsState_t> bmsstate;
+    std::unique_ptr<IMUState_t> secondary_imustate;
 };
