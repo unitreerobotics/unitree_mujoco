@@ -34,6 +34,82 @@ Note:
 
 
 # Installation
+
+## macOS (Python Simulator only)
+
+The C++ simulator cannot run natively on macOS because `unitree_sdk2` ships a pre-compiled Linux static library (`libunitree_sdk2.a`). The Python simulator uses all cross-platform dependencies and works natively on macOS.
+
+### 1. Prerequisites
+```bash
+brew install python@3.11 cmake
+```
+
+### 2. Python dependencies
+```bash
+pip3 install mujoco pygame numpy cyclonedds
+```
+
+If `pip install cyclonedds` fails, build from source:
+```bash
+git clone https://github.com/eclipse-cyclonedds/cyclonedds.git
+cd cyclonedds && mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/cyclonedds-install
+make -j4 && make install
+export CYCLONEDDS_HOME=$HOME/cyclonedds-install
+pip3 install cyclonedds
+```
+
+If `pip install pygame` fails (SDL2 missing):
+```bash
+brew install sdl2
+pip3 install pygame
+```
+
+### 3. Install unitree_sdk2_python
+```bash
+git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
+cd unitree_sdk2_python
+pip3 install -e .
+```
+
+### 4. Configure for G1
+In `simulate_python/config.py`, set:
+```python
+ROBOT = "g1"
+USE_JOYSTICK = 0  # Set to 1 if you have a gamepad
+```
+
+The loopback interface is auto-detected (`lo0` on macOS, `lo` on Linux).
+
+### 5. Run
+
+On macOS, MuJoCo requires `mjpython` (installed with the `mujoco` package) instead of `python3` for GUI rendering. A convenience script is provided:
+```bash
+cd simulate_python
+./run_sim.sh
+```
+Or manually:
+```bash
+cd simulate_python
+DYLD_LIBRARY_PATH=$(.venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))') \
+  ../.venv/bin/mjpython unitree_mujoco.py
+```
+You should see the MuJoCo viewer open with the G1 robot loaded.
+
+In a new terminal, run the G1 test (uses `unitree_hg` IDL):
+```bash
+cd simulate_python
+../.venv/bin/python3 test/test_g1.py
+```
+
+The program will output the robot's IMU and position data, and each motor will output 0.5Nm torque.
+
+**Note:** The existing `test/test_unitree_sdk2.py` uses the `unitree_go` IDL (for Go2/B2/H1). For G1, use `test/test_g1.py` which uses the `unitree_hg` IDL.
+
+---
+
+## Linux
+
 ## C++ Simulator (simulate)
 ### 1. Dependencies
 
