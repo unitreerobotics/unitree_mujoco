@@ -1,4 +1,4 @@
-robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1"
+robot: "g1"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1"
 robot_scene: "scene.xml" # Robot scene, /unitree_robots/[robot]/scene.xml 
 
 domain_id: 1  # Domain id
