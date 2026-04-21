@@ -13,6 +13,7 @@
 
 #include "param.h"
 #include "physics_joystick.h"
+#include "keyboard_joystick.h"
 
 #define MOTOR_SENSOR_NUM 3
 
@@ -31,12 +32,22 @@ public:
                 joystick = std::make_shared<XBoxJoystick>(param::config.joystick_device, param::config.joystick_bits);
             } else if(param::config.joystick_type == "switch") {
                 joystick  = std::make_shared<SwitchJoystick>(param::config.joystick_device, param::config.joystick_bits);
+            } else if(param::config.joystick_type == "keyboard") {
+                // Keyboard joystick will be initialized later via setGLFWWindow()
+                std::cout << "[Info] Keyboard joystick mode enabled. Waiting for GLFW window..." << std::endl;
             } else {
                 std::cerr << "Unsupported joystick type: " << param::config.joystick_type << std::endl;
                 exit(EXIT_FAILURE);
             }
         }
 
+    }
+    
+    // Set GLFW window for keyboard joystick
+    virtual void setGLFWWindow(GLFWwindow* window) {
+        if(param::config.use_joystick == 1 && param::config.joystick_type == "keyboard") {
+            joystick = std::make_shared<KeyboardJoystick>(window);
+        }
     }
 
     virtual void start() {}
@@ -163,6 +174,13 @@ public:
         highstate = std::make_unique<HighState_t>();
         wireless_controller = std::make_unique<WirelessController_t>();
         wireless_controller->joystick = joystick;
+    }
+
+    void setGLFWWindow(GLFWwindow* window) override {
+        UnitreeSDK2BridgeBase::setGLFWWindow(window);
+        // Sync joystick pointer to lowstate and wireless_controller
+        if(lowstate) lowstate->joystick = joystick;
+        if(wireless_controller) wireless_controller->joystick = joystick;
     }
 
     void start()
