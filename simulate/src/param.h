@@ -15,6 +15,7 @@ inline struct SimulationConfig
 
     int domain_id;
     std::string interface;
+    std::string lowcmd_topic;
 
     int use_joystick;
     std::string joystick_type;
@@ -35,6 +36,7 @@ inline struct SimulationConfig
             robot_scene = cfg["robot_scene"].as<std::string>();
             domain_id = cfg["domain_id"].as<int>();
             interface = cfg["interface"].as<std::string>();
+            lowcmd_topic = cfg["lowcmd_topic"] ? cfg["lowcmd_topic"].as<std::string>() : "";
             use_joystick = cfg["use_joystick"].as<int>();
             joystick_type = cfg["joystick_type"].as<std::string>();
             joystick_device = cfg["joystick_device"].as<std::string>();
@@ -63,6 +65,7 @@ inline po::variables_map helper(int argc, char** argv)
         ("network,n", po::value<std::string>(&config.interface), "DDS network interface; -n eth0")
         ("robot,r", po::value<std::string>(&config.robot), "Robot type; -r go2")
         ("scene,s", po::value<std::filesystem::path>(&config.robot_scene), "Robot scene file; -s scene_terrain.xml")
+        ("lowcmd_topic", po::value<std::string>(&config.lowcmd_topic), "DDS LowCmd topic override; empty uses robot default")
     ;
 
     po::variables_map vm;

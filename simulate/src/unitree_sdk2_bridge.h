@@ -8,8 +8,12 @@
 #include <unitree/dds_wrapper/robots/g1/g1.h>
 #include <unitree/idl/hg/BmsState_.hpp>
 #include <unitree/idl/hg/IMUState_.hpp>
+#include <unitree/robot/g1/loco/g1_loco_api.hpp>
+#include <unitree/robot/go2/public/jsonize_type.hpp>
+#include <unitree/robot/server/server.hpp>
 
 #include <iostream>
+#include <mutex>
 
 #include "param.h"
 #include "physics_joystick.h"
@@ -166,14 +170,15 @@ using HighState_t = unitree::robot::go2::publisher::SportModeState;
 using WirelessController_t = unitree::robot::go2::publisher::WirelessController;
 
 public:
-    RobotBridge(mjModel *model, mjData *data) : UnitreeSDK2BridgeBase(model, data)
+    RobotBridge(mjModel *model, mjData *data, const std::string &lowcmd_topic = "rt/lowcmd") : UnitreeSDK2BridgeBase(model, data)
     {
-        lowcmd = std::make_shared<LowCmd_t>("rt/lowcmd");
+        lowcmd = std::make_shared<LowCmd_t>(lowcmd_topic);
         lowstate = std::make_unique<LowState_t>();
         lowstate->joystick = joystick;
         highstate = std::make_unique<HighState_t>();
         wireless_controller = std::make_unique<WirelessController_t>();
         wireless_controller->joystick = joystick;
+        std::cout << "[Info] Subscribing LowCmd on " << lowcmd_topic << std::endl;
     }
 
     void setGLFWWindow(GLFWwindow* window) override {
@@ -274,10 +279,190 @@ private:
 
 using Go2Bridge = RobotBridge<unitree::robot::go2::subscription::LowCmd, unitree::robot::go2::publisher::LowState>;
 
+class G1LocoServer : public unitree::robot::Server
+{
+public:
+    G1LocoServer() : unitree::robot::Server(unitree::robot::g1::LOCO_SERVICE_NAME) {}
+
+    void Init() override
+    {
+        SetApiVersion(unitree::robot::g1::LOCO_API_VERSION);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_FSM_ID, &G1LocoServer::GetFsmId);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_FSM_MODE, &G1LocoServer::GetFsmMode);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_BALANCE_MODE, &G1LocoServer::GetBalanceMode);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_SWING_HEIGHT, &G1LocoServer::GetSwingHeight);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_STAND_HEIGHT, &G1LocoServer::GetStandHeight);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_GET_PHASE, &G1LocoServer::GetPhase);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_FSM_ID, &G1LocoServer::SetFsmId);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_BALANCE_MODE, &G1LocoServer::SetBalanceMode);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_SWING_HEIGHT, &G1LocoServer::SetSwingHeight);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_STAND_HEIGHT, &G1LocoServer::SetStandHeight);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_VELOCITY, &G1LocoServer::SetVelocity);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_ARM_TASK, &G1LocoServer::SetArmTask);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SET_SPEED_MODE, &G1LocoServer::SetSpeedMode);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SWITCH_TO_USER_CTRL, &G1LocoServer::SwitchToUserCtrl);
+        UT_ROBOT_SERVER_REG_API_HANDLER_NO_LEASE(unitree::robot::g1::ROBOT_API_ID_LOCO_SWITCH_TO_INTERNAL_CTRL, &G1LocoServer::SwitchToInternalCtrl);
+    }
+
+private:
+    int fsm_id_ = 1;
+    int fsm_mode_ = 0;
+    int balance_mode_ = 0;
+    int speed_mode_ = 0;
+    float swing_height_ = 0.0f;
+    float stand_height_ = 0.0f;
+    bool user_ctrl_enabled_ = false;
+    std::mutex mutex_;
+
+    static std::string DataInt(int value)
+    {
+        unitree::robot::go2::JsonizeDataInt json;
+        json.data = value;
+        return unitree::common::ToJsonString(json);
+    }
+
+    static std::string DataFloat(float value)
+    {
+        unitree::robot::go2::JsonizeDataFloat json;
+        json.data = value;
+        return unitree::common::ToJsonString(json);
+    }
+
+    static int ParseDataInt(const std::string &parameter, int fallback)
+    {
+        if (parameter.empty()) {
+            return fallback;
+        }
+        try {
+            unitree::robot::go2::JsonizeDataInt json;
+            unitree::common::FromJsonString(parameter, json);
+            return json.data;
+        } catch (...) {
+            return fallback;
+        }
+    }
+
+    static float ParseDataFloat(const std::string &parameter, float fallback)
+    {
+        if (parameter.empty()) {
+            return fallback;
+        }
+        try {
+            unitree::robot::go2::JsonizeDataFloat json;
+            unitree::common::FromJsonString(parameter, json);
+            return json.data;
+        } catch (...) {
+            return fallback;
+        }
+    }
+
+    int32_t GetFsmId(const std::string &, std::string &data)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data = DataInt(fsm_id_);
+        return 0;
+    }
+
+    int32_t GetFsmMode(const std::string &, std::string &data)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data = DataInt(fsm_mode_);
+        return 0;
+    }
+
+    int32_t GetBalanceMode(const std::string &, std::string &data)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data = DataInt(balance_mode_);
+        return 0;
+    }
+
+    int32_t GetSwingHeight(const std::string &, std::string &data)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data = DataFloat(swing_height_);
+        return 0;
+    }
+
+    int32_t GetStandHeight(const std::string &, std::string &data)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data = DataFloat(stand_height_);
+        return 0;
+    }
+
+    int32_t GetPhase(const std::string &, std::string &data)
+    {
+        unitree::robot::g1::JsonizeDataVecFloat json;
+        json.data = {0.0f, 0.0f};
+        data = unitree::common::ToJsonString(json);
+        return 0;
+    }
+
+    int32_t SetFsmId(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        fsm_id_ = ParseDataInt(parameter, fsm_id_);
+        return 0;
+    }
+
+    int32_t SetBalanceMode(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        balance_mode_ = ParseDataInt(parameter, balance_mode_);
+        return 0;
+    }
+
+    int32_t SetSwingHeight(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        swing_height_ = ParseDataFloat(parameter, swing_height_);
+        return 0;
+    }
+
+    int32_t SetStandHeight(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        stand_height_ = ParseDataFloat(parameter, stand_height_);
+        return 0;
+    }
+
+    int32_t SetVelocity(const std::string &, std::string &) { return 0; }
+    int32_t SetArmTask(const std::string &, std::string &) { return 0; }
+
+    int32_t SetSpeedMode(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        speed_mode_ = ParseDataInt(parameter, speed_mode_);
+        return 0;
+    }
+
+    int32_t SwitchToUserCtrl(const std::string &, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        user_ctrl_enabled_ = true;
+        return 0;
+    }
+
+    int32_t SwitchToInternalCtrl(const std::string &parameter, std::string &)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        user_ctrl_enabled_ = false;
+        int mode = ParseDataInt(parameter, 0);
+        if (mode == 1) {
+            fsm_id_ = 1;
+        } else if (mode == 2) {
+            fsm_id_ = 500;
+        }
+        return 0;
+    }
+};
+
 class G1Bridge : public RobotBridge<unitree::robot::g1::subscription::LowCmd, unitree::robot::g1::publisher::LowState>
 {
 public:
-    G1Bridge(mjModel *model, mjData *data) : RobotBridge(model, data)
+    G1Bridge(mjModel *model, mjData *data)
+        : RobotBridge(model, data, param::config.lowcmd_topic.empty() ? DefaultLowCmdTopic() : param::config.lowcmd_topic)
     {
         if (param::config.robot.find("g1") != std::string::npos) {
             auto* g1_lowstate = dynamic_cast<unitree::robot::g1::publisher::LowState*>(lowstate.get());
@@ -291,6 +476,13 @@ public:
         bmsstate->msg_.soc() = 100;
 
         secondary_imustate = std::make_unique<IMUState_t>("rt/secondary_imu");
+
+        if (param::config.robot.find("g1") != std::string::npos) {
+            loco_server_ = std::make_unique<G1LocoServer>();
+            loco_server_->Init();
+            loco_server_->Start();
+            std::cout << "[Info] Started simulated G1 loco service: " << unitree::robot::g1::LOCO_SERVICE_NAME << std::endl;
+        }
     }
 
     void run() override
@@ -338,4 +530,11 @@ public:
     using IMUState_t = unitree::robot::RealTimePublisher<unitree_hg::msg::dds_::IMUState_>;
     std::unique_ptr<BmsState_t> bmsstate;
     std::unique_ptr<IMUState_t> secondary_imustate;
+    std::unique_ptr<G1LocoServer> loco_server_;
+
+private:
+    static std::string DefaultLowCmdTopic()
+    {
+        return param::config.robot.find("g1") != std::string::npos ? "rt/user_lowcmd" : "rt/lowcmd";
+    }
 };

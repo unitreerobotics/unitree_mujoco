@@ -3,6 +3,7 @@ robot_scene: "scene.xml" # Robot scene, /unitree_robots/[robot]/scene.xml
 
 domain_id: 1  # Domain id
 interface: "lo" # Interface 
+lowcmd_topic: "" # Empty uses robot default: G1 -> rt/user_lowcmd, others -> rt/lowcmd
 
 use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
 joystick_type: "keyboard" # support "xbox", "switch", and "keyboard"
