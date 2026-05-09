@@ -1,0 +1,1960 @@
+<mujoco model="ICRA2024_QRC_flat">
+
+  <!-- ============================================== -->
+  <!--  ICRA 2024 Quadruped Robot Challenge - flat map  -->
+  <!--  Auto-converted from URDF, non-convex meshes decomposed via COACD  -->
+  <!-- From https://github.com/teamgrit-lab/ICRA2024_Quadruped_Robot_Challenges -->
+  <!-- ============================================== -->
+
+  <compiler
+    angle="radian"
+    meshdir="../meshes"
+    autolimits="true"
+  />
+
+  <option timestep="0.005" gravity="0 0 -9.81" />
+
+  <visual>
+    <map force="0.1" zfar="100" />
+    <global azimuth="120" elevation="-30" />
+  </visual>
+
+  <asset>
+    <texture name="tex_ground" type="2d" builtin="checker" width="512" height="512"
+      rgb1="0.2 0.3 0.4" rgb2="0.15 0.2 0.3" />
+    <material name="mat_ground" texture="tex_ground" texrepeat="5 5" specular="1" reflectance="0.5" />
+
+    <material name="mat_1" rgba="0.92 0.93 0.90 1" />
+
+    <mesh name="board_18x600x1032" file="visual/board_18x600x1032.obj" smoothnormal="true" />
+    <mesh name="board_18x600x1200" file="visual/board_18x600x1200.obj" smoothnormal="true" />
+    <mesh name="board_18x600x150" file="visual/board_18x600x150.obj" smoothnormal="true" />
+    <mesh name="board_18x600x2400" file="visual/board_18x600x2400.obj" smoothnormal="true" />
+    <mesh name="board_50x50x300" file="visual/board_50x50x300.obj" smoothnormal="true" />
+    <mesh name="crate_board" file="visual/crate_board.obj" smoothnormal="true" />
+    <mesh name="k_rail_diagonal" file="visual/k_rail_diagonal.obj" smoothnormal="true" />
+    <mesh name="lane_floor" file="visual/lane_floor.obj" smoothnormal="true" />
+    <mesh name="pallet_step" file="visual/pallet_step.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe" file="visual/pallet_step_with_pipe.obj" smoothnormal="true" />
+    <mesh name="pvc_pipe_100x1200" file="visual/pvc_pipe_100x1200.obj" smoothnormal="true" />
+    <mesh name="ramp" file="visual/ramp.obj" smoothnormal="true" />
+    <mesh name="stepover_1" file="visual/stepover_1.obj" smoothnormal="true" />
+    <mesh name="stepover_2" file="visual/stepover_2.obj" smoothnormal="true" />
+    <mesh name="crate_board_p0" file="convex/crate_board/crate_board_p0.obj" smoothnormal="true" />
+    <mesh name="crate_board_p1" file="convex/crate_board/crate_board_p1.obj" smoothnormal="true" />
+    <mesh name="crate_board_p2" file="convex/crate_board/crate_board_p2.obj" smoothnormal="true" />
+    <mesh name="crate_board_p3" file="convex/crate_board/crate_board_p3.obj" smoothnormal="true" />
+    <mesh name="crate_board_p4" file="convex/crate_board/crate_board_p4.obj" smoothnormal="true" />
+    <mesh name="crate_board_p5" file="convex/crate_board/crate_board_p5.obj" smoothnormal="true" />
+    <mesh name="crate_board_p6" file="convex/crate_board/crate_board_p6.obj" smoothnormal="true" />
+    <mesh name="crate_board_p7" file="convex/crate_board/crate_board_p7.obj" smoothnormal="true" />
+    <mesh name="crate_board_p8" file="convex/crate_board/crate_board_p8.obj" smoothnormal="true" />
+    <mesh name="crate_board_p9" file="convex/crate_board/crate_board_p9.obj" smoothnormal="true" />
+    <mesh name="crate_board_p10" file="convex/crate_board/crate_board_p10.obj" smoothnormal="true" />
+    <mesh name="crate_board_p11" file="convex/crate_board/crate_board_p11.obj" smoothnormal="true" />
+    <mesh name="crate_board_p12" file="convex/crate_board/crate_board_p12.obj" smoothnormal="true" />
+    <mesh name="crate_board_p13" file="convex/crate_board/crate_board_p13.obj" smoothnormal="true" />
+    <mesh name="k_rail_diagonal_p0" file="convex/k_rail_diagonal/k_rail_diagonal_p0.obj"
+      smoothnormal="true" />
+    <mesh name="k_rail_diagonal_p1" file="convex/k_rail_diagonal/k_rail_diagonal_p1.obj"
+      smoothnormal="true" />
+    <mesh name="lane_floor_p0" file="convex/lane_floor/lane_floor_p0.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p1" file="convex/lane_floor/lane_floor_p1.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p2" file="convex/lane_floor/lane_floor_p2.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p3" file="convex/lane_floor/lane_floor_p3.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p4" file="convex/lane_floor/lane_floor_p4.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p5" file="convex/lane_floor/lane_floor_p5.obj" smoothnormal="true" />
+    <mesh name="lane_floor_p6" file="convex/lane_floor/lane_floor_p6.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p0" file="convex/pallet_step/pallet_step_p0.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p1" file="convex/pallet_step/pallet_step_p1.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p2" file="convex/pallet_step/pallet_step_p2.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p3" file="convex/pallet_step/pallet_step_p3.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p4" file="convex/pallet_step/pallet_step_p4.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p5" file="convex/pallet_step/pallet_step_p5.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p6" file="convex/pallet_step/pallet_step_p6.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p7" file="convex/pallet_step/pallet_step_p7.obj" smoothnormal="true" />
+    <mesh name="pallet_step_p8" file="convex/pallet_step/pallet_step_p8.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p0"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p0.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p1"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p1.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p2"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p2.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p3"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p3.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p4"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p4.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p5"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p5.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p6"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p6.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p7"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p7.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p8"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p8.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p9"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p9.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p10"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p10.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p11"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p11.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p12"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p12.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p13"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p13.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p14"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p14.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p15"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p15.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p16"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p16.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p17"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p17.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p18"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p18.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p19"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p19.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p20"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p20.obj" smoothnormal="true" />
+    <mesh name="pallet_step_with_pipe_p21"
+      file="convex/pallet_step_with_pipe/pallet_step_with_pipe_p21.obj" smoothnormal="true" />
+    <mesh name="ramp_p0" file="convex/ramp/ramp_p0.obj" smoothnormal="true" />
+    <mesh name="ramp_p1" file="convex/ramp/ramp_p1.obj" smoothnormal="true" />
+    <mesh name="ramp_p2" file="convex/ramp/ramp_p2.obj" smoothnormal="true" />
+    <mesh name="ramp_p3" file="convex/ramp/ramp_p3.obj" smoothnormal="true" />
+    <mesh name="ramp_p4" file="convex/ramp/ramp_p4.obj" smoothnormal="true" />
+    <mesh name="ramp_p5" file="convex/ramp/ramp_p5.obj" smoothnormal="true" />
+    <mesh name="ramp_p6" file="convex/ramp/ramp_p6.obj" smoothnormal="true" />
+    <mesh name="ramp_p7" file="convex/ramp/ramp_p7.obj" smoothnormal="true" />
+    <mesh name="ramp_p8" file="convex/ramp/ramp_p8.obj" smoothnormal="true" />
+    <mesh name="ramp_p9" file="convex/ramp/ramp_p9.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p0" file="convex/stepover_1/stepover_1_p0.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p1" file="convex/stepover_1/stepover_1_p1.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p2" file="convex/stepover_1/stepover_1_p2.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p3" file="convex/stepover_1/stepover_1_p3.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p4" file="convex/stepover_1/stepover_1_p4.obj" smoothnormal="true" />
+    <mesh name="stepover_1_p5" file="convex/stepover_1/stepover_1_p5.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p0" file="convex/stepover_2/stepover_2_p0.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p1" file="convex/stepover_2/stepover_2_p1.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p2" file="convex/stepover_2/stepover_2_p2.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p3" file="convex/stepover_2/stepover_2_p3.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p4" file="convex/stepover_2/stepover_2_p4.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p5" file="convex/stepover_2/stepover_2_p5.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p6" file="convex/stepover_2/stepover_2_p6.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p7" file="convex/stepover_2/stepover_2_p7.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p8" file="convex/stepover_2/stepover_2_p8.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p9" file="convex/stepover_2/stepover_2_p9.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p10" file="convex/stepover_2/stepover_2_p10.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p11" file="convex/stepover_2/stepover_2_p11.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p12" file="convex/stepover_2/stepover_2_p12.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p13" file="convex/stepover_2/stepover_2_p13.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p14" file="convex/stepover_2/stepover_2_p14.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p15" file="convex/stepover_2/stepover_2_p15.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p16" file="convex/stepover_2/stepover_2_p16.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p17" file="convex/stepover_2/stepover_2_p17.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p18" file="convex/stepover_2/stepover_2_p18.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p19" file="convex/stepover_2/stepover_2_p19.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p20" file="convex/stepover_2/stepover_2_p20.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p21" file="convex/stepover_2/stepover_2_p21.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p22" file="convex/stepover_2/stepover_2_p22.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p23" file="convex/stepover_2/stepover_2_p23.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p24" file="convex/stepover_2/stepover_2_p24.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p25" file="convex/stepover_2/stepover_2_p25.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p26" file="convex/stepover_2/stepover_2_p26.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p27" file="convex/stepover_2/stepover_2_p27.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p28" file="convex/stepover_2/stepover_2_p28.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p29" file="convex/stepover_2/stepover_2_p29.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p30" file="convex/stepover_2/stepover_2_p30.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p31" file="convex/stepover_2/stepover_2_p31.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p32" file="convex/stepover_2/stepover_2_p32.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p33" file="convex/stepover_2/stepover_2_p33.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p34" file="convex/stepover_2/stepover_2_p34.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p35" file="convex/stepover_2/stepover_2_p35.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p36" file="convex/stepover_2/stepover_2_p36.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p37" file="convex/stepover_2/stepover_2_p37.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p38" file="convex/stepover_2/stepover_2_p38.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p39" file="convex/stepover_2/stepover_2_p39.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p40" file="convex/stepover_2/stepover_2_p40.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p41" file="convex/stepover_2/stepover_2_p41.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p42" file="convex/stepover_2/stepover_2_p42.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p43" file="convex/stepover_2/stepover_2_p43.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p44" file="convex/stepover_2/stepover_2_p44.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p45" file="convex/stepover_2/stepover_2_p45.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p46" file="convex/stepover_2/stepover_2_p46.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p47" file="convex/stepover_2/stepover_2_p47.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p48" file="convex/stepover_2/stepover_2_p48.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p49" file="convex/stepover_2/stepover_2_p49.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p50" file="convex/stepover_2/stepover_2_p50.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p51" file="convex/stepover_2/stepover_2_p51.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p52" file="convex/stepover_2/stepover_2_p52.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p53" file="convex/stepover_2/stepover_2_p53.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p54" file="convex/stepover_2/stepover_2_p54.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p55" file="convex/stepover_2/stepover_2_p55.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p56" file="convex/stepover_2/stepover_2_p56.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p57" file="convex/stepover_2/stepover_2_p57.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p58" file="convex/stepover_2/stepover_2_p58.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p59" file="convex/stepover_2/stepover_2_p59.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p60" file="convex/stepover_2/stepover_2_p60.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p61" file="convex/stepover_2/stepover_2_p61.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p62" file="convex/stepover_2/stepover_2_p62.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p63" file="convex/stepover_2/stepover_2_p63.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p64" file="convex/stepover_2/stepover_2_p64.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p65" file="convex/stepover_2/stepover_2_p65.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p66" file="convex/stepover_2/stepover_2_p66.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p67" file="convex/stepover_2/stepover_2_p67.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p68" file="convex/stepover_2/stepover_2_p68.obj" smoothnormal="true" />
+    <mesh name="stepover_2_p69" file="convex/stepover_2/stepover_2_p69.obj" smoothnormal="true" />
+  </asset>
+
+  <worldbody>
+
+    <geom name="ground" type="plane" pos="0 0 0" size="20 20 0.1" material="mat_ground" />
+
+    <light name="light_main" directional="true" pos="10 -10 15" dir="-1 1 -1.2"
+      diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" />
+    <light name="light_ambient" directional="false" pos="0 0 10" diffuse="0.4 0.4 0.4" />
+
+    <!-- ===== Obstacles ===== -->
+    <body name="board_18x600x1032_38" pos="1.411 3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1032_38_geom" type="mesh" mesh="board_18x600x1032" material="mat_1" />
+    </body>
+    <body name="board_18x600x1032_109" pos="-0.989 3.6205 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1032_109_geom" type="mesh" mesh="board_18x600x1032" material="mat_1" />
+    </body>
+    <body name="board_18x600x1032_138" pos="1.411 -3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1032_138_geom" type="mesh" mesh="board_18x600x1032" material="mat_1" />
+    </body>
+    <body name="board_18x600x1032_175" pos="-0.989 -3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1032_175_geom" type="mesh" mesh="board_18x600x1032" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_35" pos="-0.464 4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_35_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_36" pos="6.754 3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_36_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_37" pos="4.963 3.6205 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1200_37_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_49" pos="4.354 4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_49_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_63" pos="1.936 3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_63_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_99" pos="-6.332 4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_99_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_100" pos="0.886 3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_100_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_108" pos="-4.541 3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1200_108_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_116" pos="-1.514 4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_116_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_124" pos="-3.932 3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_124_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_135" pos="-0.464 -4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_135_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_136" pos="6.754 -3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_136_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_137" pos="4.963 -3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1200_137_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_148" pos="1.936 -3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_148_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_158" pos="4.354 -4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_158_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_166" pos="-6.332 -4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_166_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_167" pos="0.886 -3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_167_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_174" pos="-4.541 -3.6025 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x1200_174_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_183" pos="-1.514 -4.2115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_183_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x1200_194" pos="-3.932 -3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="board_18x600x1200_194_geom" type="mesh" mesh="board_18x600x1200" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_39" pos="6.67 3.6205 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_39_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_44" pos="-0.38 3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_44_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_50" pos="4.27 3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_50_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_52" pos="2.021 3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_52_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_105" pos="-6.247 3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_105_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_118" pos="-1.598 3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_118_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_126" pos="-3.847 3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_126_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_139" pos="6.67 -3.6205 0.3"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_139_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_144" pos="-0.38 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_144_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_151" pos="2.021 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_151_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_160" pos="4.288 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_160_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_172" pos="-6.247 -3.6205 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_172_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_177" pos="0.803 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_177_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_186" pos="-1.58 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_186_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x150_195" pos="-3.848 -3.6025 0.411"
+      quat="0 0 0 -1"
+    >
+      <geom name="board_18x600x150_195_geom" type="mesh" mesh="board_18x600x150" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_33" pos="5.545 2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_33_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_34" pos="0.745 4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_34_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_47" pos="3.145 4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_47_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_66" pos="3.145 2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_66_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_97" pos="-0.323 2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_97_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_98" pos="-5.123 4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_98_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_114" pos="-2.723 4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_114_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_128" pos="-2.723 2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_128_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_134" pos="5.545 -2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_134_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_145" pos="0.745 -4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_145_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_150" pos="3.145 -2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_150_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_156" pos="3.145 -4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_156_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_165" pos="-0.323 -2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_165_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_176" pos="-5.123 -4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_176_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_184" pos="-2.723 -4.8205 0.3"
+    >
+      <geom name="board_18x600x2400_184_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_18x600x2400_192" pos="-2.723 -2.4025 0.3"
+    >
+      <geom name="board_18x600x2400_192_geom" type="mesh" mesh="board_18x600x2400" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_40" pos="6.72 3.5865 0.45"
+    >
+      <geom name="board_50x50x300_40_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_41" pos="6.72 2.4365 0.45"
+    >
+      <geom name="board_50x50x300_41_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_42" pos="-0.43 4.7865 0.45"
+    >
+      <geom name="board_50x50x300_42_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_43" pos="-0.43 3.6505 0.45"
+    >
+      <geom name="board_50x50x300_43_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_48" pos="4.32 4.7865 0.45"
+    >
+      <geom name="board_50x50x300_48_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_51" pos="4.32 3.6545 0.45"
+    >
+      <geom name="board_50x50x300_51_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_64" pos="1.97 3.5865 0.45"
+    >
+      <geom name="board_50x50x300_64_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_65" pos="1.97 2.4365 0.45"
+    >
+      <geom name="board_50x50x300_65_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_101" pos="0.852 3.5865 0.45"
+    >
+      <geom name="board_50x50x300_101_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_102" pos="0.852 2.4365 0.45"
+    >
+      <geom name="board_50x50x300_102_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_103" pos="-6.298 4.7865 0.45"
+    >
+      <geom name="board_50x50x300_103_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_104" pos="-6.298 3.6545 0.45"
+    >
+      <geom name="board_50x50x300_104_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_106" pos="-3.966 3.5685 0.45"
+    >
+      <geom name="board_50x50x300_106_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_107" pos="-5.116 3.5685 0.45"
+    >
+      <geom name="board_50x50x300_107_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_115" pos="-1.548 4.7865 0.45"
+    >
+      <geom name="board_50x50x300_115_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_119" pos="-1.48 3.6545 0.45"
+    >
+      <geom name="board_50x50x300_119_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_120" pos="-1.548 3.6545 0.45"
+    >
+      <geom name="board_50x50x300_120_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_125" pos="-3.898 3.5685 0.45"
+    >
+      <geom name="board_50x50x300_125_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_127" pos="-3.898 2.4365 0.45"
+    >
+      <geom name="board_50x50x300_127_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_140" pos="6.72 -3.5935 0.45"
+    >
+      <geom name="board_50x50x300_140_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_141" pos="6.72 -2.4365 0.45"
+    >
+      <geom name="board_50x50x300_141_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_142" pos="-0.43 -3.6365 0.45"
+    >
+      <geom name="board_50x50x300_142_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_143" pos="-0.43 -4.7905 0.45"
+    >
+      <geom name="board_50x50x300_143_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_149" pos="1.97 -2.4365 0.45"
+    >
+      <geom name="board_50x50x300_149_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_152" pos="1.97 -3.5755 0.45"
+    >
+      <geom name="board_50x50x300_152_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_157" pos="4.32 -4.7865 0.45"
+    >
+      <geom name="board_50x50x300_157_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_159" pos="4.32 -3.6365 0.45"
+    >
+      <geom name="board_50x50x300_159_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_168" pos="0.852 -3.5685 0.45"
+    >
+      <geom name="board_50x50x300_168_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_169" pos="0.852 -2.4365 0.45"
+    >
+      <geom name="board_50x50x300_169_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_170" pos="-6.298 -3.6545 0.45"
+    >
+      <geom name="board_50x50x300_170_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_171" pos="-6.298 -4.7865 0.45"
+    >
+      <geom name="board_50x50x300_171_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_173" pos="-5.116 -3.5755 0.45"
+    >
+      <geom name="board_50x50x300_173_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_185" pos="-1.548 -4.7865 0.45"
+    >
+      <geom name="board_50x50x300_185_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_187" pos="-1.548 -3.6365 0.45"
+    >
+      <geom name="board_50x50x300_187_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_188" pos="-1.48 -3.6295 0.45"
+    >
+      <geom name="board_50x50x300_188_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_193" pos="-3.898 -2.4365 0.45"
+    >
+      <geom name="board_50x50x300_193_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_196" pos="-3.966 -3.5755 0.45"
+    >
+      <geom name="board_50x50x300_196_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="board_50x50x300_197" pos="-3.898 -3.5755 0.45"
+    >
+      <geom name="board_50x50x300_197_geom" type="mesh" mesh="board_50x50x300" material="mat_1" />
+    </body>
+    <body name="crate_board_131" pos="5.545 -3.0115 0.12"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="crate_board_131_crate_board_p0" type="mesh" mesh="crate_board_p0" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p1" type="mesh" mesh="crate_board_p1" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p2" type="mesh" mesh="crate_board_p2" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p3" type="mesh" mesh="crate_board_p3" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p4" type="mesh" mesh="crate_board_p4" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p5" type="mesh" mesh="crate_board_p5" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p6" type="mesh" mesh="crate_board_p6" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p7" type="mesh" mesh="crate_board_p7" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p8" type="mesh" mesh="crate_board_p8" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p9" type="mesh" mesh="crate_board_p9" material="mat_1" />
+      <geom name="crate_board_131_crate_board_p10" type="mesh" mesh="crate_board_p10"
+        material="mat_1" />
+      <geom name="crate_board_131_crate_board_p11" type="mesh" mesh="crate_board_p11"
+        material="mat_1" />
+      <geom name="crate_board_131_crate_board_p12" type="mesh" mesh="crate_board_p12"
+        material="mat_1" />
+      <geom name="crate_board_131_crate_board_p13" type="mesh" mesh="crate_board_p13"
+        material="mat_1" />
+    </body>
+    <body name="crate_board_133" pos="0.745 -4.2115 0.12"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="crate_board_133_crate_board_p0" type="mesh" mesh="crate_board_p0" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p1" type="mesh" mesh="crate_board_p1" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p2" type="mesh" mesh="crate_board_p2" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p3" type="mesh" mesh="crate_board_p3" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p4" type="mesh" mesh="crate_board_p4" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p5" type="mesh" mesh="crate_board_p5" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p6" type="mesh" mesh="crate_board_p6" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p7" type="mesh" mesh="crate_board_p7" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p8" type="mesh" mesh="crate_board_p8" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p9" type="mesh" mesh="crate_board_p9" material="mat_1" />
+      <geom name="crate_board_133_crate_board_p10" type="mesh" mesh="crate_board_p10"
+        material="mat_1" />
+      <geom name="crate_board_133_crate_board_p11" type="mesh" mesh="crate_board_p11"
+        material="mat_1" />
+      <geom name="crate_board_133_crate_board_p12" type="mesh" mesh="crate_board_p12"
+        material="mat_1" />
+      <geom name="crate_board_133_crate_board_p13" type="mesh" mesh="crate_board_p13"
+        material="mat_1" />
+    </body>
+    <body name="crate_board_153" pos="3.145 -3.0115 0.12"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="crate_board_153_crate_board_p0" type="mesh" mesh="crate_board_p0" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p1" type="mesh" mesh="crate_board_p1" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p2" type="mesh" mesh="crate_board_p2" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p3" type="mesh" mesh="crate_board_p3" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p4" type="mesh" mesh="crate_board_p4" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p5" type="mesh" mesh="crate_board_p5" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p6" type="mesh" mesh="crate_board_p6" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p7" type="mesh" mesh="crate_board_p7" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p8" type="mesh" mesh="crate_board_p8" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p9" type="mesh" mesh="crate_board_p9" material="mat_1" />
+      <geom name="crate_board_153_crate_board_p10" type="mesh" mesh="crate_board_p10"
+        material="mat_1" />
+      <geom name="crate_board_153_crate_board_p11" type="mesh" mesh="crate_board_p11"
+        material="mat_1" />
+      <geom name="crate_board_153_crate_board_p12" type="mesh" mesh="crate_board_p12"
+        material="mat_1" />
+      <geom name="crate_board_153_crate_board_p13" type="mesh" mesh="crate_board_p13"
+        material="mat_1" />
+    </body>
+    <body name="crate_board_161" pos="3.145 -4.2115 0.12"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="crate_board_161_crate_board_p0" type="mesh" mesh="crate_board_p0" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p1" type="mesh" mesh="crate_board_p1" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p2" type="mesh" mesh="crate_board_p2" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p3" type="mesh" mesh="crate_board_p3" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p4" type="mesh" mesh="crate_board_p4" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p5" type="mesh" mesh="crate_board_p5" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p6" type="mesh" mesh="crate_board_p6" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p7" type="mesh" mesh="crate_board_p7" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p8" type="mesh" mesh="crate_board_p8" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p9" type="mesh" mesh="crate_board_p9" material="mat_1" />
+      <geom name="crate_board_161_crate_board_p10" type="mesh" mesh="crate_board_p10"
+        material="mat_1" />
+      <geom name="crate_board_161_crate_board_p11" type="mesh" mesh="crate_board_p11"
+        material="mat_1" />
+      <geom name="crate_board_161_crate_board_p12" type="mesh" mesh="crate_board_p12"
+        material="mat_1" />
+      <geom name="crate_board_161_crate_board_p13" type="mesh" mesh="crate_board_p13"
+        material="mat_1" />
+    </body>
+    <body name="k_rail_diagonal_178" pos="-0.323 -3.0115 0.061"
+      quat="0 0.707107 -0.707107 0"
+    >
+      <geom name="k_rail_diagonal_178_k_rail_diagonal_p0" type="mesh" mesh="k_rail_diagonal_p0"
+        material="mat_1" />
+      <geom name="k_rail_diagonal_178_k_rail_diagonal_p1" type="mesh" mesh="k_rail_diagonal_p1"
+        material="mat_1" />
+    </body>
+    <body name="k_rail_diagonal_179" pos="-5.123 -4.2115 0.061"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="k_rail_diagonal_179_k_rail_diagonal_p0" type="mesh" mesh="k_rail_diagonal_p0"
+        material="mat_1" />
+      <geom name="k_rail_diagonal_179_k_rail_diagonal_p1" type="mesh" mesh="k_rail_diagonal_p1"
+        material="mat_1" />
+    </body>
+    <body name="k_rail_diagonal_182" pos="-2.723 -4.2115 0.061"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="k_rail_diagonal_182_k_rail_diagonal_p0" type="mesh" mesh="k_rail_diagonal_p0"
+        material="mat_1" />
+      <geom name="k_rail_diagonal_182_k_rail_diagonal_p1" type="mesh" mesh="k_rail_diagonal_p1"
+        material="mat_1" />
+    </body>
+    <body name="k_rail_diagonal_191" pos="-2.723 -3.0115 0.061"
+      quat="0 0.707107 -0.707107 0"
+    >
+      <geom name="k_rail_diagonal_191_k_rail_diagonal_p0" type="mesh" mesh="k_rail_diagonal_p0"
+        material="mat_1" />
+      <geom name="k_rail_diagonal_191_k_rail_diagonal_p1" type="mesh" mesh="k_rail_diagonal_p1"
+        material="mat_1" />
+    </body>
+    <body name="lane_floor_15" pos="5.545 3.0115 0.0555"
+    >
+      <geom name="lane_floor_15_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_15_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_24" pos="0.745 4.2115 0.0555"
+    >
+      <geom name="lane_floor_24_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_24_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_46" pos="3.145 4.2115 0.0555"
+    >
+      <geom name="lane_floor_46_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_46_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_62" pos="3.145 3.0115 0.0555"
+    >
+      <geom name="lane_floor_62_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_62_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_95" pos="-0.323 3.0115 0.0555"
+    >
+      <geom name="lane_floor_95_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_95_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_96" pos="-5.123 4.2115 0.0555"
+    >
+      <geom name="lane_floor_96_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_96_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_113" pos="-2.723 4.2115 0.0555"
+    >
+      <geom name="lane_floor_113_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_113_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_122" pos="-2.723 3.0115 0.0555"
+    >
+      <geom name="lane_floor_122_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_122_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_130" pos="5.545 -3.0115 0.0555"
+    >
+      <geom name="lane_floor_130_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_130_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_132" pos="0.745 -4.2115 0.0555"
+    >
+      <geom name="lane_floor_132_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_132_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_147" pos="3.145 -3.0115 0.0555"
+    >
+      <geom name="lane_floor_147_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_147_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_155" pos="3.145 -4.2115 0.0555"
+    >
+      <geom name="lane_floor_155_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_155_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_163" pos="-0.323 -3.0115 0.0555"
+    >
+      <geom name="lane_floor_163_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_163_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_164" pos="-5.123 -4.2115 0.0555"
+    >
+      <geom name="lane_floor_164_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_164_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_181" pos="-2.723 -4.2115 0.0555"
+    >
+      <geom name="lane_floor_181_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_181_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="lane_floor_190" pos="-2.723 -3.0115 0.0555"
+    >
+      <geom name="lane_floor_190_lane_floor_p0" type="mesh" mesh="lane_floor_p0" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p1" type="mesh" mesh="lane_floor_p1" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p2" type="mesh" mesh="lane_floor_p2" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p3" type="mesh" mesh="lane_floor_p3" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p4" type="mesh" mesh="lane_floor_p4" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p5" type="mesh" mesh="lane_floor_p5" material="mat_1" />
+      <geom name="lane_floor_190_lane_floor_p6" type="mesh" mesh="lane_floor_p6" material="mat_1" />
+    </body>
+    <body name="pallet_step_84" pos="-6.152 -0.6115 0.109"
+    >
+      <geom name="pallet_step_84_pallet_step_p0" type="mesh" mesh="pallet_step_p0" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p1" type="mesh" mesh="pallet_step_p1" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p2" type="mesh" mesh="pallet_step_p2" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p3" type="mesh" mesh="pallet_step_p3" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p4" type="mesh" mesh="pallet_step_p4" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p5" type="mesh" mesh="pallet_step_p5" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p6" type="mesh" mesh="pallet_step_p6" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p7" type="mesh" mesh="pallet_step_p7" material="mat_1" />
+      <geom name="pallet_step_84_pallet_step_p8" type="mesh" mesh="pallet_step_p8" material="mat_1" />
+    </body>
+    <body name="pallet_step_85" pos="-6.152 0.6105 0.109"
+    >
+      <geom name="pallet_step_85_pallet_step_p0" type="mesh" mesh="pallet_step_p0" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p1" type="mesh" mesh="pallet_step_p1" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p2" type="mesh" mesh="pallet_step_p2" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p3" type="mesh" mesh="pallet_step_p3" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p4" type="mesh" mesh="pallet_step_p4" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p5" type="mesh" mesh="pallet_step_p5" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p6" type="mesh" mesh="pallet_step_p6" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p7" type="mesh" mesh="pallet_step_p7" material="mat_1" />
+      <geom name="pallet_step_85_pallet_step_p8" type="mesh" mesh="pallet_step_p8" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_76" pos="-4.952 -0.6115 0.3"
+    >
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_76_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_78" pos="-3.752 -0.6115 0.3"
+    >
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_78_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_80" pos="-3.752 0.6105 0.3"
+    >
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_80_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_82" pos="-4.952 0.6105 0.3"
+    >
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_82_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_86" pos="-6.152 1.8105 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_86_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_88" pos="-6.152 -1.8115 0.3"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_88_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_90" pos="-5.752 -3.0115 0.3"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_90_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pallet_step_with_pipe_92" pos="-5.752 3.0115 0.3"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p0" type="mesh"
+        mesh="pallet_step_with_pipe_p0" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p1" type="mesh"
+        mesh="pallet_step_with_pipe_p1" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p2" type="mesh"
+        mesh="pallet_step_with_pipe_p2" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p3" type="mesh"
+        mesh="pallet_step_with_pipe_p3" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p4" type="mesh"
+        mesh="pallet_step_with_pipe_p4" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p5" type="mesh"
+        mesh="pallet_step_with_pipe_p5" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p6" type="mesh"
+        mesh="pallet_step_with_pipe_p6" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p7" type="mesh"
+        mesh="pallet_step_with_pipe_p7" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p8" type="mesh"
+        mesh="pallet_step_with_pipe_p8" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p9" type="mesh"
+        mesh="pallet_step_with_pipe_p9" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p10" type="mesh"
+        mesh="pallet_step_with_pipe_p10" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p11" type="mesh"
+        mesh="pallet_step_with_pipe_p11" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p12" type="mesh"
+        mesh="pallet_step_with_pipe_p12" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p13" type="mesh"
+        mesh="pallet_step_with_pipe_p13" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p14" type="mesh"
+        mesh="pallet_step_with_pipe_p14" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p15" type="mesh"
+        mesh="pallet_step_with_pipe_p15" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p16" type="mesh"
+        mesh="pallet_step_with_pipe_p16" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p17" type="mesh"
+        mesh="pallet_step_with_pipe_p17" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p18" type="mesh"
+        mesh="pallet_step_with_pipe_p18" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p19" type="mesh"
+        mesh="pallet_step_with_pipe_p19" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p20" type="mesh"
+        mesh="pallet_step_with_pipe_p20" material="mat_1" />
+      <geom name="pallet_step_with_pipe_92_pallet_step_with_pipe_p21" type="mesh"
+        mesh="pallet_step_with_pipe_p21" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_77" pos="-5.502 -0.6115 0.32"
+      quat="0.707107 0.707107 0 0"
+    >
+      <geom name="pvc_pipe_100x1200_77_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_79" pos="-4.302 -0.6115 0.32"
+      quat="0.707107 0.707107 0 0"
+    >
+      <geom name="pvc_pipe_100x1200_79_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_81" pos="-4.302 0.6105 0.32"
+      quat="0.707107 0.707107 0 0"
+    >
+      <geom name="pvc_pipe_100x1200_81_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_83" pos="-5.502 0.6105 0.32"
+      quat="0.707107 0.707107 0 0"
+    >
+      <geom name="pvc_pipe_100x1200_83_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_87" pos="-6.152 1.2605 0.32"
+      quat="0.5 0.5 0.5 0.5"
+    >
+      <geom name="pvc_pipe_100x1200_87_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_89" pos="-6.152 -1.2615 0.32"
+      quat="0.5 0.5 -0.5 -0.5"
+    >
+      <geom name="pvc_pipe_100x1200_89_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_91" pos="-5.752 -2.4615 0.32"
+      quat="0.5 0.5 -0.5 -0.5"
+    >
+      <geom name="pvc_pipe_100x1200_91_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="pvc_pipe_100x1200_93" pos="-5.752 2.4615 0.32"
+      quat="0.5 0.5 0.5 0.5"
+    >
+      <geom name="pvc_pipe_100x1200_93_geom" type="mesh" mesh="pvc_pipe_100x1200" material="mat_1" />
+    </body>
+    <body name="ramp_16" pos="4.724 2.738 0.095086"
+    >
+      <geom name="ramp_16_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_16_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_16_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_16_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_16_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_16_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_16_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_16_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_16_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_16_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_17" pos="4.724 3.288 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_17_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_17_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_17_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_17_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_17_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_17_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_17_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_17_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_17_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_17_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_18" pos="5.794 2.738 0.095086"
+    >
+      <geom name="ramp_18_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_18_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_18_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_18_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_18_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_18_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_18_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_18_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_18_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_18_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_19" pos="5.794 3.288 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_19_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_19_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_19_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_19_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_19_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_19_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_19_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_19_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_19_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_19_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_20" pos="5.259 2.738 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_20_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_20_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_20_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_20_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_20_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_20_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_20_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_20_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_20_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_20_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_21" pos="5.259 3.288 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_21_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_21_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_21_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_21_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_21_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_21_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_21_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_21_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_21_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_21_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_22" pos="6.329 2.738 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_22_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_22_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_22_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_22_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_22_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_22_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_22_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_22_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_22_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_22_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_23" pos="6.329 3.288 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_23_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_23_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_23_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_23_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_23_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_23_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_23_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_23_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_23_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_23_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_25" pos="-0.076 3.938 0.095086"
+    >
+      <geom name="ramp_25_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_25_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_25_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_25_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_25_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_25_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_25_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_25_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_25_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_25_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_26" pos="-0.076 4.488 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_26_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_26_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_26_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_26_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_26_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_26_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_26_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_26_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_26_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_26_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_27" pos="0.994 3.938 0.095086"
+    >
+      <geom name="ramp_27_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_27_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_27_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_27_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_27_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_27_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_27_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_27_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_27_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_27_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_28" pos="0.994 4.488 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_28_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_28_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_28_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_28_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_28_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_28_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_28_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_28_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_28_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_28_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_29" pos="0.459 3.938 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_29_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_29_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_29_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_29_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_29_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_29_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_29_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_29_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_29_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_29_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_30" pos="0.459 4.488 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_30_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_30_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_30_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_30_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_30_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_30_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_30_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_30_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_30_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_30_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_31" pos="1.529 3.938 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_31_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_31_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_31_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_31_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_31_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_31_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_31_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_31_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_31_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_31_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_32" pos="1.529 4.488 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_32_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_32_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_32_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_32_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_32_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_32_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_32_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_32_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_32_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_32_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_53" pos="2.324 3.938 0.095086"
+    >
+      <geom name="ramp_53_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_53_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_53_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_53_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_53_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_53_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_53_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_53_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_53_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_53_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_54" pos="2.324 4.488 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_54_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_54_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_54_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_54_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_54_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_54_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_54_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_54_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_54_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_54_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_55" pos="3.394 3.938 0.095086"
+    >
+      <geom name="ramp_55_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_55_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_55_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_55_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_55_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_55_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_55_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_55_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_55_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_55_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_56" pos="3.394 4.488 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_56_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_56_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_56_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_56_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_56_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_56_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_56_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_56_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_56_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_56_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_57" pos="2.859 3.938 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_57_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_57_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_57_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_57_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_57_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_57_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_57_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_57_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_57_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_57_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_58" pos="2.859 4.488 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_58_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_58_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_58_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_58_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_58_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_58_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_58_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_58_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_58_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_58_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_59" pos="3.929 3.938 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_59_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_59_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_59_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_59_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_59_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_59_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_59_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_59_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_59_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_59_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_60" pos="3.929 4.488 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_60_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_60_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_60_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_60_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_60_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_60_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_60_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_60_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_60_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_60_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_67" pos="2.324 2.738 0.095086"
+    >
+      <geom name="ramp_67_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_67_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_67_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_67_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_67_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_67_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_67_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_67_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_67_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_67_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_68" pos="2.324 3.288 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_68_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_68_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_68_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_68_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_68_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_68_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_68_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_68_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_68_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_68_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_69" pos="3.394 2.738 0.095086"
+    >
+      <geom name="ramp_69_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_69_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_69_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_69_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_69_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_69_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_69_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_69_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_69_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_69_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_70" pos="3.394 3.288 0.095086"
+      quat="0.707107 0 0 -0.707107"
+    >
+      <geom name="ramp_70_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_70_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_70_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_70_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_70_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_70_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_70_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_70_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_70_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_70_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_71" pos="2.859 2.738 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_71_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_71_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_71_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_71_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_71_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_71_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_71_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_71_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_71_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_71_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_72" pos="2.859 3.288 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_72_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_72_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_72_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_72_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_72_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_72_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_72_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_72_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_72_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_72_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_73" pos="3.929 2.738 0.095086"
+      quat="0.707107 0 0 0.707107"
+    >
+      <geom name="ramp_73_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_73_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_73_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_73_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_73_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_73_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_73_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_73_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_73_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_73_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="ramp_74" pos="3.929 3.288 0.095086"
+      quat="0 0 0 -1"
+    >
+      <geom name="ramp_74_ramp_p0" type="mesh" mesh="ramp_p0" material="mat_1" />
+      <geom name="ramp_74_ramp_p1" type="mesh" mesh="ramp_p1" material="mat_1" />
+      <geom name="ramp_74_ramp_p2" type="mesh" mesh="ramp_p2" material="mat_1" />
+      <geom name="ramp_74_ramp_p3" type="mesh" mesh="ramp_p3" material="mat_1" />
+      <geom name="ramp_74_ramp_p4" type="mesh" mesh="ramp_p4" material="mat_1" />
+      <geom name="ramp_74_ramp_p5" type="mesh" mesh="ramp_p5" material="mat_1" />
+      <geom name="ramp_74_ramp_p6" type="mesh" mesh="ramp_p6" material="mat_1" />
+      <geom name="ramp_74_ramp_p7" type="mesh" mesh="ramp_p7" material="mat_1" />
+      <geom name="ramp_74_ramp_p8" type="mesh" mesh="ramp_p8" material="mat_1" />
+      <geom name="ramp_74_ramp_p9" type="mesh" mesh="ramp_p9" material="mat_1" />
+    </body>
+    <body name="stepover_1_110" pos="-5.123 4.2115 0.161"
+    >
+      <geom name="stepover_1_110_stepover_1_p0" type="mesh" mesh="stepover_1_p0" material="mat_1" />
+      <geom name="stepover_1_110_stepover_1_p1" type="mesh" mesh="stepover_1_p1" material="mat_1" />
+      <geom name="stepover_1_110_stepover_1_p2" type="mesh" mesh="stepover_1_p2" material="mat_1" />
+      <geom name="stepover_1_110_stepover_1_p3" type="mesh" mesh="stepover_1_p3" material="mat_1" />
+      <geom name="stepover_1_110_stepover_1_p4" type="mesh" mesh="stepover_1_p4" material="mat_1" />
+      <geom name="stepover_1_110_stepover_1_p5" type="mesh" mesh="stepover_1_p5" material="mat_1" />
+    </body>
+    <body name="stepover_1_111" pos="-0.323 3.0115 0.161"
+    >
+      <geom name="stepover_1_111_stepover_1_p0" type="mesh" mesh="stepover_1_p0" material="mat_1" />
+      <geom name="stepover_1_111_stepover_1_p1" type="mesh" mesh="stepover_1_p1" material="mat_1" />
+      <geom name="stepover_1_111_stepover_1_p2" type="mesh" mesh="stepover_1_p2" material="mat_1" />
+      <geom name="stepover_1_111_stepover_1_p3" type="mesh" mesh="stepover_1_p3" material="mat_1" />
+      <geom name="stepover_1_111_stepover_1_p4" type="mesh" mesh="stepover_1_p4" material="mat_1" />
+      <geom name="stepover_1_111_stepover_1_p5" type="mesh" mesh="stepover_1_p5" material="mat_1" />
+    </body>
+    <body name="stepover_2_117" pos="-2.723 4.2115 0.161"
+    >
+      <geom name="stepover_2_117_stepover_2_p0" type="mesh" mesh="stepover_2_p0" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p1" type="mesh" mesh="stepover_2_p1" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p2" type="mesh" mesh="stepover_2_p2" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p3" type="mesh" mesh="stepover_2_p3" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p4" type="mesh" mesh="stepover_2_p4" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p5" type="mesh" mesh="stepover_2_p5" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p6" type="mesh" mesh="stepover_2_p6" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p7" type="mesh" mesh="stepover_2_p7" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p8" type="mesh" mesh="stepover_2_p8" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p9" type="mesh" mesh="stepover_2_p9" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p10" type="mesh" mesh="stepover_2_p10" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p11" type="mesh" mesh="stepover_2_p11" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p12" type="mesh" mesh="stepover_2_p12" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p13" type="mesh" mesh="stepover_2_p13" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p14" type="mesh" mesh="stepover_2_p14" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p15" type="mesh" mesh="stepover_2_p15" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p16" type="mesh" mesh="stepover_2_p16" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p17" type="mesh" mesh="stepover_2_p17" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p18" type="mesh" mesh="stepover_2_p18" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p19" type="mesh" mesh="stepover_2_p19" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p20" type="mesh" mesh="stepover_2_p20" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p21" type="mesh" mesh="stepover_2_p21" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p22" type="mesh" mesh="stepover_2_p22" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p23" type="mesh" mesh="stepover_2_p23" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p24" type="mesh" mesh="stepover_2_p24" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p25" type="mesh" mesh="stepover_2_p25" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p26" type="mesh" mesh="stepover_2_p26" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p27" type="mesh" mesh="stepover_2_p27" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p28" type="mesh" mesh="stepover_2_p28" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p29" type="mesh" mesh="stepover_2_p29" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p30" type="mesh" mesh="stepover_2_p30" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p31" type="mesh" mesh="stepover_2_p31" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p32" type="mesh" mesh="stepover_2_p32" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p33" type="mesh" mesh="stepover_2_p33" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p34" type="mesh" mesh="stepover_2_p34" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p35" type="mesh" mesh="stepover_2_p35" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p36" type="mesh" mesh="stepover_2_p36" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p37" type="mesh" mesh="stepover_2_p37" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p38" type="mesh" mesh="stepover_2_p38" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p39" type="mesh" mesh="stepover_2_p39" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p40" type="mesh" mesh="stepover_2_p40" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p41" type="mesh" mesh="stepover_2_p41" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p42" type="mesh" mesh="stepover_2_p42" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p43" type="mesh" mesh="stepover_2_p43" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p44" type="mesh" mesh="stepover_2_p44" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p45" type="mesh" mesh="stepover_2_p45" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p46" type="mesh" mesh="stepover_2_p46" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p47" type="mesh" mesh="stepover_2_p47" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p48" type="mesh" mesh="stepover_2_p48" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p49" type="mesh" mesh="stepover_2_p49" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p50" type="mesh" mesh="stepover_2_p50" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p51" type="mesh" mesh="stepover_2_p51" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p52" type="mesh" mesh="stepover_2_p52" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p53" type="mesh" mesh="stepover_2_p53" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p54" type="mesh" mesh="stepover_2_p54" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p55" type="mesh" mesh="stepover_2_p55" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p56" type="mesh" mesh="stepover_2_p56" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p57" type="mesh" mesh="stepover_2_p57" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p58" type="mesh" mesh="stepover_2_p58" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p59" type="mesh" mesh="stepover_2_p59" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p60" type="mesh" mesh="stepover_2_p60" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p61" type="mesh" mesh="stepover_2_p61" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p62" type="mesh" mesh="stepover_2_p62" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p63" type="mesh" mesh="stepover_2_p63" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p64" type="mesh" mesh="stepover_2_p64" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p65" type="mesh" mesh="stepover_2_p65" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p66" type="mesh" mesh="stepover_2_p66" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p67" type="mesh" mesh="stepover_2_p67" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p68" type="mesh" mesh="stepover_2_p68" material="mat_1" />
+      <geom name="stepover_2_117_stepover_2_p69" type="mesh" mesh="stepover_2_p69" material="mat_1" />
+    </body>
+    <body name="stepover_2_123" pos="-2.723 3.0115 0.161"
+    >
+      <geom name="stepover_2_123_stepover_2_p0" type="mesh" mesh="stepover_2_p0" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p1" type="mesh" mesh="stepover_2_p1" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p2" type="mesh" mesh="stepover_2_p2" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p3" type="mesh" mesh="stepover_2_p3" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p4" type="mesh" mesh="stepover_2_p4" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p5" type="mesh" mesh="stepover_2_p5" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p6" type="mesh" mesh="stepover_2_p6" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p7" type="mesh" mesh="stepover_2_p7" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p8" type="mesh" mesh="stepover_2_p8" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p9" type="mesh" mesh="stepover_2_p9" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p10" type="mesh" mesh="stepover_2_p10" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p11" type="mesh" mesh="stepover_2_p11" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p12" type="mesh" mesh="stepover_2_p12" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p13" type="mesh" mesh="stepover_2_p13" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p14" type="mesh" mesh="stepover_2_p14" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p15" type="mesh" mesh="stepover_2_p15" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p16" type="mesh" mesh="stepover_2_p16" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p17" type="mesh" mesh="stepover_2_p17" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p18" type="mesh" mesh="stepover_2_p18" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p19" type="mesh" mesh="stepover_2_p19" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p20" type="mesh" mesh="stepover_2_p20" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p21" type="mesh" mesh="stepover_2_p21" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p22" type="mesh" mesh="stepover_2_p22" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p23" type="mesh" mesh="stepover_2_p23" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p24" type="mesh" mesh="stepover_2_p24" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p25" type="mesh" mesh="stepover_2_p25" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p26" type="mesh" mesh="stepover_2_p26" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p27" type="mesh" mesh="stepover_2_p27" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p28" type="mesh" mesh="stepover_2_p28" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p29" type="mesh" mesh="stepover_2_p29" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p30" type="mesh" mesh="stepover_2_p30" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p31" type="mesh" mesh="stepover_2_p31" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p32" type="mesh" mesh="stepover_2_p32" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p33" type="mesh" mesh="stepover_2_p33" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p34" type="mesh" mesh="stepover_2_p34" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p35" type="mesh" mesh="stepover_2_p35" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p36" type="mesh" mesh="stepover_2_p36" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p37" type="mesh" mesh="stepover_2_p37" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p38" type="mesh" mesh="stepover_2_p38" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p39" type="mesh" mesh="stepover_2_p39" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p40" type="mesh" mesh="stepover_2_p40" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p41" type="mesh" mesh="stepover_2_p41" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p42" type="mesh" mesh="stepover_2_p42" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p43" type="mesh" mesh="stepover_2_p43" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p44" type="mesh" mesh="stepover_2_p44" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p45" type="mesh" mesh="stepover_2_p45" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p46" type="mesh" mesh="stepover_2_p46" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p47" type="mesh" mesh="stepover_2_p47" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p48" type="mesh" mesh="stepover_2_p48" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p49" type="mesh" mesh="stepover_2_p49" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p50" type="mesh" mesh="stepover_2_p50" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p51" type="mesh" mesh="stepover_2_p51" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p52" type="mesh" mesh="stepover_2_p52" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p53" type="mesh" mesh="stepover_2_p53" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p54" type="mesh" mesh="stepover_2_p54" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p55" type="mesh" mesh="stepover_2_p55" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p56" type="mesh" mesh="stepover_2_p56" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p57" type="mesh" mesh="stepover_2_p57" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p58" type="mesh" mesh="stepover_2_p58" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p59" type="mesh" mesh="stepover_2_p59" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p60" type="mesh" mesh="stepover_2_p60" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p61" type="mesh" mesh="stepover_2_p61" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p62" type="mesh" mesh="stepover_2_p62" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p63" type="mesh" mesh="stepover_2_p63" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p64" type="mesh" mesh="stepover_2_p64" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p65" type="mesh" mesh="stepover_2_p65" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p66" type="mesh" mesh="stepover_2_p66" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p67" type="mesh" mesh="stepover_2_p67" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p68" type="mesh" mesh="stepover_2_p68" material="mat_1" />
+      <geom name="stepover_2_123_stepover_2_p69" type="mesh" mesh="stepover_2_p69" material="mat_1" />
+    </body>
+
+  </worldbody>
+
+</mujoco>
