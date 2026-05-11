@@ -300,8 +300,8 @@ class UnitreeSdk2Bridge:
             self.joystick = pygame.joystick.Joystick(device_id)
             self.joystick.init()
         else:
-            print("No gamepad detected.")
-            sys.exit()
+            print("Warning: No gamepad detected. Continuing without joystick support.")
+            return
 
         if js_type == "xbox":
             self.axis_id = {
