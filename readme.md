@@ -121,6 +121,63 @@ The program will output the robot's pose and position information in the simulat
 
 **Note:** The testing program sends the unitree_go message. If you want to test G1 robot, you need to modify the program to use the unitree_hg message.
 
+## Python ROS2 Simulator (simulate_python_ros2)
+This simulator is a ROS2-native Python entrypoint for G1 only. It does not use `unitree_sdk2_python` or DDS `rt/*` channels.
+
+### 1. Dependencies
+#### unitree_ros2
+Build and source the Unitree ROS2 workspace first:
+```bash
+source ~/unitree_ros2/setup.sh
+```
+The simulator depends on `rclpy`, `unitree_hg`, and `unitree_go` from that workspace.
+
+#### mujoco-python
+```bash
+pip3 install mujoco
+```
+
+#### joystick
+Optional. If `pygame` is unavailable or no controller is connected, the simulator still runs and publishes zero-valued `/wirelesscontroller`.
+```bash
+pip3 install pygame
+```
+
+### 2. Run
+```bash
+cd ./simulate_python_ros2
+python3 ./unitree_mujoco_ros2.py
+```
+
+This version publishes these ROS2 topics directly:
+- `/lowstate` -> `unitree_hg/msg/LowState`
+- `/secondary_imu` -> `unitree_hg/msg/IMUState`
+- `/lf/bmsstate` -> `unitree_hg/msg/BmsState`
+- `/wirelesscontroller` -> `unitree_go/msg/WirelessController`
+- `/sportmodestate` -> `unitree_go/msg/SportModeState`
+
+It subscribes to:
+- `/lowcmd` -> `unitree_hg/msg/LowCmd`
+
+The provided smoke script checks that the expected topics have data:
+```bash
+python3 ./test/smoke_ros2_bridge.py
+```
+
+### 3. Config
+The ROS2-native Python simulator configuration file is at `/simulate_python_ros2/config.py`:
+```python
+ROBOT = "g1"
+ROBOT_SCENE = "../unitree_robots/" + ROBOT + "/scene_29dof.xml"
+USE_JOYSTICK = 1
+JOYSTICK_TYPE = "xbox"
+JOYSTICK_DEVICE = 0
+PRINT_SCENE_INFORMATION = True
+ENABLE_ELASTIC_BAND = False
+SIMULATE_DT = 0.005
+VIEWER_DT = 0.02
+```
+
 
 # Usage
 ## 1. Simulation Configuration
