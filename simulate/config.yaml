@@ -1,14 +1,15 @@
-robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1"
+robot: "g1"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1"
 robot_scene: "scene.xml" # Robot scene, /unitree_robots/[robot]/scene.xml 
 
 domain_id: 1  # Domain id
 interface: "lo" # Interface 
+lowcmd_topic: "" # Empty uses robot default: G1 -> rt/user_lowcmd, others -> rt/lowcmd
 
-use_joystick: 0 # Simulate Unitree WirelessController using a gamepad
-joystick_type: "xbox" # support "xbox" and "switch" gamepad layout
-joystick_device: "/dev/input/js0" # Device path
-joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
+use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
+joystick_type: "keyboard" # support "xbox", "switch", and "keyboard"
+joystick_device: "/dev/input/js0" # Device path (not used in keyboard mode)
+joystick_bits: 16 # Some game controllers may only have 8-bit accuracy (not used in keyboard mode)
 
 print_scene_information: 1 # Print link, joint and sensors information of robot
 
-enable_elastic_band: 0 # Virtual spring band, used for lifting h1
+enable_elastic_band: 1 # Virtual spring band, used for lifting h1
