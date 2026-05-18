@@ -184,6 +184,61 @@ SIMULATE_DT = 0.003
 VIEWER_DT = 0.02 
 ```
 
+### Python ROS2 仿真器 (`simulate_python_ros2`)
+这是一个仅面向 G1 的 ROS2 Native Python 版本，不使用 `unitree_sdk2_python`，也不走 DDS `rt/*` 接口。
+
+#### 1. 依赖
+首先需要正确 source `unitree_ros2` 工作区：
+```bash
+source ~/unitree_ros2/setup.sh
+```
+这个版本直接依赖该工作区提供的 `rclpy`、`unitree_hg`、`unitree_go` Python 包。
+
+MuJoCo 依赖：
+```bash
+pip3 install mujoco
+```
+
+手柄依赖是可选的；如果没有 `pygame` 或没有物理手柄，仿真器仍会运行，并持续发布全 0 的 `/wirelesscontroller`：
+```bash
+pip3 install pygame
+```
+
+#### 2. 启动
+```bash
+cd ./simulate_python_ros2
+python3 ./unitree_mujoco_ros2.py
+```
+
+该版本直接发布以下 ROS2 话题：
+- `/lowstate` -> `unitree_hg/msg/LowState`
+- `/secondary_imu` -> `unitree_hg/msg/IMUState`
+- `/lf/bmsstate` -> `unitree_hg/msg/BmsState`
+- `/wirelesscontroller` -> `unitree_go/msg/WirelessController`
+- `/sportmodestate` -> `unitree_go/msg/SportModeState`
+
+订阅：
+- `/lowcmd` -> `unitree_hg/msg/LowCmd`
+
+可以用附带的 smoke 脚本做最小检查：
+```bash
+python3 ./test/smoke_ros2_bridge.py
+```
+
+#### 3. 配置
+ROS2 Native Python 仿真器的配置文件位于 `/simulate_python_ros2/config.py`：
+```python
+ROBOT = "g1"
+ROBOT_SCENE = "../unitree_robots/" + ROBOT + "/scene_29dof.xml"
+USE_JOYSTICK = 1
+JOYSTICK_TYPE = "xbox"
+JOYSTICK_DEVICE = 0
+PRINT_SCENE_INFORMATION = True
+ENABLE_ELASTIC_BAND = False
+SIMULATE_DT = 0.005
+VIEWER_DT = 0.02
+```
+
 ### 游戏手柄
 仿真器会使用 Xbox 或者 Switch 游戏来模拟机器人的无线控制器，并将手柄按键和摇杆信息发布在"rt/wireless_controller" topic。如果手上没有可以使用的游戏手柄，需要将 `config.yaml/config.py` 中的 `use_joystick/USE_JOYSTICK` 设置为 0。如果使用的手柄不属于 Xbox 和 Switch 映射，可以在源码中自行修改或添加(可以使用 `jstest` 工具查看按键和摇杆 id)：
 
