@@ -15,6 +15,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 
 
 include_directories(
+  /usr/local/include/iceoryx/v2.0.2
   mujoco/include
   mujoco/simulate
   src/lodepng
