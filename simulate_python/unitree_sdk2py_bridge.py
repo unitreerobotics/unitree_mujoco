@@ -88,6 +88,9 @@ class UnitreeSdk2Bridge:
         self.low_cmd_suber = ChannelSubscriber(TOPIC_LOWCMD, LowCmd_)
         self.low_cmd_suber.Init(self.LowCmdHandler, 10)
 
+        # Cache latest motor commands (updated by LowCmdHandler)
+        self.low_cmd_latest = None
+
         # joystick
         self.key_map = {
             "R1": 0,
@@ -109,18 +112,30 @@ class UnitreeSdk2Bridge:
         }
 
     def LowCmdHandler(self, msg: LowCmd_):
-        if self.mj_data != None:
-            for i in range(self.num_motor):
-                self.mj_data.ctrl[i] = (
-                    msg.motor_cmd[i].tau
-                    + msg.motor_cmd[i].kp
-                    * (msg.motor_cmd[i].q - self.mj_data.sensordata[i])
-                    + msg.motor_cmd[i].kd
-                    * (
-                        msg.motor_cmd[i].dq
-                        - self.mj_data.sensordata[i + self.num_motor]
-                    )
+        """Cache the latest low command. Control update happens in UpdateControl()."""
+        self.low_cmd_latest = msg
+
+    def UpdateControl(self):
+        """
+        Recompute motor control torques on every simulation step.
+        This is called from the simulation thread before mj_step().
+        τ = tau_cmd + kp*(q_des-q_act) + kd*(dq_des-dq_act)
+        """
+        if self.mj_data is None or self.low_cmd_latest is None:
+            return
+        
+        msg = self.low_cmd_latest
+        for i in range(self.num_motor):
+            self.mj_data.ctrl[i] = (
+                msg.motor_cmd[i].tau
+                + msg.motor_cmd[i].kp
+                * (msg.motor_cmd[i].q - self.mj_data.sensordata[i])
+                + msg.motor_cmd[i].kd
+                * (
+                    msg.motor_cmd[i].dq
+                    - self.mj_data.sensordata[i + self.num_motor]
                 )
+            )
 
     def PublishLowState(self):
         if self.mj_data != None:
