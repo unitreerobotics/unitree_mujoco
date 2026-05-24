@@ -272,7 +272,8 @@ public:
     std::unique_ptr<LowState_t> lowstate;
     
 private:
-    unitree::common::RecurrentThreadPtr thread_;
+    std::atomic<bool> stop_flag_{false};
+    std::thread run_thread_;
 };
 
 using Go2Bridge = RobotBridge<unitree::robot::go2::subscription::LowCmd, unitree::robot::go2::publisher::LowState>;
