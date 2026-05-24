@@ -196,8 +196,8 @@ public:
     {
         if(!mj_data_) return;
         if(lowstate->joystick) { lowstate->joystick->update(); }
-        // lowcmd
-        {
+        // lowcmd — only apply when a real command has been received
+        if (!lowcmd->isTimeout()) {
             std::lock_guard<std::mutex> lock(lowcmd->mutex_);
             for(int i(0); i<num_motor_; i++) {
                 auto & m = lowcmd->msg_.motor_cmd()[i];
