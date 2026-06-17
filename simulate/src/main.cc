@@ -102,6 +102,11 @@ namespace
 
   // control noise variables
   mjtNum *ctrlnoise = nullptr;
+  // Pause/resume handshake for safe model reload: PhysicsLoop signals the
+  // bridge to stop before freeing m/d, bridge confirms before Physics proceeds.
+  std::atomic<bool> g_bridge_pause_request{false};
+  std::atomic<bool> g_bridge_paused{false};
+
 
   using Seconds = std::chrono::duration<double>;
 
@@ -350,12 +355,18 @@ namespace
         {
           sim.Load(mnew, dnew, sim.dropfilename);
 
+          g_bridge_pause_request.store(true);
+          while (!g_bridge_paused.load())
+              std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
           mj_deleteData(d);
           mj_deleteModel(m);
 
           m = mnew;
           d = dnew;
           mj_forward(m, d);
+
+          g_bridge_pause_request.store(false);
 
           // allocate ctrlnoise
           free(ctrlnoise);
@@ -587,23 +598,32 @@ void *UnitreeSdk2BridgeThread(void *arg)
   unitree::robot::ChannelFactory::Instance()->Init(param::config.domain_id, param::config.interface);
 
 
-  int body_id = mj_name2id(m, mjOBJ_BODY, "torso_link");
-  if (body_id < 0) {
-    body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
-  }
-  param::config.band_attached_link = 6 * body_id;
-  
-  std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
-  if (m->nu > NUM_MOTOR_IDL_GO) {
-    interface = std::make_unique<G1Bridge>(m, d);
-  } else {
-    interface = std::make_unique<Go2Bridge>(m, d);
-  }
-  interface->start();
-  
   while (true)
   {
-    sleep(1);
+    int body_id = mj_name2id(m, mjOBJ_BODY, "torso_link");
+    if (body_id < 0) {
+      body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
+    }
+    param::config.band_attached_link = 6 * body_id;
+
+    std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
+    if (m->nu > NUM_MOTOR_IDL_GO) {
+      interface = std::make_unique<G1Bridge>(m, d);
+    } else {
+      interface = std::make_unique<Go2Bridge>(m, d);
+    }
+    interface->start();
+
+    while (!g_bridge_pause_request.load())
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    interface->pre_destroy();
+    interface.reset();
+    g_bridge_paused.store(true);
+
+    while (g_bridge_pause_request.load())
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    g_bridge_paused.store(false);
   }
 }
 //------------------------------------------ main --------------------------------------------------
