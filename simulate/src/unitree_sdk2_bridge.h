@@ -10,6 +10,9 @@
 #include <unitree/idl/hg/IMUState_.hpp>
 
 #include <iostream>
+#include <atomic>
+#include <chrono>
+#include <thread>
 
 #include "param.h"
 #include "physics_joystick.h"
@@ -40,6 +43,7 @@ public:
     }
 
     virtual void start() {}
+    virtual void pre_destroy() {}
 
     void printSceneInformation()
     {
@@ -165,18 +169,35 @@ public:
         wireless_controller->joystick = joystick;
     }
 
+    ~RobotBridge()
+    {
+        pre_destroy();
+    }
+
     void start()
     {
-        thread_ = std::make_shared<unitree::common::RecurrentThread>(
-            "unitree_bridge", UT_CPU_ID_NONE, 1000, [this]() { this->run(); });
+        stop_flag_.store(false);
+        run_thread_ = std::thread([this]() {
+            while (!stop_flag_.load()) {
+                this->run();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        });
+    }
+
+    void pre_destroy() override
+    {
+        stop_flag_.store(true);
+        if (run_thread_.joinable())
+            run_thread_.join();
     }
 
     virtual void run()
     {
         if(!mj_data_) return;
         if(lowstate->joystick) { lowstate->joystick->update(); }
-        // lowcmd
-        {
+        // lowcmd — only apply when a real command has been received
+        if (!lowcmd->isTimeout()) {
             std::lock_guard<std::mutex> lock(lowcmd->mutex_);
             for(int i(0); i<num_motor_; i++) {
                 auto & m = lowcmd->msg_.motor_cmd()[i];
@@ -251,7 +272,8 @@ public:
     std::unique_ptr<LowState_t> lowstate;
     
 private:
-    unitree::common::RecurrentThreadPtr thread_;
+    std::atomic<bool> stop_flag_{false};
+    std::thread run_thread_;
 };
 
 using Go2Bridge = RobotBridge<unitree::robot::go2::subscription::LowCmd, unitree::robot::go2::publisher::LowState>;
