@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <map>
+#include <cstdint>
 #include "joystick.h"
 
 #define GAMEPAD_TYPE 1 // 1: XBOX, 0: SWITCH
