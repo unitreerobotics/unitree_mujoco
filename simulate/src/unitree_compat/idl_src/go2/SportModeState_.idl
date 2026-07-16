@@ -1,0 +1,27 @@
+#include "unitree/idl/go2/TimeSpec_.idl"
+#include "unitree/idl/go2/IMUState_.idl"
+#include "unitree/idl/go2/PathPoint_.idl"
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct SportModeState_ {
+        TimeSpec_ stamp;
+        uint32 error_code;
+        IMUState_ imu_state;
+        uint8 mode;
+        float progress;
+        uint8 gait_type;
+        float foot_raise_height;
+        float position[3];
+        float body_height;
+        float velocity[3];
+        float yaw_speed;
+        float range_obstacle[4];
+        int16 foot_force[4];
+        float foot_position_body[12];
+        float foot_speed_body[12];
+        PathPoint_ path_point[10];
+      };
+    };
+  };
+};

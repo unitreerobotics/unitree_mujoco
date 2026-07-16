@@ -17,7 +17,9 @@
 #include "glfw_adapter.h"
 #undef private
 
+#include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -28,12 +30,25 @@
 #include <new>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include <mujoco/mujoco.h>
 #include "simulate.h"
 #include "array_safety.h"
+
+// Apple's legacy MacTypes.h defines `nil` as a macro. CycloneDDS-CXX uses
+// `nil()` as an InstanceHandle API, so do not let the Cocoa macro rewrite it.
+#if defined(__APPLE__) && defined(nil)
+#undef nil
+#endif
+
 #include "unitree_sdk2_bridge.h"
 #include "param.h"
+
+#if defined(UNITREE_MUJOCO_BAZEL_BUILD)
+#include "rules_cc/cc/runfiles/runfiles.h"
+using rules_cc::cc::runfiles::Runfiles;
+#endif
 
 #define MUJOCO_PLUGIN_DIR "mujoco_plugin"
 #define NUM_MOTOR_IDL_GO 20
@@ -57,6 +72,10 @@ public:
   ElasticBand(){};
   void Advance(std::vector<double> x, std::vector<double> dx)
   {
+    // Model an overhead trolley: keep the support point directly above the
+    // robot so the band unloads weight without pulling it back to the origin.
+    point_[0] = x[0];
+    point_[1] = x[1];
     std::vector<double> delta_x = {0.0, 0.0, 0.0};
     delta_x[0] = point_[0] - x[0];
     delta_x[1] = point_[1] - x[1];
@@ -75,6 +94,23 @@ public:
     f_[2] = (stiffness_ * (distance - length_) - damping_ * v) * direction[2];
   }
 
+  void Stabilize(const mjtNum* quat, const mjtNum* angular_velocity)
+  {
+    const double w = quat[0];
+    const double x = quat[1];
+    const double y = quat[2];
+    const double z = quat[3];
+    const double roll = atan2(2.0 * (w * x + y * z),
+                              1.0 - 2.0 * (x * x + y * y));
+    const double pitch = asin(std::clamp(2.0 * (w * y - z * x), -1.0, 1.0));
+    const double yaw = atan2(2.0 * (w * z + x * y),
+                             1.0 - 2.0 * (y * y + z * z));
+
+    torque_[0] = -180.0 * roll - 30.0 * angular_velocity[0];
+    torque_[1] = -180.0 * pitch - 30.0 * angular_velocity[1];
+    torque_[2] = -100.0 * yaw - 20.0 * angular_velocity[2];
+  }
+
 
   double stiffness_ = 200;
   double damping_ = 100;
@@ -82,6 +118,7 @@ public:
   double length_ = 0.0;
   bool enable_ = true;
   std::vector<double> f_ = {0, 0, 0};
+  std::vector<double> torque_ = {0, 0, 0};
 };
 inline ElasticBand elastic_band;
 
@@ -495,10 +532,14 @@ namespace
                     std::vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
 
                     elastic_band.Advance(x, dx);
+                    elastic_band.Stabilize(&d->qpos[3], &d->qvel[3]);
 
                     d->xfrc_applied[param::config.band_attached_link] = elastic_band.f_[0];
                     d->xfrc_applied[param::config.band_attached_link + 1] = elastic_band.f_[1];
                     d->xfrc_applied[param::config.band_attached_link + 2] = elastic_band.f_[2];
+                    d->xfrc_applied[param::config.band_attached_link + 3] = elastic_band.torque_[0];
+                    d->xfrc_applied[param::config.band_attached_link + 4] = elastic_band.torque_[1];
+                    d->xfrc_applied[param::config.band_attached_link + 5] = elastic_band.torque_[2];
                   }
                 }
 
@@ -592,7 +633,7 @@ void *UnitreeSdk2BridgeThread(void *arg)
     body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
   }
   param::config.band_attached_link = 6 * body_id;
-  
+
   std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
   if (m->nu > NUM_MOTOR_IDL_GO) {
     interface = std::make_unique<G1Bridge>(m, d);
@@ -600,7 +641,7 @@ void *UnitreeSdk2BridgeThread(void *arg)
     interface = std::make_unique<Go2Bridge>(m, d);
   }
   interface->start();
-  
+
   while (true)
   {
     sleep(1);
@@ -671,12 +712,31 @@ int main(int argc, char **argv)
   mjv_defaultPerturb(&pert);
 
   // Load simulation configuration
+#if defined(UNITREE_MUJOCO_BAZEL_BUILD)
+  // Under Bazel, config.yaml and unitree_robots/ travel with the binary as
+  // `data` runfiles, so resolve them through the Bazel runfiles API instead of
+  // walking up from the executable's path. This works for both `bazel run`
+  // and directly executing the binary from bazel-bin.
+  std::string runfiles_error;
+  std::unique_ptr<Runfiles> runfiles(
+    Runfiles::Create(argv[0], BAZEL_CURRENT_REPOSITORY, &runfiles_error));
+  if (!runfiles) {
+    mju_error("Failed to locate bazel runfiles: %s", runfiles_error.c_str());
+  }
+  param::config.load_from_yaml(runfiles->Rlocation("unitree_mujoco/simulate/config.yaml"));
+  param::helper(argc, argv);
+  if(param::config.robot_scene.is_relative()) {
+    param::config.robot_scene = runfiles->Rlocation(
+      "unitree_mujoco/unitree_robots/" + param::config.robot + "/" + param::config.robot_scene.string());
+  }
+#else
   std::filesystem::path proj_dir = std::filesystem::path(getExecutableDir()).parent_path();
   param::config.load_from_yaml(proj_dir / "config.yaml");
   param::helper(argc, argv);
   if(param::config.robot_scene.is_relative()) {
     param::config.robot_scene = proj_dir.parent_path() / "unitree_robots" / param::config.robot / param::config.robot_scene;
   }
+#endif
 
   // simulate object encapsulates the UI
   auto sim = std::make_unique<mj::Simulate>(

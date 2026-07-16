@@ -1,0 +1,26 @@
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct LidarState_ {
+        double stamp;
+        string firmware_version;
+        string software_version;
+        string sdk_version;
+        float sys_rotation_speed;
+        float com_rotation_speed;
+        uint8 error_state;
+        uint8 dirty_percentage;
+        float cloud_frequency;
+        float cloud_packet_loss_rate;
+        uint32 cloud_size;
+        uint32 cloud_scan_num;
+        float imu_frequency;
+        float imu_packet_loss_rate;
+        float imu_rpy[3];
+        double serial_recv_stamp;
+        uint32 serial_buffer_size;
+        uint32 serial_buffer_read;
+      };
+    };
+  };
+};

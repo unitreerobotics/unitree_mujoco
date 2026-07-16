@@ -1,0 +1,6 @@
+exports_files([
+    "cyclonedds_public_idl.patch",
+    "cyclonedds_cxx_idlcxx.patch",
+    "unitree_sdk2.BUILD.bazel",
+    "unitree_sdk2_compat.BUILD.bazel",
+])

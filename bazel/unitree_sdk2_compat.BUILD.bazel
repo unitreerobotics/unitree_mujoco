@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# Headers-only view of unitree_sdk2, patched for macOS (see MODULE.bazel).
+# The compiled symbols these headers declare (ChannelFactory, DdsParticipant,
+# Thread, ...) are provided by //simulate/src/unitree_compat, not by the
+# prebuilt linux-only libunitree_sdk2.a.
+cc_library(
+    name = "headers",
+    hdrs = glob([
+        "include/**/*.h",
+        "include/**/*.hpp",
+    ]),
+    includes = ["include"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)

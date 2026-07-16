@@ -1,0 +1,10 @@
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct Req_ {
+        string uuid;
+        string body;
+      };
+    };
+  };
+};

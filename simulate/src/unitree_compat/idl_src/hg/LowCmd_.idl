@@ -1,0 +1,14 @@
+#include "unitree/idl/hg/MotorCmd_.idl"
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct LowCmd_ {
+        uint8 mode_pr;
+        uint8 mode_machine;
+        MotorCmd_ motor_cmd[35];
+        uint32 reserve[4];
+        uint32 crc;
+      };
+    };
+  };
+};

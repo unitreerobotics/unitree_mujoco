@@ -1,0 +1,13 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct IMUState_ {
+        float quaternion[4];
+        float gyroscope[3];
+        float accelerometer[3];
+        float rpy[3];
+        int16 temperature;
+      };
+    };
+  };
+};

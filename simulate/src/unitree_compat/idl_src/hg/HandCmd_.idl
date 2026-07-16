@@ -1,0 +1,11 @@
+#include "unitree/idl/hg/MotorCmd_.idl"
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct HandCmd_ {
+        sequence<MotorCmd_> motor_cmd;
+        uint32 reserve[4];
+      };
+    };
+  };
+};

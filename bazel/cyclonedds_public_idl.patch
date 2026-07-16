@@ -1,0 +1,12 @@
+diff --git a/BUILD.bazel b/BUILD.bazel
+index b3bb36a..dc44bce 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -497,6 +497,7 @@ cc_library(
+         "src/idl/src",
+     ],
+     deps = [":ddsc"],
++    visibility = ["//visibility:public"],
+ )
+ 
+ IDLPP_SRCS = [

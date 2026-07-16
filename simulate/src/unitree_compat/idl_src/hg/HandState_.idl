@@ -1,0 +1,20 @@
+#include "unitree/idl/hg/MotorState_.idl"
+#include "unitree/idl/hg/PressSensorState_.idl"
+#include "unitree/idl/hg/IMUState_.idl"
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct HandState_ {
+        sequence<MotorState_> motor_state;
+        sequence<PressSensorState_> press_sensor_state;
+        IMUState_ imu_state;
+        float power_v;
+        float power_a;
+        float system_v;
+        float device_v;
+        uint32 error[2];
+        uint32 reserve[2];
+      };
+    };
+  };
+};

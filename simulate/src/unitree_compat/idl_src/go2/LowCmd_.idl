@@ -1,0 +1,24 @@
+#include "unitree/idl/go2/MotorCmd_.idl"
+#include "unitree/idl/go2/BmsCmd_.idl"
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct LowCmd_ {
+        uint8 head[2];
+        uint8 level_flag;
+        uint8 frame_reserve;
+        uint32 sn[2];
+        uint32 version[2];
+        uint16 bandwidth;
+        MotorCmd_ motor_cmd[20];
+        BmsCmd_ bms_cmd;
+        uint8 wireless_remote[40];
+        uint8 led[12];
+        uint8 fan[2];
+        uint8 gpio;
+        uint32 reserve;
+        uint32 crc;
+      };
+    };
+  };
+};

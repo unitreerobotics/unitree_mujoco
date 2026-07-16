@@ -1,0 +1,10 @@
+#include "unitree/idl/go2/MotorCmd_.idl"
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct MotorCmds_ {
+        sequence<MotorCmd_> cmds;
+      };
+    };
+  };
+};

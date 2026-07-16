@@ -85,6 +85,34 @@ make -j4
 
 **注：** 测试程序发送的是 unitree_go 消息，如果需要测试 G1 机器人，需要修改程序使用 unitree_hg 消息。
 
+### 另一种方式：使用 Bazel 编译
+`simulate` 和 `example/cpp` 也可以使用 [Bazel](https://bazel.build)（通过 [Bazelisk](https://github.com/bazelbuild/bazelisk)）编译，无需手动安装 mujoco、glfw、yaml-cpp、fmt 或 Boost —— 这些依赖会作为 Bazel module 自动拉取。`unitree_sdk2` 本身没有官方的 Bazel 支持，其编译核心也完全不公开源码（仅提供 linux/x86_64 与 linux/aarch64 的预编译二进制文件），因此直接从其 git 仓库拉取，并配合本仓库中编写的 `BUILD` 文件使用（见 `bazel/unitree_sdk2.BUILD.bazel`）。
+
+`config.yaml` 和 `unitree_robots/` 已经配置为 Bazel 的 `data`，运行时通过 Bazel runfiles API 定位，因此 `bazel run` 可以直接完整运行，无需手动拷贝或安装：
+
+```bash
+cd unitree_mujoco
+bazel run //simulate:unitree_mujoco -- -r go2 -s scene_terrain.xml
+bazel run //simulate:jstest
+```
+
+要控制仿真 Go2，请在两个终端分别运行仿真器和控制器。两者默认使用 DDS 域 `1` 和回环接口：
+
+```bash
+# 终端 1
+bazel run //simulate:unitree_mujoco -- -r go2 -s scene.xml
+
+# 终端 2：立即启动并持续执行站起/趴下动作
+bazel run //example/cpp:stand_go2 -- --start
+
+# 或运行 7 秒测试并打印返回的关节状态
+bazel run //example/cpp:stand_go2 -- --start --duration 7
+```
+
+控制器还支持 `--domain_id`/`-i` 和 `--network`/`-n`，这些值必须与仿真器一致。不指定 `--start` 时，程序会等待按 Enter 后再发送命令。在 Linux 上该目标链接官方 SDK2 二进制库；在 macOS 上使用源码兼容层。
+
+**macOS：** Bazel 构建为仿真器使用到的 `unitree_sdk2` 功能提供了源码兼容层。它使用 CycloneDDS 0.10.5 重新生成 Unitree DDS 消息的 TypeSupport，并基于 CycloneDDS-CXX 实现 SDK 的通道和线程适配，因此无需 Unitree 仅限 Linux 的二进制库也可使用完整 DDS 桥接。默认的 `lo` 接口会自动映射为 macOS 的 `lo0`；可通过 `-n <接口>` 指定其他接口。CMake 构建仍依赖已安装的上游 SDK，因此仍仅支持 Linux。
+
 ## Python 仿真器 (simulate_python)
 ### 1. 依赖
 #### unitree_sdk2_python

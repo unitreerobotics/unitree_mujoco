@@ -1,0 +1,33 @@
+#include "unitree/idl/go2/IMUState_.idl"
+#include "unitree/idl/go2/MotorState_.idl"
+#include "unitree/idl/go2/BmsState_.idl"
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct LowState_ {
+        uint8 head[2];
+        uint8 level_flag;
+        uint8 frame_reserve;
+        uint32 sn[2];
+        uint32 version[2];
+        uint16 bandwidth;
+        IMUState_ imu_state;
+        MotorState_ motor_state[20];
+        BmsState_ bms_state;
+        int16 foot_force[4];
+        int16 foot_force_est[4];
+        uint32 tick;
+        uint8 wireless_remote[40];
+        uint8 bit_flag;
+        float adc_reel;
+        uint8 temperature_ntc1;
+        uint8 temperature_ntc2;
+        float power_v;
+        float power_a;
+        uint16 fan_frequency[4];
+        uint32 reserve;
+        uint32 crc;
+      };
+    };
+  };
+};

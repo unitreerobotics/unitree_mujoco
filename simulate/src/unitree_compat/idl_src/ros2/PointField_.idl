@@ -1,0 +1,12 @@
+module sensor_msgs {
+  module msg {
+    module dds_ {
+      struct PointField_ {
+        string name;
+        uint32 offset;
+        uint8 datatype;
+        uint32 count;
+      };
+    };
+  };
+};

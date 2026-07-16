@@ -1,0 +1,11 @@
+#include "unitree/idl/ros2/Time_.idl"
+module std_msgs {
+  module msg {
+    module dds_ {
+      struct Header_ {
+        builtin_interfaces::msg::dds_::Time_ stamp;
+        string frame_id;
+      };
+    };
+  };
+};

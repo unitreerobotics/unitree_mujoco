@@ -1,0 +1,17 @@
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct BmsState_ {
+        uint8 version_high;
+        uint8 version_low;
+        uint8 status;
+        uint8 soc;
+        int32 current;
+        uint16 cycle;
+        uint8 bq_ntc[2];
+        uint8 mcu_ntc[2];
+        uint16 cell_vol[15];
+      };
+    };
+  };
+};

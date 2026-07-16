@@ -4,3 +4,5 @@
 **/log/
 **/install/
 simulate/mujoco
+/bazel-*
+MODULE.bazel.lock

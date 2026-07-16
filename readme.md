@@ -82,6 +82,34 @@ The program will output the robot's pose and position information in the simulat
 
 **Note:** The testing program sends the unitree_go message. If you want to test G1 robot, you need to modify the program to use the unitree_hg message.
 
+### Alternative: Build with Bazel
+`simulate` and `example/cpp` can also be built with [Bazel](https://bazel.build) (via [Bazelisk](https://github.com/bazelbuild/bazelisk)), without manually installing mujoco, glfw, yaml-cpp, fmt or Boost — they are fetched automatically as Bazel modules. `unitree_sdk2` itself has no official Bazel support and ships no source at all for its compiled core (only prebuilt linux/x86_64 and linux/aarch64 binaries), so it is fetched directly from its git repository with a locally authored `BUILD` file (see `bazel/unitree_sdk2.BUILD.bazel`).
+
+`config.yaml` and `unitree_robots/` are wired up as Bazel `data` and located at runtime through the Bazel runfiles API, so `bazel run` is self-contained — no manual copying or install step needed:
+
+```bash
+cd unitree_mujoco
+bazel run //simulate:unitree_mujoco -- -r go2 -s scene_terrain.xml
+bazel run //simulate:jstest
+```
+
+To control the simulated Go2, run the simulator and controller in separate terminals. Both default to DDS domain `1` and the loopback interface:
+
+```bash
+# Terminal 1
+bazel run //simulate:unitree_mujoco -- -r go2 -s scene.xml
+
+# Terminal 2: start immediately and run the stand-up/down sequence indefinitely
+bazel run //example/cpp:stand_go2 -- --start
+
+# Or run a finite seven-second test that prints returned joint states
+bazel run //example/cpp:stand_go2 -- --start --duration 7
+```
+
+The controller also accepts `--domain_id`/`-i` and `--network`/`-n`; these values must match the simulator. Without `--start`, it waits for Enter before sending commands. On Linux the target links the official SDK2 binary; on macOS it uses the source-built compatibility layer.
+
+**macOS:** the Bazel build provides a source-built compatibility layer for the parts of `unitree_sdk2` used by the simulator. It regenerates Unitree's DDS message TypeSupport with CycloneDDS 0.10.5 and implements the SDK's channel/thread glue on top of CycloneDDS-CXX, so the full DDS bridge works without Unitree's Linux-only binary. The default `lo` interface is mapped to macOS `lo0`; pass `-n <interface>` to use another interface. The CMake build still requires an installed upstream SDK and therefore remains Linux-only.
+
 ## Python Simulator (simulate_python)
 ### 1. Dependencies
 #### unitree_sdk2_python

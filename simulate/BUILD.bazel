@@ -1,0 +1,55 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "joystick",
+    srcs = ["src/joystick/joystick.cc"],
+    hdrs = ["src/joystick/joystick.h"],
+    copts = ["-std=c++17"],
+)
+
+cc_binary(
+    name = "unitree_mujoco",
+    srcs = [
+        "src/main.cc",
+        "src/param.h",
+        "src/physics_joystick.h",
+        "src/unitree_sdk2_bridge.h",
+    ],
+    copts = ["-std=c++17"],
+    data = [
+        "config.yaml",
+        "//unitree_robots:all_files",
+    ],
+    local_defines = ["UNITREE_MUJOCO_BAZEL_BUILD"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":joystick",
+        "@rules_cc//cc/runfiles",
+        "@boost.program_options",
+        "@fmt",
+        "@mujoco//:mujoco",
+        "@mujoco//:mujoco_renderer",
+        "@mujoco//:simulate_lib",
+        "@yaml-cpp",
+    ] + select({
+        # On linux link the official prebuilt unitree_sdk2. macOS has no such
+        # binaries, so the DDS bridge is provided by unitree_compat instead:
+        # the SDK's published headers plus a clean-room build of its small
+        # compiled glue layer on top of cyclonedds/cyclonedds-cxx from source.
+        "@platforms//os:linux": ["@unitree_sdk2"],
+        "//conditions:default": ["//simulate/src/unitree_compat"],
+    }),
+)
+
+cc_binary(
+    name = "jstest",
+    srcs = ["src/joystick/jstest.cc"],
+    copts = ["-std=c++17"],
+    visibility = ["//visibility:public"],
+    deps = [":joystick"],
+)

@@ -1,0 +1,19 @@
+#include "unitree/idl/hg/IMUState_.idl"
+#include "unitree/idl/hg/MotorState_.idl"
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct LowState_ {
+        uint32 version[2];
+        uint8 mode_pr;
+        uint8 mode_machine;
+        uint32 tick;
+        IMUState_ imu_state;
+        MotorState_ motor_state[35];
+        uint8 wireless_remote[40];
+        uint32 reserve[4];
+        uint32 crc;
+      };
+    };
+  };
+};

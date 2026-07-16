@@ -1,0 +1,2 @@
+common --registry=https://raw.githubusercontent.com/wep21/bazel-central-registry/mujoco/
+common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/

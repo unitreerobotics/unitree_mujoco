@@ -1,0 +1,12 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct PressSensorState_ {
+        float pressure[12];
+        float temperature[12];
+        uint32 lost;
+        uint32 reserve;
+      };
+    };
+  };
+};

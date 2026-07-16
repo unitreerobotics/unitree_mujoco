@@ -1,0 +1,21 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct BmsState_ {
+        uint8 version_high;
+        uint8 version_low;
+        uint8 fn;
+        uint16 cell_vol[40];
+        uint32 bmsvoltage[3];
+        int32 current;
+        uint8 soc;
+        uint8 soh;
+        int16 temperature[12];
+        uint16 cycle;
+        uint16 manufacturer_date;
+        uint32 bmsstate[5];
+        uint32 reserve[3];
+      };
+    };
+  };
+};

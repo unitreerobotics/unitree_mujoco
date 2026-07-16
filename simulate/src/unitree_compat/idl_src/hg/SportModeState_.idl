@@ -1,0 +1,12 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct SportModeState_ {
+        uint32 fsm_id;
+        uint32 fsm_mode;
+        uint32 task_id;
+        float task_time;
+      };
+    };
+  };
+};

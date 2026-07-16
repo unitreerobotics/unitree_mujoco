@@ -1,0 +1,130 @@
+module(name = "unitree_mujoco")
+
+bazel_dep(name = "mujoco", version = "3.10.0")
+
+# Required so Bazel's C++ toolchain discovery picks the Apple CC toolchain on
+# macOS (needed to compile the objc_library used by glfw's Cocoa backend).
+# Must come before rules_cc: toolchain registration priority follows
+# declaration order. See https://github.com/bazelbuild/apple_support#toolchain-setup
+bazel_dep(name = "apple_support", version = "2.7.0")
+
+bazel_dep(name = "platforms", version = "1.1.0")
+bazel_dep(name = "rules_cc", version = "0.2.22")
+bazel_dep(name = "yaml-cpp", version = "0.9.0")
+bazel_dep(name = "fmt", version = "12.2.0")
+bazel_dep(name = "boost.program_options", version = "1.90.0.bcr.1")
+
+# Used by unitree_sdk2's dds_wrapper headers, consumed on macOS via
+# //simulate/src/unitree_compat (Subscription.h uses spdlog; go2_sub.h/g1_sub.h
+# use Eigen through an <eigen3/...> shim).
+bazel_dep(name = "spdlog", version = "1.17.0")
+bazel_dep(name = "eigen", version = "3.4.1")
+
+# CycloneDDS (ddsc), used on macOS to reimplement the small non-template glue
+# (ChannelFactory/DdsParticipant/etc.) that unitree_sdk2 only ships as a
+# prebuilt linux binary for. Built from source with real macOS support.
+# Pinned to 0.10.5 (not the newer 11.x line) to match the cyclonedds-cxx
+# version unitree_sdk2's pre-generated IDL message headers were built against
+# ("Cyclone DDS: v0.10.2" per their own generated-file comment) -- the
+# per-message serialization call signatures changed between the 0.x and 11.x
+# ddscxx code-generator templates and are not source compatible.
+bazel_dep(name = "cyclonedds", version = "0.10.5")
+
+# The BCR target is private by default, but cyclonedds-cxx's idlcxx plugin is
+# a separate repository and must link the public C IDL compiler library.
+single_version_override(
+    module_name = "cyclonedds",
+    patches = ["//bazel:cyclonedds_public_idl.patch"],
+    patch_strip = 1,
+    version = "0.10.5",
+)
+
+# unitree_sdk2 has no upstream Bazel/BCR support and ships prebuilt static/shared
+# libraries for linux (x86_64, aarch64) directly in its git tree, so it is fetched
+# as a plain http_archive with a locally authored BUILD file overlay instead of a
+# bazel_dep. Pinned to a commit on `main` because the dds_wrapper headers used by
+# this project (unitree/dds_wrapper/...) are not yet part of a tagged release.
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "unitree_sdk2",
+    build_file = "//bazel:unitree_sdk2.BUILD.bazel",
+    integrity = "sha256-0LRoC+T3w6s+qyaH4uElFkhwqIk/PuScT207wdhmY+c=",
+    strip_prefix = "unitree_sdk2-21d0a3b2c46ee48c8fdf2783becb6be3beb0a59b",
+    url = "https://github.com/unitreerobotics/unitree_sdk2/archive/21d0a3b2c46ee48c8fdf2783becb6be3beb0a59b.tar.gz",
+)
+
+# Same unitree_sdk2 tarball again, but headers-only and patched to compile on
+# macOS, where the prebuilt linux libunitree_sdk2.a is unusable. Used by
+# //simulate/src/unitree_compat, which reimplements the SDK's small compiled
+# glue layer on top of cyclonedds/cyclonedds-cxx built from source:
+#  - include/unitree/idl is dropped: those pre-generated message headers lack
+#    their TypeSupport .cpp halves (closed source), so unitree_compat carries
+#    regenerated .hpp/.cpp pairs from hand-written .idl files instead.
+#  - decl.hpp's <sys/sysinfo.h>/<sys/timerfd.h> includes are linux-only and
+#    unused by any header we consume; SYS_gettid maps to SYS_thread_selfid.
+http_archive(
+    name = "unitree_sdk2_compat",
+    build_file = "//bazel:unitree_sdk2_compat.BUILD.bazel",
+    integrity = "sha256-0LRoC+T3w6s+qyaH4uElFkhwqIk/PuScT207wdhmY+c=",
+    patch_cmds = [
+        "rm -rf include/unitree/idl",
+        "sed -i.bak -e 's|#include <sys/sysinfo.h>|#ifdef __linux__\\n#include <sys/sysinfo.h>\\n#endif|' -e 's|#include <sys/timerfd.h>|#ifdef __linux__\\n#include <sys/timerfd.h>\\n#endif|' -e 's|#define SYS_gettid __NR_gettid|#ifdef __APPLE__\\n#define SYS_gettid SYS_thread_selfid\\n#else\\n#define SYS_gettid __NR_gettid\\n#endif|' include/unitree/common/decl.hpp",
+        "rm -f include/unitree/common/decl.hpp.bak",
+        # Parse-only shims for identifiers macOS lacks: pthread_spinlock_t
+        # (lock.hpp's Spinlock member; never instantiated by unitree_compat)
+        # and the linux-only SCHED_* constants (os.hpp's UT_SCHED_POLICY enum).
+        """cat >> include/unitree/common/decl.hpp << 'EOF'
+#ifdef __APPLE__
+typedef int pthread_spinlock_t;
+#ifndef SCHED_BATCH
+#define SCHED_BATCH SCHED_OTHER
+#endif
+#ifndef SCHED_IDLE
+#define SCHED_IDLE SCHED_OTHER
+#endif
+#ifndef SCHED_DEADLINE
+#define SCHED_DEADLINE SCHED_OTHER
+#endif
+#endif
+EOF""",
+    ],
+    strip_prefix = "unitree_sdk2-21d0a3b2c46ee48c8fdf2783becb6be3beb0a59b",
+    url = "https://github.com/unitreerobotics/unitree_sdk2/archive/21d0a3b2c46ee48c8fdf2783becb6be3beb0a59b.tar.gz",
+)
+
+# cyclonedds-cxx (ddscxx) has no Bazel/BCR support yet (tracked upstream as a
+# possible future addition, mirroring the existing `cyclonedds` module in this
+# same registry fork). Version pinned to match the `cyclonedds` C library
+# above. features.hpp and export.hpp are normally produced by CMake's
+# configure_file()/generate_export_header(); patch_cmds writes the same
+# (static, non-shared-library) content directly since there is no CMake here.
+http_archive(
+    name = "cyclonedds_cxx",
+    build_file = "//bazel:cyclonedds_cxx.BUILD.bazel",
+    integrity = "sha256-lKYof2F+aJaQ/BegaLYL4a4AMJlwLT4alRYvdO24hEI=",
+    patches = ["//bazel:cyclonedds_cxx_idlcxx.patch"],
+    patch_strip = 1,
+    patch_cmds = [
+        "mkdir -p src/ddscxx/include/dds/core/detail",
+        """cat > src/ddscxx/include/dds/features.hpp << 'EOF'
+#ifndef __OMG_DDS_DDSCXX_FEATURES_HPP__
+#define __OMG_DDS_DDSCXX_FEATURES_HPP__
+#define DDSCXX_HAS_TYPE_DISCOVERY 1
+#define DDSCXX_HAS_TOPIC_DISCOVERY 1
+#endif /* __OMG_DDS_DDSCXX_FEATURES_HPP__ */
+EOF""",
+        """cat > src/ddscxx/include/dds/core/detail/export.hpp << 'EOF'
+#ifndef OMG_DDS_API_DETAIL_H
+#define OMG_DDS_API_DETAIL_H
+#define OMG_DDS_API_DETAIL
+#define OMG_DDS_API_DETAIL_NO_EXPORT
+#define OMG_DDS_API_DETAIL_DEPRECATED
+#define OMG_DDS_API_DETAIL_DEPRECATED_EXPORT
+#define OMG_DDS_API_DETAIL_DEPRECATED_NO_EXPORT
+#endif /* OMG_DDS_API_DETAIL_H */
+EOF""",
+    ],
+    strip_prefix = "cyclonedds-cxx-0.10.5",
+    url = "https://github.com/eclipse-cyclonedds/cyclonedds-cxx/archive/refs/tags/0.10.5.tar.gz",
+)

@@ -1,0 +1,10 @@
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct BmsCmd_ {
+        uint8 off;
+        uint8 reserve[3];
+      };
+    };
+  };
+};

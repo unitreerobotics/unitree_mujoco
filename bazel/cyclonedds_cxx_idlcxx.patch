@@ -1,0 +1,83 @@
+diff --git a/src/idlcxx/shim/idlc/options.h b/src/idlcxx/shim/idlc/options.h
+new file mode 100644
+index 0000000..725e8dc
+--- /dev/null
++++ b/src/idlcxx/shim/idlc/options.h
+@@ -0,0 +1,32 @@
++#ifndef IDLC_OPTIONS_H
++#define IDLC_OPTIONS_H
++
++#include <stdbool.h>
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++typedef struct idlc_option idlc_option_t;
++struct idlc_option {
++  enum {
++    IDLC_FLAG,
++    IDLC_STRING,
++    IDLC_FUNCTION,
++  } type;
++  union {
++    int *flag;
++    const char **string;
++    int (*function)(const idlc_option_t *, const char *);
++  } store;
++  char option;
++  char *suboption;
++  char *argument;
++  char *help;
++};
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* IDLC_OPTIONS_H */
+diff --git a/src/idlcxx/shim/idlc/generator.h b/src/idlcxx/shim/idlc/generator.h
+new file mode 100644
+index 0000000..fe02862
+--- /dev/null
++++ b/src/idlcxx/shim/idlc/generator.h
+@@ -0,0 +1,39 @@
++#ifndef IDLC_GENERATOR_H
++#define IDLC_GENERATOR_H
++
++#include <stdint.h>
++
++#include "idl/processor.h"
++#include "idl/tree.h"
++#include "idlc/options.h"
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++#define IDLC_GENERATOR_OPTIONS generator_options
++#define IDLC_GENERATOR_ANNOTATIONS generator_annotations
++#define IDLC_GENERATE generate
++
++typedef struct idlc_generator_config idlc_generator_config_t;
++struct idlc_generator_config {
++  char *output_dir;
++  char *base_dir;
++  bool generate_type_info;
++  idl_retcode_t (*generate_typeinfo_typemap)(
++    const idl_pstate_t *pstate,
++    const idl_node_t *node,
++    idl_typeinfo_typemap_t *result);
++};
++
++typedef const idlc_option_t **(*idlc_generator_options_t)(void);
++typedef const idl_builtin_annotation_t **(*idlc_generator_annotations_t)(void);
++typedef int (*idlc_generate_t)(
++  const idl_pstate_t *,
++  const idlc_generator_config_t *);
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* IDLC_GENERATOR_H */

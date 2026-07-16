@@ -1,0 +1,33 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "stand_go2",
+    srcs = ["stand_go2.cpp"],
+    copts = ["-std=c++17"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@platforms//os:linux": ["@unitree_sdk2"],
+        "//conditions:default": ["//simulate/src/unitree_compat"],
+    }),
+)
+
+cc_binary(
+    name = "walk_h1",
+    srcs = ["walk_h1.cpp"],
+    copts = ["-std=c++17"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@platforms//os:linux": ["@unitree_sdk2"],
+        "//conditions:default": ["//simulate/src/unitree_compat"],
+    }),
+)

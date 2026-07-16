@@ -1,0 +1,103 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# Mirrors src/ddscxx/CMakeLists.txt's `sources` list (0.10.5).
+_SRCS = [
+    "src/ddscxx/src/dds/core/Duration.cpp",
+    "src/ddscxx/src/dds/core/Exception.cpp",
+    "src/ddscxx/src/dds/core/Reference.cpp",
+    "src/ddscxx/src/dds/core/Time.cpp",
+    "src/ddscxx/src/dds/core/policy/CorePolicy.cpp",
+    "src/ddscxx/src/dds/core/status/State.cpp",
+    "src/ddscxx/src/dds/domain/discovery.cpp",
+    "src/ddscxx/src/dds/domain/find.cpp",
+    "src/ddscxx/src/dds/pub/pubdiscovery.cpp",
+    "src/ddscxx/src/dds/sub/subdiscovery.cpp",
+    "src/ddscxx/src/dds/sub/subfind.cpp",
+    "src/ddscxx/src/dds/sub/status/DataState.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/Mutex.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/ObjectDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/DDScObjectDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/ObjectSet.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/EntityDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/ReportUtils.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/ListenerDispatcher.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/InstanceHandleDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/EntitySet.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/MiscUtils.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/fragchain.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/cdr_stream.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/basic_cdr_ser.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/entity_properties.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/extended_cdr_v1_ser.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cdr/extended_cdr_v2_ser.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cond/ConditionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cond/GuardConditionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cond/StatusConditionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/cond/WaitSetDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/core/policy/PolicyDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/domain/Domain.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/domain/DomainWrap.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/domain/DomainParticipantDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/domain/DomainParticipantRegistry.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/domain/qos/DomainParticipantQosDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/pub/AnyDataWriterDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/pub/PublisherDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/pub/qos/DataWriterQosDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/pub/qos/PublisherQosDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/qos/DataReaderQosDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/AnyDataReaderDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/SubscriberDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/BuiltinSubscriberDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/QueryDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/cond/ReadConditionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/cond/QueryConditionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/sub/qos/SubscriberQosDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/find.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/hash.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/AnyTopicDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/FilterDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/TopicDescriptionDelegate.cpp",
+    "src/ddscxx/src/org/eclipse/cyclonedds/topic/qos/TopicQosDelegate.cpp",
+]
+
+cc_library(
+    name = "ddscxx",
+    srcs = _SRCS,
+    hdrs = glob([
+        "src/ddscxx/include/dds/**/*.hpp",
+        "src/ddscxx/include/org/**/*.hpp",
+    ]),
+    copts = [
+        "-std=c++17",
+        "-fexceptions",
+    ],
+    includes = ["src/ddscxx/include"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    deps = ["@cyclonedds//:ddsc"],
+)
+
+# C++ backend loaded by CycloneDDS idlc.  Upstream builds this as the shared
+# library libcycloneddsidlcxx; exposing it as a Bazel tool makes IDL generation
+# hermetic instead of depending on an idlcxx plugin installed on the host.
+cc_binary(
+    name = "libcycloneddsidlcxx.dylib",
+    srcs = glob([
+        "src/idlcxx/shim/idlc/*.h",
+        "src/idlcxx/src/*.c",
+        "src/idlcxx/src/*.h",
+    ]),
+    copts = ["-std=c99"],
+    includes = [
+        "src/idlcxx/shim",
+        "src/idlcxx/src",
+    ],
+    linkshared = True,
+    target_compatible_with = ["@platforms//os:macos"],
+    deps = ["@cyclonedds//:idl"],
+)

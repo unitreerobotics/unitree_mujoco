@@ -1,0 +1,153 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+_COMPAT_PLATFORMS = select({
+    "@platforms//os:macos": [],
+    "//conditions:default": ["@platforms//:incompatible"],
+})
+
+_GO2_IDL_TYPES = [
+    "BmsCmd_",
+    "BmsState_",
+    "HeightMap_",
+    "IMUState_",
+    "LidarState_",
+    "LowCmd_",
+    "LowState_",
+    "MotorCmd_",
+    "MotorCmds_",
+    "MotorState_",
+    "MotorStates_",
+    "PathPoint_",
+    "Req_",
+    "Res_",
+    "SportModeCmd_",
+    "SportModeState_",
+    "TimeSpec_",
+    "UwbState_",
+    "WirelessController_",
+]
+
+_HG_IDL_TYPES = [
+    "BmsCmd_",
+    "BmsState_",
+    "HandCmd_",
+    "HandState_",
+    "IMUState_",
+    "LowCmd_",
+    "LowState_",
+    "MotorCmd_",
+    "MotorState_",
+    "PressSensorState_",
+    "SportModeState_",
+]
+
+_ROS2_IDL_TYPES = [
+    "Header_",
+    "PointCloud2_",
+    "PointField_",
+    "Time_",
+]
+
+_IDL_OUTPUTS = [
+    "generated/unitree/idl/{}/{}.{}".format(group, type_name, extension)
+    for group, type_names in [
+        ("go2", _GO2_IDL_TYPES),
+        ("hg", _HG_IDL_TYPES),
+        ("ros2", _ROS2_IDL_TYPES),
+    ]
+    for type_name in type_names
+    for extension in ["hpp", "cpp"]
+]
+
+# Generate the C++ message classes and TypeSupport as a declared Bazel action.
+# Passing the idlcxx dylib by exact path makes this independent of host tools
+# and dynamic-library search paths.
+genrule(
+    name = "generate_unitree_idl",
+    srcs = glob(["idl_src/**/*.idl"]),
+    outs = _IDL_OUTPUTS,
+    cmd = """
+set -eu
+tmp="$(@D)/unitree_idl_tmp"
+idlc="$$PWD/$(location @cyclonedds//:idlc)"
+idlcxx="$$PWD/$(location @cyclonedds_cxx//:libcycloneddsidlcxx.dylib)"
+rm -rf "$$tmp"
+mkdir -p "$$tmp/unitree/idl"
+for src in $(SRCS); do
+  group=$$(basename "$$(dirname "$$src")")
+  mkdir -p "$$tmp/unitree/idl/$$group"
+  cp "$$src" "$$tmp/unitree/idl/$$group/"
+done
+for src in $(SRCS); do
+  group=$$(basename "$$(dirname "$$src")")
+  stem=$$(basename "$$src" .idl)
+  (cd "$$tmp" && "$$idlc" \
+    -Wno-implicit-extensibility \
+    -l "$$idlcxx" \
+    -I . "unitree/idl/$$group/$$stem.idl")
+  outdir="$(RULEDIR)/generated/unitree/idl/$$group"
+  mkdir -p "$$outdir"
+  upper=$$(printf '%s' "$$stem" | tr '[:lower:]' '[:upper:]')
+  group_upper=$$(printf '%s' "$$group" | tr '[:lower:]' '[:upper:]')
+  for extension in hpp cpp; do
+    sed -E \
+      -e "s/DDSCXX_$${upper}_HPP/DDSCXX_UNITREE_IDL_$${group_upper}_$${upper}_HPP/g" \
+      -e "s|#include \\\"([[:alnum:]]+_\\.hpp)\\\"|#include \\\"unitree/idl/$$group/\\1\\\"|g" \
+      "$$tmp/$$stem.$$extension" > "$$outdir/$$stem.$$extension"
+    rm -f "$$tmp/$$stem.$$extension"
+  done
+done
+rm -rf "$$tmp"
+""",
+    target_compatible_with = _COMPAT_PLATFORMS,
+    tools = [
+        "@cyclonedds//:idlc",
+        "@cyclonedds_cxx//:libcycloneddsidlcxx.dylib",
+    ],
+)
+
+# unitree_go / unitree_hg message types regenerated from the .idl sources in
+# idl_src/ with cyclonedds' idlc (see idl_src/README.md). Unlike the headers
+# unitree_sdk2 publishes, these come with their TypeSupport .cpp halves, so
+# they link without the closed-source prebuilt library.
+cc_library(
+    name = "unitree_idl",
+    srcs = [output for output in _IDL_OUTPUTS if output.endswith(".cpp")],
+    hdrs = [output for output in _IDL_OUTPUTS if output.endswith(".hpp")],
+    copts = ["-std=c++17"],
+    includes = ["generated"],
+    target_compatible_with = _COMPAT_PLATFORMS,
+    deps = ["@cyclonedds_cxx//:ddscxx"],
+)
+
+# unitree_sdk2's dds_wrapper headers include <eigen3/Eigen/Dense> (the
+# apt libeigen3-dev layout); the Bazel eigen module exposes <Eigen/Dense>.
+cc_library(
+    name = "eigen3_shim",
+    hdrs = ["shim/eigen3/Eigen/Dense"],
+    includes = ["shim"],
+    deps = ["@eigen"],
+)
+
+# Drop-in replacement for unitree_sdk2 on platforms its prebuilt linux-only
+# binaries cannot serve: the SDK's published headers + regenerated message
+# types + a clean-room implementation of the compiled glue layer on top of
+# cyclonedds/cyclonedds-cxx built from source.
+cc_library(
+    name = "unitree_compat",
+    srcs = ["src/unitree_compat.cc"],
+    copts = [
+        "-std=c++17",
+        "-fexceptions",
+    ],
+    target_compatible_with = _COMPAT_PLATFORMS,
+    deps = [
+        ":eigen3_shim",
+        ":unitree_idl",
+        "@cyclonedds_cxx//:ddscxx",
+        "@spdlog",
+        "@unitree_sdk2_compat//:headers",
+    ],
+)

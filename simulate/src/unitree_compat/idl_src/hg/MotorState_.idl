@@ -1,0 +1,18 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct MotorState_ {
+        uint8 mode;
+        float q;
+        float dq;
+        float ddq;
+        float tau_est;
+        int16 temperature[2];
+        float vol;
+        uint32 sensor[2];
+        uint32 motorstate;
+        uint32 reserve[4];
+      };
+    };
+  };
+};

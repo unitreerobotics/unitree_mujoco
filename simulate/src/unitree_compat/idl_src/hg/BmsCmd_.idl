@@ -1,0 +1,10 @@
+module unitree_hg {
+  module msg {
+    module dds_ {
+      struct BmsCmd_ {
+        uint8 cmd;
+        uint8 reserve[40];
+      };
+    };
+  };
+};

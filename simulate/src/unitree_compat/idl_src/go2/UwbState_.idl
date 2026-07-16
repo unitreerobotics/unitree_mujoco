@@ -1,0 +1,25 @@
+module unitree_go {
+  module msg {
+    module dds_ {
+      struct UwbState_ {
+        uint8 version[2];
+        uint8 channel;
+        uint8 joy_mode;
+        float orientation_est;
+        float pitch_est;
+        float distance_est;
+        float yaw_est;
+        float tag_roll;
+        float tag_pitch;
+        float tag_yaw;
+        float base_roll;
+        float base_pitch;
+        float base_yaw;
+        float joystick[2];
+        uint8 error_state;
+        uint8 buttons;
+        uint8 enabled_from_app;
+      };
+    };
+  };
+};
