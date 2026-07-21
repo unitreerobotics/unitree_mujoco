@@ -79,6 +79,15 @@ accept the self-signed cert, enter VR, and press **r** in Terminal 3 to start te
 `https://<PC-IP>:60001` once on the Quest to accept the cert, then use
 `--image-transport webrtc`.)
 
+### 5. XR tracking-loss safety fallback (2026-07-21)
+- `xr_teleoperate/teleop/teleop_hand_and_arm.py`: detects tracking loss (raw Quest poses
+  frozen longer than `--tracking-timeout`, default 0.5 s, or invalid/singular) and stops
+  feeding XR data to the IK — no more arm spin when the headset is taken off.
+- Fallback selectable with `--tracking-fallback`: `hold` (default, freeze at last pose)
+  or `home` (ramp arms back to the default pose at ≤0.5 rad/s).
+- Hand/gripper targets also freeze during loss; on recovery the arm velocity limit
+  ramps up gradually to avoid a jump.
+
 ## Known limitations
 - Robot base is fixed (no locomotion) — intended for upper-body + hands teleop.
 - Scene is an empty floor; no table/objects yet.
