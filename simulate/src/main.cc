@@ -99,6 +99,9 @@ namespace
   // model and data
   mjModel *m = nullptr;
   mjData *d = nullptr;
+  
+  // global bridge pointer for keyboard joystick setup
+  UnitreeSDK2BridgeBase* g_bridge = nullptr;
 
   // control noise variables
   mjtNum *ctrlnoise = nullptr;
@@ -599,6 +602,7 @@ void *UnitreeSdk2BridgeThread(void *arg)
   } else {
     interface = std::make_unique<Go2Bridge>(m, d);
   }
+  g_bridge = interface.get();  // Save pointer for keyboard joystick setup
   interface->start();
   
   while (true)
@@ -625,9 +629,9 @@ void user_key_cb(GLFWwindow* window, int key, int scancode, int act, int mods) {
     if(param::config.enable_elastic_band == 1) {
       if (key==GLFW_KEY_9) {
         elastic_band.enable_ = !elastic_band.enable_;
-      } else if (key==GLFW_KEY_7 || key==GLFW_KEY_UP) {
+      } else if (key==GLFW_KEY_7) {
         elastic_band.length_ -= 0.1;
-      } else if (key==GLFW_KEY_8 || key==GLFW_KEY_DOWN) {
+      } else if (key==GLFW_KEY_8) {
         elastic_band.length_ += 0.1;
       }
     }
@@ -666,6 +670,7 @@ int main(int argc, char **argv)
 
   mjvOption opt;
   mjv_defaultOption(&opt);
+  opt.flags[mjVIS_CONTACTPOINT] = 1;
 
   mjvPerturb pert;
   mjv_defaultPerturb(&pert);
@@ -687,8 +692,16 @@ int main(int argc, char **argv)
 
   // start physics thread
   std::thread physicsthreadhandle(&PhysicsThread, sim.get(), param::config.robot_scene.c_str());
+  
+  // Wait for bridge initialization and set GLFW window for keyboard joystick
+  while (!g_bridge) {
+    usleep(100000);  // Wait 100ms
+  }
+  GLFWwindow* window = static_cast<mj::GlfwAdapter*>(sim->platform_ui.get())->window_;
+  g_bridge->setGLFWWindow(window);
+  
   // start simulation UI loop (blocking call)
-  glfwSetKeyCallback(static_cast<mj::GlfwAdapter*>(sim->platform_ui.get())->window_,user_key_cb);
+  glfwSetKeyCallback(window, user_key_cb);
   sim->RenderLoop();
   physicsthreadhandle.join();
 

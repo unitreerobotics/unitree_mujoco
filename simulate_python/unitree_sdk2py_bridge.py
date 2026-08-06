@@ -22,7 +22,7 @@ else:
     from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
     from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_ as LowState_default
 
-TOPIC_LOWCMD = "rt/lowcmd"
+TOPIC_LOWCMD = config.LOWCMD_TOPIC or ("rt/user_lowcmd" if config.ROBOT == "g1" else "rt/lowcmd")
 TOPIC_LOWSTATE = "rt/lowstate"
 TOPIC_HIGHSTATE = "rt/sportmodestate"
 TOPIC_WIRELESS_CONTROLLER = "rt/wirelesscontroller"
@@ -87,6 +87,7 @@ class UnitreeSdk2Bridge:
 
         self.low_cmd_suber = ChannelSubscriber(TOPIC_LOWCMD, LowCmd_)
         self.low_cmd_suber.Init(self.LowCmdHandler, 10)
+        print(f"[Info] Subscribing LowCmd on {TOPIC_LOWCMD}")
 
         # joystick
         self.key_map = {
