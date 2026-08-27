@@ -11,12 +11,13 @@ Uses DDS domain 1 (simulation), same as xr_teleoperate --sim.
 Head-camera frames (left/right eye) are written to shared memory in the same
 format as unitree_sim_isaaclab, so teleimager's IsaacSim image server can
 stream them to the Quest.
-"""
+""" 
 
 import argparse
 import os
 import threading
 import time
+from pathlib import Path
 from threading import Thread
 
 # Offscreen head-camera rendering uses EGL so it does not fight over GLFW with
@@ -30,7 +31,7 @@ import mujoco.viewer
 from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from g1_inspire_bridge import G1InspireBridge
 
-SCENE = "../unitree_robots/g1/scene_29dof_inspire_fixed.xml"
+SCENE = str(Path(__file__).resolve().parents[1] / "unitree_robots/g1/scene_29dof_inspire_fixed.xml")
 DOMAIN_ID = 1  # 1 = simulation (matches xr_teleoperate --sim), 0 = real robot
 SIMULATE_DT = 0.002
 VIEWER_DT = 0.02
@@ -85,11 +86,12 @@ def main():
     mj_model = mujoco.MjModel.from_xml_path(args.scene)
     mj_data = mujoco.MjData(mj_model)
     mj_model.opt.timestep = SIMULATE_DT
+    stop_event = threading.Event()
 
     if args.headless:
         class _FakeViewer:
             def is_running(self):
-                return True
+                return not stop_event.is_set()
 
             def sync(self):
                 pass
@@ -99,12 +101,12 @@ def main():
         viewer = mujoco.viewer.launch_passive(mj_model, mj_data)
 
     ChannelFactoryInitialize(DOMAIN_ID, args.interface)
-    bridge = G1InspireBridge(mj_model, mj_data)
+    bridge = G1InspireBridge(mj_model, mj_data, locker)
     print(f"[g1_inspire_sim] DDS bridge up (domain {DOMAIN_ID}, interface {args.interface})")
     print("[g1_inspire_sim] topics: rt/lowcmd rt/lowstate rt/inspire/cmd rt/inspire/state")
 
     def SimulationThread():
-        while viewer.is_running():
+        while not stop_event.is_set() and viewer.is_running():
             step_start = time.perf_counter()
             with locker:
                 bridge.update_ctrl()
@@ -114,7 +116,7 @@ def main():
                 time.sleep(remain)
 
     def ViewerThread():
-        while viewer.is_running():
+        while not stop_event.is_set() and viewer.is_running():
             with locker:
                 viewer.sync()
             time.sleep(VIEWER_DT)
@@ -125,13 +127,24 @@ def main():
     if not args.no_camera:
         threads.append(Thread(
             target=CameraThread,
-            args=(mj_model, mj_data, viewer.is_running),
+            args=(mj_model, mj_data,
+                  lambda: not stop_event.is_set() and viewer.is_running()),
             daemon=True,
         ))
     for t in threads:
         t.start()
-    sim_thread.join()
-    viewer_thread.join()
+    try:
+        sim_thread.join()
+        viewer_thread.join()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        stop_event.set()
+        sim_thread.join(1.0)
+        viewer_thread.join(1.0)
+        bridge.close()
+        if not args.headless:
+            viewer.close()
 
 
 if __name__ == "__main__":

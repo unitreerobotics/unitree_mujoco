@@ -146,6 +146,15 @@ def main() -> None:
         hand_body.set("quat", mount_quat)
         wrist.append(hand_body)
 
+    # The thumb's proximal link overlaps its palm at the joint origin.  Keep
+    # all other self/object contacts, but exclude these two impossible pairs.
+    contact = ET.SubElement(root, "contact")
+    for side in ("L", "R"):
+        ET.SubElement(contact, "exclude", {
+            "body1": f"{side}_hand_base_link",
+            "body2": f"{side}_thumb_proximal",
+        })
+
     # --- actuators: 12 position actuators in inspire DDS order ---
     actuator = root.find("actuator")
     for name, lo, hi in DDS_ORDER:

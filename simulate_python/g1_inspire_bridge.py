@@ -50,9 +50,10 @@ HOLD_KD = 1.5
 
 
 class G1InspireBridge:
-    def __init__(self, mj_model, mj_data):
+    def __init__(self, mj_model, mj_data, data_lock):
         self.mj_model = mj_model
         self.mj_data = mj_data
+        self.data_lock = data_lock
         self.lock = threading.Lock()
         self.crc = CRC()
 
@@ -91,8 +92,9 @@ class G1InspireBridge:
         self.cmd_kd = np.full(NUM_BODY_MOTOR, HOLD_KD)
         self.lowcmd_received = False
 
-        # hand targets in radians (start open: q = min of range)
-        self.hand_target = INSPIRE_RANGES[:, 0].copy()
+        # Hold the model's initial pose until the first complete DDS command.
+        self.hand_target = self.mj_data.qpos[self.hand_qadr].copy()
+        self.inspire_command_received = False
 
         # --- DDS pub/sub ---
         self.low_state = unitree_hg_msg_dds__LowState_()
@@ -135,13 +137,16 @@ class G1InspireBridge:
             self.lowcmd_received = True
 
     def InspireCmdHandler(self, msg: MotorCmds_):
-        n = min(NUM_HAND_MOTOR, len(msg.cmds))
+        if len(msg.cmds) != NUM_HAND_MOTOR:
+            return
+        target = np.empty(NUM_HAND_MOTOR)
+        for i, (lo, hi) in enumerate(INSPIRE_RANGES):
+            q_norm = np.clip(msg.cmds[i].q, 0.0, 1.0)
+            # q_norm: 1.0 = fully open (q=lo), 0.0 = fully closed (q=hi)
+            target[i] = hi - q_norm * (hi - lo)
         with self.lock:
-            for i in range(n):
-                lo, hi = INSPIRE_RANGES[i]
-                q_norm = np.clip(msg.cmds[i].q, 0.0, 1.0)
-                # q_norm: 1.0 = fully open (q=lo), 0.0 = fully closed (q=hi)
-                self.hand_target[i] = hi - q_norm * (hi - lo)
+            self.hand_target[:] = target
+            self.inspire_command_received = True
 
     # ------------------------------------------------------------------ step
     def update_ctrl(self):
@@ -161,28 +166,37 @@ class G1InspireBridge:
     # ------------------------------------------------------------- publish
     def PublishLowState(self):
         d = self.mj_data
+        with self.data_lock:
+            q = d.qpos[self.body_qadr].copy()
+            dq = d.qvel[self.body_dqadr].copy()
+            force = d.actuator_force[:NUM_BODY_MOTOR].copy()
+            sensors = d.sensordata.copy()
         for i in range(NUM_BODY_MOTOR):
             ms = self.low_state.motor_state[i]
-            ms.q = d.qpos[self.body_qadr[i]]
-            ms.dq = d.qvel[self.body_dqadr[i]]
-            ms.tau_est = d.actuator_force[i]
+            ms.q = q[i]
+            ms.dq = dq[i]
+            ms.tau_est = force[i]
         if self.imu_quat_adr >= 0:
             for k in range(4):
-                self.low_state.imu_state.quaternion[k] = d.sensordata[self.imu_quat_adr + k]
+                self.low_state.imu_state.quaternion[k] = sensors[self.imu_quat_adr + k]
         if self.imu_gyro_adr >= 0:
             for k in range(3):
-                self.low_state.imu_state.gyroscope[k] = d.sensordata[self.imu_gyro_adr + k]
+                self.low_state.imu_state.gyroscope[k] = sensors[self.imu_gyro_adr + k]
         if self.imu_acc_adr >= 0:
             for k in range(3):
-                self.low_state.imu_state.accelerometer[k] = d.sensordata[self.imu_acc_adr + k]
+                self.low_state.imu_state.accelerometer[k] = sensors[self.imu_acc_adr + k]
         self.low_state.tick += 1
         self.low_state.crc = self.crc.Crc(self.low_state)
         self.low_state_puber.Write(self.low_state)
 
     def PublishInspireState(self):
-        d = self.mj_data
+        with self.data_lock:
+            q = self.mj_data.qpos[self.hand_qadr].copy()
         for i in range(NUM_HAND_MOTOR):
             lo, hi = INSPIRE_RANGES[i]
-            q = d.qpos[self.hand_qadr[i]]
-            self.inspire_state.states[i].q = float(np.clip((hi - q) / (hi - lo), 0.0, 1.0))
+            self.inspire_state.states[i].q = float(np.clip((hi - q[i]) / (hi - lo), 0.0, 1.0))
         self.inspire_state_puber.Write(self.inspire_state)
+
+    def close(self):
+        self.low_state_thread.Wait(1.0)
+        self.inspire_state_thread.Wait(1.0)

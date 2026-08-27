@@ -584,6 +584,10 @@
   <visual>
     <global offwidth="1280" offheight="720" />
   </visual>
+  <contact>
+    <exclude body1="L_hand_base_link" body2="L_thumb_proximal" />
+    <exclude body1="R_hand_base_link" body2="R_thumb_proximal" />
+  </contact>
   <equality>
     <joint joint1="L_index_intermediate_joint" joint2="L_index_proximal_joint" polycoef="0 1.0 0 0 0" />
     <joint joint1="L_middle_intermediate_joint" joint2="L_middle_proximal_joint" polycoef="0 1.0 0 0 0" />

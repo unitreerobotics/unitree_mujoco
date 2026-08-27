@@ -1,6 +1,6 @@
-"""Fake-teleop test: drives arms via rt/lowcmd and hands via rt/inspire/cmd,
-and checks rt/lowstate + rt/inspire/state come back. Run g1_inspire_sim.py
-first, then run this in another terminal (same machine):
+"""DDS integration test for the G1 body and Inspire hands.
+
+Run g1_inspire_sim.py first, then run this in another terminal:
 
     python test/test_g1_inspire_teleop.py
 """
@@ -27,11 +27,21 @@ KP, KD = 80.0, 3.0
 
 # G1 29-DoF DDS indices
 LEFT_SHOULDER_PITCH = 15
-RIGHT_SHOULDER_PITCH = 22
-LEFT_ELBOW = 18
-RIGHT_ELBOW = 25
-
 state = {"lowstate": None, "inspire": None}
+
+
+def wait_for(topic, timeout=5.0):
+    deadline = time.monotonic() + timeout
+    while state[topic] is None and time.monotonic() < deadline:
+        time.sleep(0.05)
+    if state[topic] is None:
+        raise AssertionError(f"no rt/{topic} received within {timeout}s")
+
+
+def hand_state():
+    msg = state["inspire"]
+    assert len(msg.states) == 12, f"expected 12 hand states, got {len(msg.states)}"
+    return np.array([motor.q for motor in msg.states])
 
 
 def main():
@@ -52,56 +62,66 @@ def main():
     hand_cmd = MotorCmds_()
     hand_cmd.cmds = [unitree_go_msg_dds__MotorCmd_() for _ in range(12)]
 
-    print("waiting for rt/lowstate ...")
-    t0 = time.time()
-    while state["lowstate"] is None:
-        time.sleep(0.05)
-        if time.time() - t0 > 5:
-            print("FAIL: no rt/lowstate received"); return 1
-    print("OK: rt/lowstate received")
-
-    t0 = time.time()
-    while state["inspire"] is None:
-        time.sleep(0.05)
-        if time.time() - t0 > 5:
-            print("FAIL: no rt/inspire/state received"); return 1
-    print("OK: rt/inspire/state received (first q values:",
-          [round(state['inspire'].states[i].q, 2) for i in range(6)], ")")
-
-    # hold every joint at current pos, then wave arms + open/close hands
+    wait_for("lowstate")
+    wait_for("inspire")
     ls = state["lowstate"]
+    assert len(ls.motor_state) >= 29, "lowstate is missing G1 body motors"
+    assert len(hand_cmd.cmds) == 12
     for i in range(29):
         cmd.motor_cmd[i].q = ls.motor_state[i].q
         cmd.motor_cmd[i].kp = KP
         cmd.motor_cmd[i].kd = KD
 
-    print("driving arms (shoulder pitch + elbow) and hands for 8s ...")
-    start = time.time()
-    while time.time() - start < 8.0:
-        t = time.time() - start
-        # arms: raise forward and bend elbows sinusoidally
-        target = 0.6 * np.sin(2 * np.pi * 0.25 * t)
-        cmd.motor_cmd[LEFT_SHOULDER_PITCH].q = -abs(target)
-        cmd.motor_cmd[RIGHT_SHOULDER_PITCH].q = -abs(target)
-        cmd.motor_cmd[LEFT_ELBOW].q = abs(target)
-        cmd.motor_cmd[RIGHT_ELBOW].q = abs(target)
-        cmd.crc = crc.Crc(cmd)
-        lowcmd_pub.Write(cmd)
+    def drive(seconds, hand_q, shoulder_q=None):
+        values = np.broadcast_to(hand_q, (12,))
+        deadline = time.monotonic() + seconds
+        while time.monotonic() < deadline:
+            if shoulder_q is not None:
+                cmd.motor_cmd[LEFT_SHOULDER_PITCH].q = shoulder_q
+            cmd.crc = crc.Crc(cmd)
+            lowcmd_pub.Write(cmd)
+            for i, value in enumerate(values):
+                hand_cmd.cmds[i].q = float(value)
+            inspire_pub.Write(hand_cmd)
+            time.sleep(0.01)
 
-        # hands: 1.0 = open, 0.0 = closed
-        grip = 0.5 + 0.5 * np.sin(2 * np.pi * 0.5 * t)
-        for i in range(12):
-            hand_cmd.cmds[i].q = float(grip)
-        inspire_pub.Write(hand_cmd)
-        time.sleep(0.01)
+    # No hand command should change the model's startup pose.
+    startup = hand_state()
+    time.sleep(0.5)
+    np.testing.assert_allclose(hand_state(), startup, atol=0.02)
 
-    # verify motion happened
-    ls = state["lowstate"]
-    q_shoulder = ls.motor_state[LEFT_SHOULDER_PITCH].q
-    ins = state["inspire"]
-    print(f"final left shoulder pitch q = {q_shoulder:.3f}")
-    print("final hand norm q =", [round(ins.states[i].q, 2) for i in range(12)])
-    print("DONE")
+    drive(4.0, 0.0)
+    closed = hand_state()
+    assert np.max(closed) < 0.23, f"hands did not close: {closed}"
+    assert np.max(np.abs(closed - startup)) > 0.5, "hand command caused no motion"
+
+    drive(5.0, 1.0)
+    opened = hand_state()
+    np.testing.assert_allclose(opened, 1.0, atol=0.13)
+
+    drive(3.0, 0.5)
+    midpoint = hand_state()
+    np.testing.assert_allclose(midpoint, 0.5, atol=0.12)
+
+    # DDS index 0 is right pinky; changing it must not move the other fingers.
+    individual = np.ones(12)
+    individual[0] = 0.0
+    drive(4.0, individual)
+    fingers = hand_state()
+    assert fingers[0] < 0.1, f"right pinky did not close: {fingers[0]}"
+    np.testing.assert_array_less(0.85, fingers[[1, 2, 3, 6, 7, 8, 9]])
+
+    initial_shoulder = state["lowstate"].motor_state[LEFT_SHOULDER_PITCH].q
+    shoulder_target = initial_shoulder - 0.25
+    drive(3.0, 1.0, shoulder_target)
+    final_shoulder = state["lowstate"].motor_state[LEFT_SHOULDER_PITCH].q
+    assert abs(final_shoulder - initial_shoulder) > 0.1, "arm command caused no motion"
+    assert abs(final_shoulder - shoulder_target) < 0.1, (
+        f"shoulder target {shoulder_target:.3f}, got {final_shoulder:.3f}"
+    )
+
+    print("PASS: body DDS, 12-hand DDS, startup hold, range, midpoint, and index mapping")
+    print(f"PASS: left shoulder {initial_shoulder:.3f} -> {final_shoulder:.3f}")
     return 0
 
 
