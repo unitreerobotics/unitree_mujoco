@@ -3,6 +3,8 @@ robot_scene: "scene_29dof.xml" # Robot scene, /unitree_robots/[robot]/scene.xml
 
 domain_id: 0  # Domain id
 interface: "lo" # Interface 
+# DDS IDL type: -1 auto, 0 unitree_go, 1 unitree_hg. Auto selects unitree_hg for as2.
+idl_type: -1
 
 use_joystick: 0 # Simulate Unitree WirelessController using a gamepad
 joystick_type: "xbox" # support "xbox" and "switch" gamepad layout

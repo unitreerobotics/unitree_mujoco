@@ -21,7 +21,7 @@
 
 ## 消息(DDS idl)类型说明
 - Unitree Go2, B2, H1, B2w, Go2w 型号的机器人使用 unitree_go idl 实现底层通信
-- Unitree G1, H1-2 型号的机器人使用 unitree_hg 实现底层通信
+- Unitree G1、H1-2、AS2 型号的机器人使用 unitree_hg 实现底层通信
 
 注：
  1. 电机的编号与机器人实物一致，具体可参考 [Unitree 文档](https://support.unitree.com/home/zh/developer)
@@ -85,6 +85,20 @@ make -j4
 
 **注：** 测试程序发送的是 unitree_go 消息，如果需要测试 G1 机器人，需要修改程序使用 unitree_hg 消息。
 
+### AS2 仿真
+
+AS2 的底层通信使用 `unitree_hg`。使用 `-r as2` 时仿真器会自动选择该
+IDL，也可以通过 `-t 1` 显式指定。在 `simulate/build` 中运行平地场景：
+
+```bash
+./unitree_mujoco -r as2 -s plane_terrain.xml -t 1
+```
+
+将场景名替换为 `scene_terrain.xml` 可以加载复杂地形。与
+`2_as2_control` 联调时，仿真器保持 DDS domain `1`、网卡 `lo`，控制程序使用
+`EXECUTE_ONBOARD=false` 构建，并在另一个终端启动 x86 `ai_sport`。该回环配置
+不得连接实机。
+
 ## Python 仿真器 (simulate_python)
 ### 1. 依赖
 #### unitree_sdk2_python
@@ -131,7 +145,7 @@ python3 ./test/test_unitree_sdk2.py
 c++ 仿真器的配置文件位于 `/simulate/config.yaml` 中：
 ```yaml
 # 仿真器加载的机器人名称
-# "go2", "b2", "b2w", "h1"
+# "go2", "b2", "b2w", "h1", "go2w", "g1", "h2", "as2"
 robot: "go2"
 
 # 机器人仿真仿真场景文件
@@ -140,6 +154,10 @@ robot_scene: "scene.xml"
 
 # dds domain id，最好与实物(实物上默认为 0)区分开
 domain_id: 1 
+
+# -1：自动选择，0：unitree_go，1：unitree_hg
+# 自动模式会为 as2 选择 unitree_hg。
+idl_type: -1
 # 网卡名称, 对于仿真建议使用本地回环 "lo"
 interface: "lo"
 

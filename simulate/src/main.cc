@@ -36,7 +36,6 @@
 #include "param.h"
 
 #define MUJOCO_PLUGIN_DIR "mujoco_plugin"
-#define NUM_MOTOR_IDL_GO 20
 
 extern "C"
 {
@@ -592,11 +591,21 @@ void *UnitreeSdk2BridgeThread(void *arg)
     body_id = mj_name2id(m, mjOBJ_BODY, "base_link");
   }
   param::config.band_attached_link = 6 * body_id;
-  
+
   std::unique_ptr<UnitreeSDK2BridgeBase> interface = nullptr;
-  if (m->nu > NUM_MOTOR_IDL_GO) {
+  int idl_type = param::IDL_AUTO;
+  try {
+    idl_type = param::ResolveIdlType(param::config.robot, m->nu, param::config.idl_type);
+  } catch (const std::invalid_argument& error) {
+    std::cerr << error.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  if (idl_type == param::IDL_HG) {
+    std::cout << "Using unitree_hg DDS IDL for robot " << param::config.robot << std::endl;
     interface = std::make_unique<G1Bridge>(m, d);
   } else {
+    std::cout << "Using unitree_go DDS IDL for robot " << param::config.robot << std::endl;
     interface = std::make_unique<Go2Bridge>(m, d);
   }
   interface->start();

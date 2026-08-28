@@ -30,7 +30,7 @@ Note:
 
 ## Message (DDS idl) type description
 - Unitree Go2, B2, H1, B2w, Go2w robots use unitree_go idl for low-level communication.
-- Unitree G1, H1-2 robot uses unitree_hg idl for low-level communication.
+- Unitree G1, H1-2, and AS2 robots use unitree_hg idl for low-level communication.
 
 
 # Installation
@@ -82,6 +82,22 @@ The program will output the robot's pose and position information in the simulat
 
 **Note:** The testing program sends the unitree_go message. If you want to test G1 robot, you need to modify the program to use the unitree_hg message.
 
+### AS2 simulation
+
+AS2 uses the `unitree_hg` low-level messages. The simulator selects that IDL
+automatically when `-r as2` is used; `-t 1` can be supplied to make the choice
+explicit. From `simulate/build`, start the flat scene with:
+
+```bash
+./unitree_mujoco -r as2 -s plane_terrain.xml -t 1
+```
+
+Use `scene_terrain.xml` instead for the rough-terrain scene. To test with
+`2_as2_control`, keep the simulator on DDS domain `1` and interface `lo`, build
+the controller with `EXECUTE_ONBOARD=false`, then run its x86 `ai_sport`
+binary in a second terminal. This loopback setup must not be connected to a
+real robot.
+
 ## Python Simulator (simulate_python)
 ### 1. Dependencies
 #### unitree_sdk2_python
@@ -128,13 +144,17 @@ The program will output the robot's pose and position information in the simulat
 The configuration file for the C++ simulator is located at `/simulate/config.yaml`:
 ```yaml
 # Robot name loaded by the simulator
-# "go2", "b2", "b2w", "h1"
+# "go2", "b2", "b2w", "h1", "go2w", "g1", "h2", "as2"
 robot: "go2"
 # Robot simulation scene file
 # For example, for go2, it refers to the scene.xml file in the /unitree_robots/go2/ folder
 robot_scene: "scene.xml"
 # DDS domain id, it is recommended to distinguish from the real robot (default is 0 on the real robot)
 domain_id: 1
+
+# -1: automatic, 0: unitree_go, 1: unitree_hg
+# Automatic mode selects unitree_hg for as2.
+idl_type: -1
 
 use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
 joystick_type: "xbox" # support "xbox" and "switch" gamepad layout
