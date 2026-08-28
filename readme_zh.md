@@ -298,6 +298,8 @@ else
 ### unitree_sdk2_python
 1. 运行：
 ```bash
+cd example/python
+
 python3 ./stand_go2.py # 控制仿真中的机器人 (需确保 Go2 仿真场景已经加载)
 python3 ./stand_go2.py enp3s0 # 控制机器人实物，其中 enp3s0 为机器人所连接的网卡名称
 ```

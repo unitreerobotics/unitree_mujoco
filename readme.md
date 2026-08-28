@@ -292,6 +292,8 @@ else
 ### unitree_sdk2_python
 1. Run
 ```bash
+cd example/python
+
 python3 ./stand_go2.py # Control the robot in the simulation (make sure the Go2 simulation scene has been loaded)
 python3 ./stand_go2.py enp3s0 # Control the physical robot, where enp3s0 is the name of the network card connected to the robot
 ```
