@@ -1,0 +1,107 @@
+<mujoco model="inspire_hand_left">
+  <compiler angle="radian" meshdir="/home/panu/Documents/fibo/project_humanoid/xr_teleoperate/assets/inspire_hand/"/>
+
+  <asset>
+    <mesh name="L_hand_base_link" content_type="model/stl" file="./meshes/L_hand_base_link.STL"/>
+    <mesh name="Link11_L" content_type="model/stl" file="./meshes/Link11_L.STL"/>
+    <mesh name="Link12_L" content_type="model/stl" file="./meshes/Link12_L.STL"/>
+    <mesh name="Link13_L" content_type="model/stl" file="./meshes/Link13_L.STL"/>
+    <mesh name="Link14_L" content_type="model/stl" file="./meshes/Link14_L.STL"/>
+    <mesh name="Link15_L" content_type="model/stl" file="./meshes/Link15_L.STL"/>
+    <mesh name="Link16_L" content_type="model/stl" file="./meshes/Link16_L.STL"/>
+    <mesh name="Link17_L" content_type="model/stl" file="./meshes/Link17_L.STL"/>
+    <mesh name="Link18_L" content_type="model/stl" file="./meshes/Link18_L.STL"/>
+    <mesh name="Link19_L" content_type="model/stl" file="./meshes/Link19_L.STL"/>
+    <mesh name="Link20_L" content_type="model/stl" file="./meshes/Link20_L.STL"/>
+    <mesh name="Link21_L" content_type="model/stl" file="./meshes/Link21_L.STL"/>
+    <mesh name="Link22_L" content_type="model/stl" file="./meshes/Link22_L.STL"/>
+  </asset>
+
+  <worldbody>
+    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="L_hand_base_link"/>
+    <geom type="mesh" rgba="1 1 1 1" mesh="L_hand_base_link"/>
+    <geom size="0.004 0.075" pos="0.075 0 0" quat="0.707105 0 -0.707108 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="1 0 0 1"/>
+    <geom size="0.015" pos="0.15 0 0" quat="0.707105 0 -0.707108 0" contype="0" conaffinity="0" group="1" density="0" rgba="1 0 0 1"/>
+    <geom size="0.004 0.075" pos="0 0.075 0" quat="0.707105 0.707108 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0 1 0 1"/>
+    <geom size="0.015" pos="0 0.15 0" quat="0.707105 0.707108 0 0" contype="0" conaffinity="0" group="1" density="0" rgba="0 1 0 1"/>
+    <geom size="0.004 0.075" pos="0 0 0.075" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0 0 1 1"/>
+    <geom size="0.015" pos="0 0 0.15" contype="0" conaffinity="0" group="1" density="0" rgba="0 0 1 1"/>
+    <body name="L_thumb_proximal_base" pos="-0.01696 -0.0691 0.02045" quat="0.499998 0.5 -0.5 0.500002">
+      <inertial pos="0.0048817 0.00038782 -0.00722" quat="0.445981 0.352284 0.495833 0.656617" mass="0.0018869" diaginertia="8.66031e-08 6.87331e-08 4.94199e-08"/>
+      <joint name="L_thumb_proximal_yaw_joint" pos="0 0 0" axis="0 0 1" range="-0.1 1.3" actuatorfrcrange="-1 1"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link11_L"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="Link11_L"/>
+      <body name="L_thumb_proximal" pos="0.0099867 0.0098242 -0.0089" quat="0.704571 -0.704573 -0.0598169 0.0598167">
+        <inertial pos="0.021936 -0.01279 -0.0080386" quat="0.25452 0.660687 -0.251949 0.659723" mass="0.0066101" diaginertia="2.78701e-06 2.44024e-06 8.6466e-07"/>
+        <joint name="L_thumb_proximal_pitch_joint" pos="0 0 0" axis="0 0 -1" range="0 0.5" actuatorfrcrange="-1 1"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link12_L"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="Link12_L"/>
+        <body name="L_thumb_intermediate" pos="0.04407 -0.034553 -0.0008">
+          <inertial pos="0.0095531 0.0016282 -0.0072002" quat="0.30738 0.636732 -0.307526 0.636803" mass="0.0037844" diaginertia="4.6532e-07 4.48114e-07 2.45646e-07"/>
+          <joint name="L_thumb_intermediate_joint" pos="0 0 0" axis="0 0 -1" range="0 0.8" actuatorfrcrange="-1 1"/>
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link13_L"/>
+          <geom type="mesh" rgba="1 1 1 1" mesh="Link13_L"/>
+          <body name="L_thumb_distal" pos="0.020248 -0.010156 -0.0012">
+            <inertial pos="0.0092888 -0.004953 -0.0060033" quat="0.266264 0.65596 -0.262836 0.655544" mass="0.003344" diaginertia="2.0026e-07 1.95246e-07 8.1594e-08"/>
+            <joint name="L_thumb_distal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.2" actuatorfrcrange="-1 1"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link14_L"/>
+            <geom type="mesh" rgba="1 1 1 1" mesh="Link14_L"/>
+            <geom size="0.005" pos="0.015 -0.013 -0.004" contype="0" conaffinity="0" group="1" density="0" rgba="1 0 0 1"/>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="L_index_proximal" pos="0.00028533 -0.13653 0.032268" quat="0.999848 -0.0174526 0 0">
+      <inertial pos="0.0012971 -0.011934 -0.0059998" quat="0.489677 0.510115 -0.489692 0.510099" mass="0.0042405" diaginertia="6.9402e-07 6.62904e-07 2.10916e-07"/>
+      <joint name="L_index_proximal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link15_L"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="Link15_L"/>
+      <body name="L_index_intermediate" pos="-0.0024229 -0.032041 -0.001">
+        <inertial pos="0.0021753 -0.019567 -0.005" quat="0.528694 0.469555 -0.528694 0.469555" mass="0.0045682" diaginertia="7.8176e-07 7.72427e-07 8.47209e-08"/>
+        <joint name="L_index_intermediate_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link16_L"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="Link16_L"/>
+        <geom size="0.005" pos="-0.005 -0.04 -0.004" contype="0" conaffinity="0" group="1" density="0" rgba="0 1 0 1"/>
+      </body>
+    </body>
+    <body name="L_middle_proximal" pos="0.00028533 -0.1371 0.01295">
+      <inertial pos="0.0012971 -0.011934 -0.0059999" quat="0.489677 0.510115 -0.489692 0.510099" mass="0.0042405" diaginertia="6.9402e-07 6.62904e-07 2.10916e-07"/>
+      <joint name="L_middle_proximal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link17_L"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="Link17_L"/>
+      <body name="L_middle_intermediate" pos="-0.0024229 -0.032041 -0.001">
+        <inertial pos="0.001921 -0.020796 -0.0049999" quat="0.531603 0.466115 -0.531728 0.466262" mass="0.0050397" diaginertia="9.8385e-07 9.73288e-07 9.14016e-08"/>
+        <joint name="L_middle_intermediate_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link18_L"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="Link18_L"/>
+        <geom size="0.005" pos="-0.005 -0.045 -0.004" contype="0" conaffinity="0" group="1" density="0" rgba="0 0 1 1"/>
+      </body>
+    </body>
+    <body name="L_ring_proximal" pos="0.00028533 -0.13691 -0.0062872" quat="0.999657 0.026177 0 0">
+      <inertial pos="0.0012971 -0.011934 -0.0059999" quat="0.489677 0.510114 -0.489692 0.510099" mass="0.0042405" diaginertia="6.9402e-07 6.62904e-07 2.10916e-07"/>
+      <joint name="L_ring_proximal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link19_L"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="Link19_L"/>
+      <body name="L_ring_intermediate" pos="-0.0024229 -0.032041 -0.001">
+        <inertial pos="0.0021753 -0.019567 -0.005" quat="0.528694 0.469556 -0.528694 0.469556" mass="0.0045682" diaginertia="7.8176e-07 7.72437e-07 8.47208e-08"/>
+        <joint name="L_ring_intermediate_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link20_L"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="Link20_L"/>
+        <geom size="0.005" pos="-0.002 -0.04 -0.004" contype="0" conaffinity="0" group="1" density="0" rgba="0 1 1 1"/>
+      </body>
+    </body>
+    <body name="L_pinky_proximal" pos="0.00028533 -0.13571 -0.025488" quat="0.99863 0.0523361 0 0">
+      <inertial pos="0.0012971 -0.011934 -0.0059999" quat="0.489677 0.510114 -0.489692 0.510099" mass="0.0042405" diaginertia="6.9402e-07 6.62904e-07 2.10916e-07"/>
+      <joint name="L_pinky_proximal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link21_L"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="Link21_L"/>
+      <body name="L_pinky_intermediate" pos="-0.0024229 -0.032041 -0.001">
+        <inertial pos="0.0024788 -0.016208 -0.0050001" quat="0.526797 0.471683 -0.526793 0.471687" mass="0.0036036" diaginertia="4.4881e-07 4.43809e-07 6.5736e-08"/>
+        <joint name="L_pinky_intermediate_joint" pos="0 0 0" axis="0 0 -1" range="0 1.7" actuatorfrcrange="-1 1"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="Link22_L"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="Link22_L"/>
+        <geom size="0.005" pos="-0.002 -0.032 -0.004" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

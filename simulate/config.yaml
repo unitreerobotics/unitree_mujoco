@@ -1,7 +1,7 @@
-robot: "go2"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1", "h2", "as2"
-robot_scene: "scene.xml" # Robot scene, /unitree_robots/[robot]/scene.xml 
+robot: "g1"  # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1", "h2"
+robot_scene: "scene_29dof.xml" # Robot scene, /unitree_robots/[robot]/scene.xml 
 
-domain_id: 1  # Domain id
+domain_id: 0  # Domain id
 interface: "lo" # Interface 
 # DDS IDL type: -1 auto, 0 unitree_go, 1 unitree_hg. Auto selects unitree_hg for as2.
 idl_type: -1
@@ -13,4 +13,4 @@ joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
 
 print_scene_information: 1 # Print link, joint and sensors information of robot
 
-enable_elastic_band: 0 # Virtual spring band, used for lifting h1
+enable_elastic_band: 1 # Virtual spring band, used for lifting h1/g1

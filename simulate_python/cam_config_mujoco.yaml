@@ -1,0 +1,53 @@
+# Camera config for the MuJoCo G1+Inspire sim (served to xr_teleoperate on port 60000).
+# The head camera is a virtual stereo pair rendered by g1_inspire_sim.py into
+# shared memory; teleimager streams it exactly like the Isaac Sim pipeline.
+
+webrtc:
+  bitrate:
+    min: 2000000
+    default: 5000000
+    max: 12000000
+  gop_length: 60
+
+head_camera:
+  enable_zmq: true
+  zmq_port: 55555
+  enable_webrtc: true
+  webrtc_port: 60001
+  webrtc_codec: h264
+  type: isaacsim          # read from shared memory (written by the MuJoCo sim)
+  image_shape: [480, 1280] # binocular: left eye 480x640 + right eye 480x640
+  binocular: true
+  fps: 30
+  video_id: null
+  serial_number: null
+  physical_path: null
+
+# No wrist cameras in the MuJoCo scene (keys must exist for xr_teleoperate).
+left_wrist_camera:
+  enable_zmq: false
+  zmq_port: 55556
+  enable_webrtc: false
+  webrtc_port: 60002
+  webrtc_codec: h264
+  type: isaacsim
+  image_shape: [480, 640]
+  binocular: false
+  fps: 30
+  video_id: null
+  serial_number: null
+  physical_path: null
+
+right_wrist_camera:
+  enable_zmq: false
+  zmq_port: 55557
+  enable_webrtc: false
+  webrtc_port: 60003
+  webrtc_codec: h264
+  type: isaacsim
+  image_shape: [480, 640]
+  binocular: false
+  fps: 30
+  video_id: null
+  serial_number: null
+  physical_path: null
