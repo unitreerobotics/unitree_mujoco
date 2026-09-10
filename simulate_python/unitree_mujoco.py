@@ -1,4 +1,7 @@
 import time
+import sys
+import os
+import platform
 import mujoco
 import mujoco.viewer
 from threading import Thread
@@ -8,6 +11,11 @@ from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from unitree_sdk2py_bridge import UnitreeSdk2Bridge, ElasticBand
 
 import config
+
+if platform.system() == "Darwin" and "MJPYTHON_BIN" not in os.environ:
+    print("Error: On macOS, MuJoCo requires 'mjpython' for GUI rendering.")
+    print("Run with:  mjpython unitree_mujoco.py")
+    sys.exit(1)
 
 
 locker = threading.Lock()

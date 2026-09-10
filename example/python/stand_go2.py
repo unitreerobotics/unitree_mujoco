@@ -1,5 +1,6 @@
 import time
 import sys
+import platform
 import numpy as np
 
 from unitree_sdk2py.core.channel import ChannelPublisher, ChannelSubscriber
@@ -29,7 +30,8 @@ input("Press enter to start")
 if __name__ == '__main__':
 
     if len(sys.argv) <2:
-        ChannelFactoryInitialize(1, "lo")
+        interface = "lo0" if platform.system() == "Darwin" else "lo"
+        ChannelFactoryInitialize(1, interface)
     else:
         ChannelFactoryInitialize(0, sys.argv[1])
 
