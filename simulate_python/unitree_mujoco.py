@@ -51,6 +51,9 @@ def SimulationThread():
 
         locker.acquire()
 
+        # Update control torques from latest command
+        unitree.UpdateControl()
+
         if config.ENABLE_ELASTIC_BAND:
             if elastic_band.enable:
                 mj_data.xfrc_applied[band_attached_link, :3] = elastic_band.Advance(
