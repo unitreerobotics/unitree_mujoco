@@ -1,0 +1,33 @@
+Mon May 25 22:12:19 2026
+ERROR: could not create window
+
+Mon May 25 22:13:11 2026
+ERROR: could not create window
+
+Mon May 25 22:13:39 2026
+ERROR: could not create window
+
+Mon May 25 23:04:08 2026
+ERROR: could not create window
+
+Mon May 25 23:17:32 2026
+ERROR: could not create window
+
+Mon May 25 23:20:23 2026
+ERROR: could not create window
+
+Mon May 25 23:22:44 2026
+ERROR: could not create window
+
+Mon May 25 23:24:59 2026
+ERROR: could not create window
+
+Mon May 25 23:26:49 2026
+ERROR: could not create window
+
+Mon May 25 23:27:54 2026
+ERROR: could not create window
+
+Tue May 26 00:07:13 2026
+ERROR: could not create window
+
