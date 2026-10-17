@@ -14,3 +14,5 @@ joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
 print_scene_information: 1 # Print link, joint and sensors information of robot
 
 enable_elastic_band: 0 # Virtual spring band, used for lifting h1
+elastic_band_stiffness: 200 # Virtual spring band stiffness
+elastic_band_damping: 100 # Virtual spring band damping

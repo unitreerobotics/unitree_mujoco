@@ -60,6 +60,8 @@ inline struct SimulationConfig
 
     int enable_elastic_band;
     int band_attached_link = 0;
+    double elastic_band_stiffness = 200.0;
+    double elastic_band_damping = 100.0;
 
     void load_from_yaml(const std::string &filename)
     {
@@ -80,6 +82,14 @@ inline struct SimulationConfig
             joystick_bits = cfg["joystick_bits"].as<int>();
             print_scene_information = cfg["print_scene_information"].as<int>();
             enable_elastic_band = cfg["enable_elastic_band"].as<int>();
+            if (cfg["elastic_band_stiffness"])
+            {
+                elastic_band_stiffness = cfg["elastic_band_stiffness"].as<double>();
+            }
+            if (cfg["elastic_band_damping"])
+            {
+                elastic_band_damping = cfg["elastic_band_damping"].as<double>();
+            }
         }
         catch(const std::exception& e)
         {
