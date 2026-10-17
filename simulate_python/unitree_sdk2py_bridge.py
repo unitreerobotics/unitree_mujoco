@@ -398,11 +398,11 @@ class UnitreeSdk2Bridge:
 
 class ElasticBand:
 
-    def __init__(self):
-        self.stiffness = 200
-        self.damping = 100
-        self.point = np.array([0, 0, 3])
-        self.length = 0
+    def __init__(self, stiffness=200, damping=100, point=None, length=0):
+        self.stiffness = stiffness
+        self.damping = damping
+        self.point = np.array(point if point is not None else [0, 0, 3])
+        self.length = length
         self.enable = True
 
     def Advance(self, x, dx):
