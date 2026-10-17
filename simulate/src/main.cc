@@ -683,6 +683,8 @@ int main(int argc, char **argv)
   std::filesystem::path proj_dir = std::filesystem::path(getExecutableDir()).parent_path();
   param::config.load_from_yaml(proj_dir / "config.yaml");
   param::helper(argc, argv);
+  elastic_band.stiffness_ = param::config.elastic_band_stiffness;
+  elastic_band.damping_ = param::config.elastic_band_damping;
   if(param::config.robot_scene.is_relative()) {
     param::config.robot_scene = proj_dir.parent_path() / "unitree_robots" / param::config.robot / param::config.robot_scene;
   }
