@@ -324,3 +324,26 @@ source ~/unitree_ros2/setup.sh # Use the network card connected to the robot
 export ROS_DOMAIN_ID=0 # Use the default domain id
 ./install/stand_go2/bin/stand_go2 # Run
 ```
+
+## 4. G1 with dexterous hands
+`simulate_python/g1_hands_run.py` runs the G1 (29 DoF) with one of five hands attached. The body keeps `rt/lowcmd` and `rt/lowstate` (29 motors); each hand has its own topics and messages, as on the real robot. The models are in `unitree_robots/g1/` (`scene_29dof_<hand>.xml`, built from Unitree's URDFs, see `unitree_robots/g1/g1_variants.md`) and use a 2 ms physics step.
+
+| `--hand` | Topics | Message |
+|---|---|---|
+| `dex3` | `rt/dex3/{left,right}/cmd`, `state` | `unitree_hg` `HandCmd_` / `HandState_` |
+| `dex1` | `rt/dex1/{left,right}/cmd`, `state` | `unitree_go` `MotorCmds_` / `MotorStates_` |
+| `brainco` | `rt/brainco/{left,right}/cmd`, `state` | `unitree_go` `MotorCmds_` / `MotorStates_` |
+| `inspire_ftp` | `rt/inspire_hand/ctrl/{l,r}`, `state/{l,r}` | `inspire_hand_ctrl` / `inspire_hand_state` |
+| `inspire_dfx` | `rt/inspire/cmd`, `state` | `unitree_go` `MotorCmds_` / `MotorStates_` |
+
+```bash
+cd simulate_python
+python g1_hands_run.py                         # Dex3, pelvis welded to the world
+python g1_hands_run.py --hand brainco          # also: dex1, inspire_ftp, inspire_dfx
+python g1_hands_run.py --hand dex3 --free-base --no-band   # pelvis free, elastic band off (key 9 toggles it)
+python g1_hands_run.py --hand inspire_dfx --free-base --no-band --stand   # starts standing, waits for the first rt/lowcmd
+```
+
+The Dex3 and Dex1 bridges use the `kp`/`kd` sent in the command. BrainCo and Inspire hands are held by a joint-space PD (kp 8, kd 0.2, our choice, not the vendors'). `--dt` changes the physics step.
+
+The Inspire FTP messages come from [inspire_hand_ws](https://github.com/NaCl-1374/inspire_hand_ws): set `INSPIRE_SDK_PATH` to its `inspire_hand_sdk/inspire_sdkpy` folder. The other hands need nothing else than `unitree_sdk2_python`, `mujoco` and `numpy`.
